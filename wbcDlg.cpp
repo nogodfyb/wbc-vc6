@@ -173,6 +173,7 @@ HCURSOR CWbcDlg::OnQueryDragIcon()
 // 重写onOk
 void CWbcDlg::OnOK() 
 {
+	//测试github使用是否正常
 
 }
 

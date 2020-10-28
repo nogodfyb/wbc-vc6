@@ -58,6 +58,6 @@ Filter=W
 Type=1
 Class=CWbcDlg
 ControlCount=2
-Control1=IDOK,button,1342242817
-Control2=IDCANCEL,button,1342242816
+Control1=IDC_STATIC,button,1342177287
+Control2=IDC_STATIC,static,1342308352
 

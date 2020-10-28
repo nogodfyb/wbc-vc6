@@ -6,10 +6,16 @@
 --------------------Configuration: wbc - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating command line "rc.exe /l 0x804 /fo"Debug/wbc.res" /d "_DEBUG" /d "_AFXDLL" "D:\vc6\wbc\wbc.rc"" 
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSP51CE.tmp" with contents
+[
+/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/wbc.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\vc6\wbc\wbcDlg.cpp"
+]
+Creating command line "cl.exe @C:\Users\FYB\AppData\Local\Temp\RSP51CE.tmp" 
 Creating command line "link.exe /nologo /subsystem:windows /incremental:yes /pdb:"Debug/wbc.pdb" /debug /machine:I386 /out:"Debug/wbc.exe" /pdbtype:sept  .\Debug\CMyListCtrl.obj .\Debug\MySqlUtil.obj .\Debug\StdAfx.obj .\Debug\wbc.obj .\Debug\wbcDlg.obj .\Debug\wbc.res "
 <h3>Output Window</h3>
-Compiling resources...
+Compiling...
+wbcDlg.cpp
 Linking...
 
 
