@@ -6,27 +6,16 @@
 --------------------Configuration: wbc - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSP678.tmp" with contents
-[
-/nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /Fp"Debug/wbc.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ   /c 
-"D:\vc6\wbc\MySqlUtil.cpp"
-]
-Creating command line "cl.exe @C:\Users\FYB\AppData\Local\Temp\RSP678.tmp" 
-Creating command line "link.exe /nologo /subsystem:windows /incremental:yes /pdb:"Debug/wbc.pdb" /debug /machine:I386 /out:"Debug/wbc.exe" /pdbtype:sept  .\Debug\wbc.obj .\Debug\wbcDlg.obj .\Debug\StdAfx.obj .\Debug\wbc.res .\Debug\MySqlUtil.obj .\Debug\CMyListCtrl.obj "
+Creating command line "rc.exe /l 0x804 /fo"Debug/wbc.res" /d "_DEBUG" /d "_AFXDLL" "D:\vc6\wbc\wbc.rc"" 
+Creating command line "link.exe /nologo /subsystem:windows /incremental:yes /pdb:"Debug/wbc.pdb" /debug /machine:I386 /out:"Debug/wbc.exe" /pdbtype:sept  .\Debug\CMyListCtrl.obj .\Debug\MySqlUtil.obj .\Debug\StdAfx.obj .\Debug\wbc.obj .\Debug\wbcDlg.obj .\Debug\wbc.res "
 <h3>Output Window</h3>
-Compiling...
-MySqlUtil.cpp
-D:\vc6\wbc\MySqlUtil.cpp(99) : warning C4018: '<' : signed/unsigned mismatch
-D:\vc6\wbc\MySqlUtil.cpp(104) : warning C4244: '=' : conversion from 'unsigned __int64' to 'int', possible loss of data
-D:\vc6\wbc\MySqlUtil.cpp(131) : warning C4018: '<' : signed/unsigned mismatch
-D:\vc6\wbc\MySqlUtil.cpp(136) : warning C4244: 'initializing' : conversion from 'unsigned __int64' to 'int', possible loss of data
-D:\vc6\wbc\MySqlUtil.cpp(158) : warning C4244: 'initializing' : conversion from 'unsigned __int64' to 'int', possible loss of data
+Compiling resources...
 Linking...
 
 
 
 <h3>Results</h3>
-wbc.exe - 0 error(s), 5 warning(s)
+wbc.exe - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>

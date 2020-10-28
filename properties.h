@@ -3,5 +3,5 @@
 #define HOST  "localhost"
 #define USER  "tester"
 #define PASSWORD "tester"
-#define DATABASE "shimo"
-#define PORT  3306
+#define DATABASE "diesaw"
+#define PORT  3307

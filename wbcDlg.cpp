@@ -170,24 +170,18 @@ HCURSOR CWbcDlg::OnQueryDragIcon()
 	return (HCURSOR) m_hIcon;
 }
 
-//测试数据库工具类
+// 重写onOk
 void CWbcDlg::OnOK() 
 {
-	// TODO: Add extra validation here
 
-	try
-	{
-		CString msg;
-		MySqlUtil mysqlUtil=MySqlUtil(msg);
-		CString sql="INSERT INTO user2 (email, password) VALUES ('adadsadsa', '123456')";
-		mysqlUtil.InsertData(sql,msg);
-		MessageBox("111");
+}
 
-	}
-	catch (const char* info)
+// 重写onCancel
+void CWbcDlg::OnCancel() 
+{
+	if(MessageBox(TEXT("是否确认退出?"),TEXT("退出程序"),MB_OKCANCEL)!=IDOK)
 	{
-		MessageBox(info);
-		
+		return;
 	}
-	//CDialog::OnOK();
+	CDialog::OnCancel();
 }
