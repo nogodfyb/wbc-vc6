@@ -28,16 +28,29 @@ void CheckToolsDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CheckToolsDlg)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, CHECK_TOOLS_DLG_WS, waferSourceCtr);
 	//}}AFX_DATA_MAP
 }
 
 
 BEGIN_MESSAGE_MAP(CheckToolsDlg, CDialog)
 	//{{AFX_MSG_MAP(CheckToolsDlg)
-		// NOTE: the ClassWizard will add message map macros here
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
 /////////////////////////////////////////////////////////////////////////////
 // CheckToolsDlg message handlers
+
+//初始化窗口
+BOOL CheckToolsDlg::OnInitDialog() 
+{
+	CDialog::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+
+	//初始化当前waferSource
+	waferSourceCtr.SetWindowText(waferSource);
+	
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
+}

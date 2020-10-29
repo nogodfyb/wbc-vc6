@@ -6,6 +6,8 @@
 #include "wbcDlg.h"
 #include "MySqlUtil.h"
 #include "CheckToolsDlg.h"
+#include "ValiadteUtils.h"
+#include "MyUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -196,9 +198,13 @@ void CWbcDlg::OnCancel()
 void CWbcDlg::OnScanWafer(){
 	CString wafer;
 	waferCtr.GetWindowText(wafer);
-	if (wafer=="123")
+	if (ValiadteUtils::validateWafer(wafer))
 	{
 		CheckToolsDlg dlg;
+		CStringArray array;
+		MyUtils::splitStr(wafer,'^',array);
+		//将芯片二维码中的waferSource分割提取出来，传递给弹出的校验工具窗口
+		dlg.waferSource=array.GetAt(1);
 		dlg.DoModal();
 	}
 	waferCtr.SetWindowText("");

@@ -16,10 +16,12 @@ class CheckToolsDlg : public CDialog
 public:
 	CheckToolsDlg(CWnd* pParent = NULL);   // standard constructor
 
+	CString waferSource;
+
 // Dialog Data
 	//{{AFX_DATA(CheckToolsDlg)
 	enum { IDD = CHECK_TOOLS_DIALOG };
-		// NOTE: the ClassWizard will add data members here
+	CStatic	waferSourceCtr;
 	//}}AFX_DATA
 
 
@@ -35,7 +37,7 @@ protected:
 
 	// Generated message map functions
 	//{{AFX_MSG(CheckToolsDlg)
-		// NOTE: the ClassWizard will add member functions here
+	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

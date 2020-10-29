@@ -102,8 +102,16 @@ SOURCE=.\MySqlUtil.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\MyUtils.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
+# End Source File
+# Begin Source File
+
+SOURCE=.\ValiadteUtils.cpp
 # End Source File
 # Begin Source File
 
@@ -135,6 +143,10 @@ SOURCE=.\MySqlUtil.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\MyUtils.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\properties.h
 # End Source File
 # Begin Source File
@@ -144,6 +156,10 @@ SOURCE=.\Resource.h
 # Begin Source File
 
 SOURCE=.\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ValiadteUtils.h
 # End Source File
 # Begin Source File
 
