@@ -15,8 +15,8 @@ class CheckToolsDlg : public CDialog
 // Construction
 public:
 	CheckToolsDlg(CWnd* pParent = NULL);   // standard constructor
-
 	CString waferSource;
+	void selectToolsInfo();
 
 // Dialog Data
 	//{{AFX_DATA(CheckToolsDlg)
@@ -38,6 +38,8 @@ protected:
 	// Generated message map functions
 	//{{AFX_MSG(CheckToolsDlg)
 	virtual BOOL OnInitDialog();
+	virtual void OnOK();
+
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

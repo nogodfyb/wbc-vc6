@@ -71,11 +71,18 @@ Control3=IDC_EDIT1,edit,1350631584
 [DLG:CHECK_TOOLS_DIALOG]
 Type=1
 Class=CheckToolsDlg
-ControlCount=4
+ControlCount=11
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
 Control3=IDC_STATIC,static,1342308352
 Control4=CHECK_TOOLS_DLG_WS,static,1342308352
+Control5=IDC_STATIC,static,1342308352
+Control6=IDC_EDIT1,edit,1350631552
+Control7=IDC_STATIC,button,1342177287
+Control8=IDC_STATIC,static,1342308352
+Control9=IDC_STATIC,static,1342308352
+Control10=IDC_STATIC,static,1342308352
+Control11=IDC_STATIC,static,1342308352
 
 [CLS:CheckToolsDlg]
 Type=0
@@ -83,6 +90,6 @@ HeaderFile=CheckToolsDlg.h
 ImplementationFile=CheckToolsDlg.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=CheckToolsDlg
+LastObject=CHECK_TOOLS_DLG_WS
 VirtualFilter=dWC
 

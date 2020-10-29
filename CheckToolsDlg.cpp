@@ -50,7 +50,26 @@ BOOL CheckToolsDlg::OnInitDialog()
 
 	//初始化当前waferSource
 	waferSourceCtr.SetWindowText(waferSource);
+
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
+
+//重写onOk
+void CheckToolsDlg::OnOK() 
+{
+	// TODO: Add extra validation here
+	
+	if(GetDlgItem(IDC_EDIT1)==GetFocus())
+	{
+		MessageBox("haha");
+		return;
+	}
+}
+
+void CheckToolsDlg::selectToolsInfo(){
+
+}
+
+

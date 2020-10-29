@@ -206,6 +206,8 @@ void CWbcDlg::OnScanWafer(){
 		//将芯片二维码中的waferSource分割提取出来，传递给弹出的校验工具窗口
 		dlg.waferSource=array.GetAt(1);
 		dlg.DoModal();
+	}else{
+		MessageBox("芯片二维码格式不正确!");
 	}
 	waferCtr.SetWindowText("");
 }
