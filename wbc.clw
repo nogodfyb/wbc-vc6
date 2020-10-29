@@ -2,12 +2,12 @@
 
 [General Info]
 Version=1
-LastClass=CMyListCtrl
+LastClass=CWbcDlg
 LastTemplate=CListCtrl
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
 
-ClassCount=5
+ClassCount=4
 Class1=CWbcApp
 Class2=CWbcDlg
 Class3=CAboutDlg
@@ -15,7 +15,7 @@ Class3=CAboutDlg
 ResourceCount=3
 Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
-Class5=CMyListCtrl
+Class4=CMyListCtrl
 Resource3=MAIN_DIALOG
 
 [CLS:CWbcApp]
@@ -23,6 +23,7 @@ Type=0
 HeaderFile=wbc.h
 ImplementationFile=wbc.cpp
 Filter=N
+LastObject=IDC_EDIT1
 
 [CLS:CWbcDlg]
 Type=0
@@ -31,12 +32,14 @@ ImplementationFile=wbcDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
+LastObject=IDC_EDIT1
 
 [CLS:CAboutDlg]
 Type=0
 HeaderFile=wbcDlg.h
 ImplementationFile=wbcDlg.cpp
 Filter=D
+LastObject=CAboutDlg
 
 [DLG:IDD_ABOUTBOX]
 Type=1
@@ -53,11 +56,13 @@ HeaderFile=CMyListCtrl.h
 ImplementationFile=CMyListCtrl.cpp
 BaseClass=CListCtrl
 Filter=W
+LastObject=IDC_EDIT1
 
 [DLG:MAIN_DIALOG]
 Type=1
 Class=CWbcDlg
-ControlCount=2
+ControlCount=3
 Control1=IDC_STATIC,button,1342177287
 Control2=IDC_STATIC,static,1342308352
+Control3=IDC_EDIT1,edit,1350631552
 

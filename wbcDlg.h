@@ -19,8 +19,9 @@ public:
 
 // Dialog Data
 	//{{AFX_DATA(CWbcDlg)
-	enum { IDD = IDD_WBC_DIALOG };
-		// NOTE: the ClassWizard will add data members here
+	enum { IDD = MAIN_DIALOG };
+	//…®√Ë–æ∆¨ ‰»Îøÿº˛
+	CEdit	waferCtr;
 	//}}AFX_DATA
 
 	// ClassWizard generated virtual function overrides

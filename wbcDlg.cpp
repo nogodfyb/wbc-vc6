@@ -74,7 +74,7 @@ void CWbcDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CWbcDlg)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, IDC_EDIT1, waferCtr);
 	//}}AFX_DATA_MAP
 }
 
@@ -173,7 +173,7 @@ HCURSOR CWbcDlg::OnQueryDragIcon()
 // 重写onOk
 void CWbcDlg::OnOK() 
 {
-	//测试github使用是否正常
+
 
 }
 
