@@ -174,7 +174,11 @@ HCURSOR CWbcDlg::OnQueryDragIcon()
 void CWbcDlg::OnOK() 
 {
 
-
+	if(GetDlgItem(IDC_EDIT1)==GetFocus())
+	{
+		OnScanWafer();
+		return;
+	}
 }
 
 // ÷ÿ–¥onCancel
@@ -185,4 +189,15 @@ void CWbcDlg::OnCancel()
 		return;
 	}
 	CDialog::OnCancel();
+}
+
+//…®√Ë«π…®√Ëwafer
+void CWbcDlg::OnScanWafer(){
+	CString wafer;
+	waferCtr.GetWindowText(wafer);
+	if (wafer=="123")
+	{
+		MessageBox("µ»”⁄123");
+	}
+	waferCtr.SetWindowText("");
 }

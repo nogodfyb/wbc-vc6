@@ -42,6 +42,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	virtual void OnOK();
 	virtual void OnCancel();
+	void OnScanWafer();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
