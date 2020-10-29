@@ -5,6 +5,7 @@
 #include "wbc.h"
 #include "wbcDlg.h"
 #include "MySqlUtil.h"
+#include "CheckToolsDlg.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -197,7 +198,8 @@ void CWbcDlg::OnScanWafer(){
 	waferCtr.GetWindowText(wafer);
 	if (wafer=="123")
 	{
-		MessageBox("µÈÓÚ123");
+		CheckToolsDlg dlg;
+		dlg.DoModal();
 	}
 	waferCtr.SetWindowText("");
 }

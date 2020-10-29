@@ -30,6 +30,8 @@ public:
 	virtual void DoDataExchange(CDataExchange* pDX);	// DDX/DDV support
 	//}}AFX_VIRTUAL
 
+	void OnScanWafer();
+
 // Implementation
 protected:
 	HICON m_hIcon;
@@ -42,7 +44,7 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	virtual void OnOK();
 	virtual void OnCancel();
-	void OnScanWafer();
+
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
