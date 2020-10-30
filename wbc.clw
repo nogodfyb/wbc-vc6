@@ -13,10 +13,10 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=4
-Resource1=IDD_ABOUTBOX
+Resource1=MAIN_DIALOG
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=MAIN_DIALOG
+Resource3=IDD_ABOUTBOX
 Class5=CheckToolsDlg
 Resource4=CHECK_TOOLS_DIALOG
 
@@ -71,18 +71,24 @@ Control3=IDC_EDIT1,edit,1350631584
 [DLG:CHECK_TOOLS_DIALOG]
 Type=1
 Class=CheckToolsDlg
-ControlCount=11
+ControlCount=17
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
 Control3=IDC_STATIC,static,1342308352
 Control4=CHECK_TOOLS_DLG_WS,static,1342308352
 Control5=IDC_STATIC,static,1342308352
-Control6=IDC_EDIT1,edit,1350631552
+Control6=IDC_EDIT1,edit,1350631584
 Control7=IDC_STATIC,button,1342177287
 Control8=IDC_STATIC,static,1342308352
 Control9=IDC_STATIC,static,1342308352
 Control10=IDC_STATIC,static,1342308352
 Control11=IDC_STATIC,static,1342308352
+Control12=SCRAPER_TEXT,static,1342308352
+Control13=STEELMESH_TEXT,static,1342308352
+Control14=SHIM_TEXT,static,1342308352
+Control15=IDC_EDIT2,edit,1350631552
+Control16=IDC_EDIT3,edit,1350631552
+Control17=IDC_STATIC,static,1342308352
 
 [CLS:CheckToolsDlg]
 Type=0

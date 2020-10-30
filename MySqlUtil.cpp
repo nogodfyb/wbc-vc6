@@ -76,10 +76,6 @@ int MySqlUtil::ConnMySQL(CString &Msg)
 //查询数据
 void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array,int * rowNums,int * colNums)
 {
-	if (!Msg.IsEmpty())
-	{
-		return;
-	}
     MYSQL_ROW m_row;
     MYSQL_RES* m_res;
     if (mysql_query(&mysql, SQL) != 0)
@@ -104,13 +100,49 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array,int * 
     *rowNums=mysql_num_rows(m_res);
     *colNums = mysql_num_fields(m_res);
     mysql_free_result(m_res);
-    return ;
-}
-//查询数据并渲染表格
-void MySqlUtil::SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list){
-	if(!Msg.IsEmpty()){
+	if (!Msg.IsEmpty())
+	{
+		throw "查询数据失败!";
 		return;
 	}
+    return ;
+}
+//查询数据
+void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array)
+{
+
+    MYSQL_ROW m_row;
+    MYSQL_RES* m_res;
+    if (mysql_query(&mysql, SQL) != 0)
+    {
+        Msg = mysql_error(&mysql);
+        return ;
+    }
+    m_res = mysql_store_result(&mysql);
+	
+    if (m_res == NULL)
+    {
+        Msg = mysql_error(&mysql);
+        return ;
+    }
+    while (m_row = mysql_fetch_row(m_res))
+    {
+        for (int i = 0; i < mysql_num_fields(m_res); i++)
+        {
+            array.Add(m_row[i]);
+        }
+    }
+    mysql_free_result(m_res);
+	if (!Msg.IsEmpty())
+	{
+		throw "查询数据失败!";
+		return;
+	}
+    return ;
+}
+
+//查询数据并渲染表格
+void MySqlUtil::SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list){
 	MYSQL_ROW m_row;
     MYSQL_RES* m_res;
 	CStringArray array;
@@ -147,6 +179,11 @@ void MySqlUtil::SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list
 	}
 	//重绘
 	list->AdjustColumnWidth();
+	if (!Msg.IsEmpty())
+	{
+		throw "查询数据失败!";
+		return;
+	}
     return ;
 
 }
@@ -186,31 +223,32 @@ int MySqlUtil::InsertData(CString SQL, CString &Msg)
 //更新数据
 int MySqlUtil::UpdateData(CString SQL, CString& Msg)
 {
-	if (!Msg.IsEmpty())
-	{
-		return 0;
-	}
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
         return 0;
     }
+	if (!Msg.IsEmpty())
+	{
+		throw "更新数据失败!";
+		return 0;
+	}
     return 1;
 }
 
 //删除数据
 int MySqlUtil::DeleteData(CString SQL, CString& Msg)
 {
-	if (!Msg.IsEmpty())
-	{
-		return 0;
-	}
-
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
         return 0;
     }
+	if (!Msg.IsEmpty())
+	{
+		throw "删除数据失败!";
+		return 0;
+	}
     return 1;
 }
 
