@@ -13,10 +13,10 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=4
-Resource1=MAIN_DIALOG
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=IDD_ABOUTBOX
+Resource3=MAIN_DIALOG
 Class5=CheckToolsDlg
 Resource4=CHECK_TOOLS_DIALOG
 
@@ -71,7 +71,7 @@ Control3=IDC_EDIT1,edit,1350631584
 [DLG:CHECK_TOOLS_DIALOG]
 Type=1
 Class=CheckToolsDlg
-ControlCount=17
+ControlCount=20
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
 Control3=IDC_STATIC,static,1342308352
@@ -86,9 +86,12 @@ Control11=IDC_STATIC,static,1342308352
 Control12=SCRAPER_TEXT,static,1342308352
 Control13=STEELMESH_TEXT,static,1342308352
 Control14=SHIM_TEXT,static,1342308352
-Control15=IDC_EDIT2,edit,1350631552
-Control16=IDC_EDIT3,edit,1350631552
+Control15=IDC_EDIT2,edit,1350631584
+Control16=IDC_EDIT3,edit,1350631584
 Control17=IDC_STATIC,static,1342308352
+Control18=IDC_COMBO1,combobox,1344340226
+Control19=IDC_COMBO2,combobox,1344340226
+Control20=IDC_COMBO3,combobox,1344340226
 
 [CLS:CheckToolsDlg]
 Type=0
@@ -96,6 +99,6 @@ HeaderFile=CheckToolsDlg.h
 ImplementationFile=CheckToolsDlg.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=CHECK_TOOLS_DLG_WS
+LastObject=IDC_COMBO1
 VirtualFilter=dWC
 

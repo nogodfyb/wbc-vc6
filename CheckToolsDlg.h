@@ -18,6 +18,9 @@ public:
 	CString waferSource;
 	void selectToolsInfo();
 	void onScanScraper();
+	void onScanSteelMesh();
+	void onScanShim();
+	void initAppearanceCheckSelects();
 	//期望刀片信息
 	CString expectedScraper;
 	//刀片校验结果
@@ -33,6 +36,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CheckToolsDlg)
 	enum { IDD = CHECK_TOOLS_DIALOG };
+	CComboBox	shimCbxCtr;
+	CComboBox	steelMeshCbxCtr;
+	CComboBox	scraperCbxCtr;
 	CEdit	shimEditCtr;
 	CEdit	steelMeshEditCtr;
 	CEdit	scraperEditCtr;
