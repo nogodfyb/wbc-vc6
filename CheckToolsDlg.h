@@ -36,6 +36,11 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CheckToolsDlg)
 	enum { IDD = CHECK_TOOLS_DIALOG };
+	CEdit	vacuumEditCtr;
+	CEdit	speedEditCtr;
+	CEdit	powerEditCtr;
+	CComboBox	machineCodeCbxCtr;
+	CEdit	bnEditCtr;
 	CComboBox	shimCbxCtr;
 	CComboBox	steelMeshCbxCtr;
 	CComboBox	scraperCbxCtr;
@@ -63,7 +68,8 @@ protected:
 	//{{AFX_MSG(CheckToolsDlg)
 	virtual BOOL OnInitDialog();
 	virtual void OnOK();
-
+	virtual void OnCancel();
+	afx_msg void OnButton1();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

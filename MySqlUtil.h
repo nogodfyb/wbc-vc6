@@ -34,7 +34,7 @@ public:
 	void SelectData(CString SQL, CString & Msg,CStringArray &array);
 
 	void SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list);
-
+	
     bool isExist(CString SQL);
 	
     int InsertData(CString SQL, CString &Msg);

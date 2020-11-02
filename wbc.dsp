@@ -106,6 +106,10 @@ SOURCE=.\MyUtils.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ShiftUtils.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\StdAfx.cpp
 # ADD CPP /Yc"stdafx.h"
 # End Source File
@@ -152,6 +156,10 @@ SOURCE=.\properties.h
 # Begin Source File
 
 SOURCE=.\Resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ShiftUtils.h
 # End Source File
 # Begin Source File
 
