@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CheckToolsDlg
+LastClass=CWbcDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
@@ -13,10 +13,10 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=4
-Resource1=MAIN_DIALOG
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=IDD_ABOUTBOX
+Resource3=MAIN_DIALOG
 Class5=CheckToolsDlg
 Resource4=CHECK_TOOLS_DIALOG
 
@@ -34,7 +34,7 @@ ImplementationFile=wbcDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_EDIT1
+LastObject=ID_TEXT
 
 [CLS:CAboutDlg]
 Type=0
@@ -63,10 +63,14 @@ LastObject=IDC_EDIT1
 [DLG:MAIN_DIALOG]
 Type=1
 Class=CWbcDlg
-ControlCount=3
+ControlCount=7
 Control1=IDC_STATIC,button,1342177287
 Control2=IDC_STATIC,static,1342308352
 Control3=IDC_EDIT1,edit,1350631584
+Control4=IDC_STATIC,static,1342308352
+Control5=LAST_CHECK_TEXT,static,1342308352
+Control6=IDC_STATIC,static,1342308352
+Control7=ID_TEXT,static,1342308352
 
 [DLG:CHECK_TOOLS_DIALOG]
 Type=1

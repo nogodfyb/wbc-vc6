@@ -280,6 +280,12 @@ void CheckToolsDlg::OnButton1()
 			VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s')",shift,machineCode,bn,power,speed,vacuum,shimCheckStr,scraperCheckStr,steelMeshCheckStr);
 		mysql.InsertData(sql,msg);
 		MessageBox("保存点检记录成功!");
+		CStringArray array;
+		CString sql2;
+		sql2.Format("SELECT id,create_time from wbc20_check_record WHERE id=LAST_INSERT_ID()");
+		mysql.SelectData(sql2,msg,array);
+		lastCheckId=array.GetAt(0);
+		lastCheckTime=array.GetAt(1);
 		//关闭弹窗
 		CDialog::OnOK();
 	}

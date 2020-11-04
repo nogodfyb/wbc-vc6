@@ -20,7 +20,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CWbcDlg)
 	enum { IDD = MAIN_DIALOG };
-	//…®√Ë–æ∆¨ ‰»Îøÿº˛
+	CStatic	idTextCtr;
+	CStatic	lastCheckCtr;
 	CEdit	waferCtr;
 	//}}AFX_DATA
 

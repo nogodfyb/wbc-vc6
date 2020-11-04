@@ -33,6 +33,10 @@ public:
 	CString expectedShim;
 	//垫片校验结果
 	bool shimCheck;
+	//上次点检时间
+	CString lastCheckTime;
+	//上次点检ID
+	CString lastCheckId;
 // Dialog Data
 	//{{AFX_DATA(CheckToolsDlg)
 	enum { IDD = CHECK_TOOLS_DIALOG };

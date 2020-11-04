@@ -77,6 +77,8 @@ void CWbcDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CWbcDlg)
+	DDX_Control(pDX, ID_TEXT, idTextCtr);
+	DDX_Control(pDX, LAST_CHECK_TEXT, lastCheckCtr);
 	DDX_Control(pDX, IDC_EDIT1, waferCtr);
 	//}}AFX_DATA_MAP
 }
@@ -206,6 +208,10 @@ void CWbcDlg::OnScanWafer(){
 		//将芯片二维码中的waferSource分割提取出来，传递给弹出的校验工具窗口
 		dlg.waferSource=array.GetAt(1);
 		dlg.DoModal();
+		//设置上次点检时间
+		lastCheckCtr.SetWindowText(dlg.lastCheckTime);
+		//设置上次点检id
+		idTextCtr.SetWindowText(dlg.lastCheckId);
 	}else{
 		MessageBox("芯片二维码格式不正确!");
 	}
