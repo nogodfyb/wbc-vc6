@@ -77,6 +77,8 @@ void CWbcDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CWbcDlg)
+	DDX_Control(pDX, IDC_LIST1, waferSelectListCtr);
+	DDX_Control(pDX, IDC_EDIT2, firstWeighWaferEditCtr);
 	DDX_Control(pDX, ID_TEXT, idTextCtr);
 	DDX_Control(pDX, LAST_CHECK_TEXT, lastCheckCtr);
 	DDX_Control(pDX, IDC_EDIT1, waferCtr);
@@ -122,6 +124,7 @@ BOOL CWbcDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
+	initSelectWaferListCtr();
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -179,11 +182,19 @@ HCURSOR CWbcDlg::OnQueryDragIcon()
 void CWbcDlg::OnOK() 
 {
 
+	//点检前匹配刷胶工具
 	if(GetDlgItem(IDC_EDIT1)==GetFocus())
 	{
 		OnScanWafer();
 		return;
 	}
+	//第一次称重前扫描wafer
+	if(GetDlgItem(IDC_EDIT2)==GetFocus())
+	{
+		OnScanWaferFistWeigh();
+		return;
+	}
+
 }
 
 // 重写onCancel
@@ -216,4 +227,43 @@ void CWbcDlg::OnScanWafer(){
 		MessageBox("芯片二维码格式不正确!");
 	}
 	waferCtr.SetWindowText("");
+}
+//第一次称重前扫描wafer
+void CWbcDlg::OnScanWaferFistWeigh(){
+	CString wafer;
+	firstWeighWaferEditCtr.GetWindowText(wafer);
+	firstWeighWaferEditCtr.SetWindowText("");
+	if (ValiadteUtils::validateWafer(wafer))
+	{
+		CStringArray array;
+		MyUtils::splitStr(wafer,'^',array);
+		for (int i=0;i<waferSelectListCtr.GetItemCount();i++)
+		{
+			CString waferLot=waferSelectListCtr.GetItemText(i,1);
+			if (waferLot==array.GetAt(3))
+			{
+				MessageBox("已存在!");
+				return;
+			}
+		}
+		//将waferSource和waferLot填充到第一行
+		waferSelectListCtr.InsertItem(0,array.GetAt(1));
+		waferSelectListCtr.SetItemText(0,1,array.GetAt(3));
+		waferSelectListCtr.AdjustColumnWidth();
+	} 
+	else
+	{
+		MessageBox("芯片二维码格式不正确");
+	}
+}
+//初始化芯片查询的listCtr
+void CWbcDlg::initSelectWaferListCtr(){
+	CString str[4] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma")};
+	for (size_t i = 0; i < 4; i++)
+	{
+		waferSelectListCtr.InsertColumn(i, str[i], LVCFMT_LEFT, 100);
+	}
+	//设置风格  整行选中 加入网格线
+	waferSelectListCtr.SetExtendedStyle(waferSelectListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES |LVS_EX_CHECKBOXES);
+	waferSelectListCtr.AdjustColumnWidth();
 }

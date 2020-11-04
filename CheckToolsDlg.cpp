@@ -120,6 +120,11 @@ void CheckToolsDlg::selectToolsInfo(){
 		sql.Format("SELECT description,sn from wbc20_wafer_tool_relation,wbc20_tool WHERE tool_id=wbc20_tool.id AND wafer_source='%s' ORDER BY type",waferSource);
 		CStringArray array;
 		mysqlUtil.SelectData(sql,msg,array);
+		if(array.GetSize()!=6){
+			MessageBox("刷胶工具未知!请联系管理员!");
+			CDialog::OnOK();
+			return;
+		}
 		//设置刮刀信息
 		scraperTextCtr.SetWindowText(array.GetAt(0));
 		expectedScraper=array.GetAt(1);

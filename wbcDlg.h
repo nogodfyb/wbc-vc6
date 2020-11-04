@@ -7,6 +7,7 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
+#include "CMyListCtrl.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CWbcDlg dialog
@@ -20,6 +21,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CWbcDlg)
 	enum { IDD = MAIN_DIALOG };
+	CMyListCtrl	waferSelectListCtr;
+	CEdit	firstWeighWaferEditCtr;
 	CStatic	idTextCtr;
 	CStatic	lastCheckCtr;
 	CEdit	waferCtr;
@@ -33,6 +36,8 @@ public:
 
 	void OnScanWafer();
 
+	void OnScanWaferFistWeigh();
+	void initSelectWaferListCtr();
 // Implementation
 protected:
 	HICON m_hIcon;
