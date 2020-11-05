@@ -8,6 +8,7 @@
 #include "CheckToolsDlg.h"
 #include "ValiadteUtils.h"
 #include "MyUtils.h"
+#include "SettingDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -77,6 +78,8 @@ void CWbcDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CWbcDlg)
+	DDX_Control(pDX, IDC_COMBO1, planIdCbxCtr);
+	DDX_Control(pDX, IDC_DATETIMEPICKER1, planDateCtr);
 	DDX_Control(pDX, IDC_LIST1, waferSelectListCtr);
 	DDX_Control(pDX, IDC_EDIT2, firstWeighWaferEditCtr);
 	DDX_Control(pDX, ID_TEXT, idTextCtr);
@@ -90,6 +93,10 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_WM_SYSCOMMAND()
 	ON_WM_PAINT()
 	ON_WM_QUERYDRAGICON()
+	ON_BN_CLICKED(IDC_BUTTON1, OnButton1)
+	ON_BN_CLICKED(IDC_BUTTON2, OnButton2)
+	ON_WM_CONTEXTMENU()
+	ON_COMMAND(ID_MENUITEM32771, OnMenuitem32771)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -125,6 +132,8 @@ BOOL CWbcDlg::OnInitDialog()
 	
 	// TODO: Add extra initialization here
 	initSelectWaferListCtr();
+	initPlanIdCbxCtr();
+	getSetting();
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -258,12 +267,105 @@ void CWbcDlg::OnScanWaferFistWeigh(){
 }
 //初始化芯片查询的listCtr
 void CWbcDlg::initSelectWaferListCtr(){
-	CString str[4] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma")};
-	for (size_t i = 0; i < 4; i++)
+	CString str[3] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量")};
+	for (size_t i = 0; i < 3; i++)
 	{
 		waferSelectListCtr.InsertColumn(i, str[i], LVCFMT_LEFT, 100);
 	}
 	//设置风格  整行选中 加入网格线
-	waferSelectListCtr.SetExtendedStyle(waferSelectListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES |LVS_EX_CHECKBOXES);
+	waferSelectListCtr.SetExtendedStyle(waferSelectListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	waferSelectListCtr.AdjustColumnWidth();
+}
+//初始化计划号下拉框
+void CWbcDlg::initPlanIdCbxCtr(){
+	for (int i=1;i<=200;i++)
+	{
+		CString str;
+		str.Format("%d",i);
+		MyUtils::completeZero(str);
+		planIdCbxCtr.AddString(str);
+	}
+	planIdCbxCtr.SetCurSel(0);
+}
+
+//芯片查询
+void CWbcDlg::OnButton1() 
+{
+	// TODO: Add your control notification handler code here
+	try
+	{
+		waferSelectListCtr.DeleteAllItems();
+		CTime date;
+		planDateCtr.GetTime(date);
+		CString planDate=date.Format(_T("%y%m%d"));
+		CString planId;
+		planIdCbxCtr.GetWindowText(planId);
+		CString msg;
+		MySqlUtil mysql(msg);
+		//查询数据并渲染
+		CString sql;
+		sql.Format("SELECT ws,wl from wafer_list_mes_org WHERE schid='%s'",planDate+"-"+planId);
+		mysql.SelectDataAndToList(sql,msg,&waferSelectListCtr);
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+	}
+}
+
+//弹出设置窗口
+void CWbcDlg::OnButton2() 
+{
+	// TODO: Add your control notification handler code here
+	SettingDialog dlg;
+	dlg.DoModal();
+	
+}
+
+//读取配置信息
+void CWbcDlg::getSetting(){
+	// TODO: Add your control notification handler code here
+	CFile file;
+	bool state=file.Open("setting.ini",CFile::modeRead,NULL); 
+	int i=0;
+	DWORD len=file.GetLength( );
+	char * arr=new char[len+1];
+	arr[len]=0;  //0终止字符串，用于输出。
+	file.Read(arr,len);   //Read( void* lpBuf, UINT nCount ) lpBuf是用于接收读取到的数据的Buf指针nCount是从文件读取的字节数
+	CString setting(arr);
+	CStringArray array;
+	MyUtils::splitStr(setting,'\r\n',array);
+	weigthMode=array.GetAt(0).Mid(11);
+	serialPort=array.GetAt(1).Mid(12);
+	delete arr;
+}
+
+//菜单关联映射
+void CWbcDlg::OnContextMenu(CWnd* pWnd, CPoint point) 
+{
+	// TODO: Add your message handler code here
+	CRect  rect; //定义矩形区域
+	GetDlgItem(IDC_LIST1) -> GetWindowRect(&rect);  //获得控件相对于屏幕的位置坐标
+	if(rect.PtInRect(point))  //右击点在指定控件上
+	{
+		CMenu popMenu;//弹出菜单
+		popMenu.LoadMenu(IDR_MENU1);//根据资源ID关联菜单资源
+		CMenu * subMenu = popMenu.GetSubMenu(0);//获得第0列子菜单的指针
+		subMenu->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON, point.x, point.y, this);  //在指定位置显示浮动弹出菜单，并追踪弹出菜单中被选择的项
+	}
+	
+}
+
+//点击称重菜单
+void CWbcDlg::OnMenuitem32771() 
+{
+	// TODO: Add your command handler code here
+	CString wafeLot;
+	int row = waferSelectListCtr.GetSelectionMark();
+	wafeLot=waferSelectListCtr.GetItemText(row, 1);
+	if (wafeLot.IsEmpty())
+	{
+		MessageBox("当前未选中任何wafer!");
+		return;
+	}
 }

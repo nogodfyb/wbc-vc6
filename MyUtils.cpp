@@ -36,3 +36,14 @@ void MyUtils::splitStr(CString input,char separtor,CStringArray &array){
 		i++;
 	}
 }
+
+void MyUtils::completeZero(CString &input){
+	int length=input.GetLength();
+	if (input.GetLength()<3)
+	{
+		for (int i=0;i<3-length;i++)
+		{
+			input="0"+input;
+		}
+	}
+}

@@ -98,11 +98,19 @@ SOURCE=.\CMyListCtrl.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ManualWeighDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\MySqlUtil.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=.\MyUtils.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\SettingDialog.cpp
 # End Source File
 # Begin Source File
 
@@ -143,6 +151,10 @@ SOURCE=.\CMyListCtrl.h
 # End Source File
 # Begin Source File
 
+SOURCE=.\ManualWeighDialog.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\MySqlUtil.h
 # End Source File
 # Begin Source File
@@ -156,6 +168,10 @@ SOURCE=.\properties.h
 # Begin Source File
 
 SOURCE=.\Resource.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\SettingDialog.h
 # End Source File
 # Begin Source File
 

@@ -9,6 +9,9 @@
 #define MAIN_DIALOG                     102
 #define IDR_MAINFRAME                   128
 #define CHECK_TOOLS_DIALOG              129
+#define SETTING_DIALOG                  130
+#define MANUAL_WEIGH_DIALOG             131
+#define IDR_MENU1                       132
 #define IDC_EDIT1                       1000
 #define CHECK_TOOLS_DLG_WS              1001
 #define SCRAPER_TEXT                    1002
@@ -28,14 +31,17 @@
 #define LAST_CHECK_TEXT                 1017
 #define ID_TEXT                         1018
 #define IDC_LIST1                       1019
+#define IDC_DATETIMEPICKER1             1020
+#define IDC_BUTTON2                     1021
+#define ID_MENUITEM32771                32771
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        130
-#define _APS_NEXT_COMMAND_VALUE         32771
-#define _APS_NEXT_CONTROL_VALUE         1020
+#define _APS_NEXT_RESOURCE_VALUE        133
+#define _APS_NEXT_COMMAND_VALUE         32772
+#define _APS_NEXT_CONTROL_VALUE         1022
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

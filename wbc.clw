@@ -7,18 +7,23 @@ LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
 
-ClassCount=5
+ClassCount=7
 Class1=CWbcApp
 Class2=CWbcDlg
 Class3=CAboutDlg
 
-ResourceCount=4
+ResourceCount=7
 Resource1=MAIN_DIALOG
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=IDD_ABOUTBOX
+Resource3=MANUAL_WEIGH_DIALOG
 Class5=CheckToolsDlg
 Resource4=CHECK_TOOLS_DIALOG
+Class6=SettingDialog
+Resource5=IDD_ABOUTBOX
+Class7=ManualWeighDialog
+Resource6=SETTING_DIALOG
+Resource7=IDR_MENU1
 
 [CLS:CWbcApp]
 Type=0
@@ -34,7 +39,7 @@ ImplementationFile=wbcDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=IDC_LIST1
+LastObject=ID_MENUITEM32771
 
 [CLS:CAboutDlg]
 Type=0
@@ -63,7 +68,7 @@ LastObject=IDC_EDIT1
 [DLG:MAIN_DIALOG]
 Type=1
 Class=CWbcDlg
-ControlCount=12
+ControlCount=18
 Control1=IDC_STATIC,button,1342177287
 Control2=IDC_STATIC,static,1342308352
 Control3=IDC_EDIT1,edit,1350631584
@@ -76,6 +81,12 @@ Control9=IDC_STATIC,static,1342308352
 Control10=IDC_EDIT2,edit,1350631584
 Control11=IDC_LIST1,SysListView32,1350631425
 Control12=IDC_STATIC,button,1342177287
+Control13=IDC_STATIC,static,1342308352
+Control14=IDC_DATETIMEPICKER1,SysDateTimePick32,1342242848
+Control15=IDC_STATIC,static,1342308352
+Control16=IDC_COMBO1,combobox,1344339970
+Control17=IDC_BUTTON1,button,1342242816
+Control18=IDC_BUTTON2,button,1073807360
 
 [DLG:CHECK_TOOLS_DIALOG]
 Type=1
@@ -120,4 +131,44 @@ BaseClass=CDialog
 Filter=D
 LastObject=CHECK_TOOLS_DLG_WS
 VirtualFilter=dWC
+
+[DLG:SETTING_DIALOG]
+Type=1
+Class=SettingDialog
+ControlCount=4
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_STATIC,static,1342308352
+Control4=IDC_EDIT1,edit,1350631552
+
+[CLS:SettingDialog]
+Type=0
+HeaderFile=SettingDialog.h
+ImplementationFile=SettingDialog.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=IDC_EDIT1
+VirtualFilter=dWC
+
+[DLG:MANUAL_WEIGH_DIALOG]
+Type=1
+Class=ManualWeighDialog
+ControlCount=2
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+
+[CLS:ManualWeighDialog]
+Type=0
+HeaderFile=ManualWeighDialog.h
+ImplementationFile=ManualWeighDialog.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=IDCANCEL
+VirtualFilter=dWC
+
+[MNU:IDR_MENU1]
+Type=1
+Class=?
+Command1=ID_MENUITEM32771
+CommandCount=1
 

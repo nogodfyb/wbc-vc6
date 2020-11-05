@@ -21,6 +21,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CWbcDlg)
 	enum { IDD = MAIN_DIALOG };
+	CComboBox	planIdCbxCtr;
+	CDateTimeCtrl	planDateCtr;
 	CMyListCtrl	waferSelectListCtr;
 	CEdit	firstWeighWaferEditCtr;
 	CStatic	idTextCtr;
@@ -35,9 +37,12 @@ public:
 	//}}AFX_VIRTUAL
 
 	void OnScanWafer();
-
 	void OnScanWaferFistWeigh();
 	void initSelectWaferListCtr();
+	void initPlanIdCbxCtr();
+	void getSetting();
+	CString serialPort;
+	CString weigthMode;
 // Implementation
 protected:
 	HICON m_hIcon;
@@ -50,7 +55,10 @@ protected:
 	afx_msg HCURSOR OnQueryDragIcon();
 	virtual void OnOK();
 	virtual void OnCancel();
-
+	afx_msg void OnButton1();
+	afx_msg void OnButton2();
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnMenuitem32771();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

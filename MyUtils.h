@@ -14,9 +14,8 @@ class MyUtils
 public:
 	MyUtils();
 	virtual ~MyUtils();
-
 	static void splitStr(CString input,char separtor,CStringArray &array);
-
+	static void completeZero(CString &input);
 };
 
 #endif // !defined(AFX_MYUTILS_H__8995524F_144E_4165_B1EC_C7735D0D87FF__INCLUDED_)
