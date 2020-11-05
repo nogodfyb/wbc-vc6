@@ -9,6 +9,7 @@
 #include "ValiadteUtils.h"
 #include "MyUtils.h"
 #include "SettingDialog.h"
+#include "ManualWeighDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -78,6 +79,7 @@ void CWbcDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CWbcDlg)
+	DDX_Control(pDX, IDC_LIST2, firstWeighWaferListCtr);
 	DDX_Control(pDX, IDC_COMBO1, planIdCbxCtr);
 	DDX_Control(pDX, IDC_DATETIMEPICKER1, planDateCtr);
 	DDX_Control(pDX, IDC_LIST1, waferSelectListCtr);
@@ -133,6 +135,7 @@ BOOL CWbcDlg::OnInitDialog()
 	// TODO: Add extra initialization here
 	initSelectWaferListCtr();
 	initPlanIdCbxCtr();
+	initFirstWeighWaferListCtr();
 	getSetting();
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
@@ -276,6 +279,18 @@ void CWbcDlg::initSelectWaferListCtr(){
 	waferSelectListCtr.SetExtendedStyle(waferSelectListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	waferSelectListCtr.AdjustColumnWidth();
 }
+
+//初始化第一次称重的listCtr
+void CWbcDlg::initFirstWeighWaferListCtr(){
+	CString str[4] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma")};
+	for (size_t i = 0; i < 4; i++)
+	{
+		firstWeighWaferListCtr.InsertColumn(i, str[i], LVCFMT_LEFT, 100);
+	}
+	//设置风格  整行选中 加入网格线
+	firstWeighWaferListCtr.SetExtendedStyle(firstWeighWaferListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	firstWeighWaferListCtr.AdjustColumnWidth();
+}
 //初始化计划号下拉框
 void CWbcDlg::initPlanIdCbxCtr(){
 	for (int i=1;i<=200;i++)
@@ -306,6 +321,20 @@ void CWbcDlg::OnButton1()
 		CString sql;
 		sql.Format("SELECT ws,wl from wafer_list_mes_org WHERE schid='%s'",planDate+"-"+planId);
 		mysql.SelectDataAndToList(sql,msg,&waferSelectListCtr);
+		//如果列表不为空;遍历每一行从第一次称重记录里查询第一次称重数据;并在该行填充
+		for (int i=0;i<waferSelectListCtr.GetItemCount();i++)
+		{
+			CString waferLot=waferSelectListCtr.GetItemText(i,1);
+			CString sql;
+			sql.Format("SELECT weight from wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
+			CStringArray array;
+			mysql.SelectData(sql,msg,array);
+			//设置重量
+			if (array.GetSize()==1)
+			{
+				waferSelectListCtr.SetItemText(i,2,array.GetAt(0));
+			}
+		}
 	}
 	catch (const char * info)
 	{
@@ -361,11 +390,38 @@ void CWbcDlg::OnMenuitem32771()
 {
 	// TODO: Add your command handler code here
 	CString wafeLot;
+	CString waferSource;
 	int row = waferSelectListCtr.GetSelectionMark();
 	wafeLot=waferSelectListCtr.GetItemText(row, 1);
+	waferSource=waferSelectListCtr.GetItemText(row,0);
 	if (wafeLot.IsEmpty())
 	{
 		MessageBox("当前未选中任何wafer!");
 		return;
+	}
+	//手动模式
+	if (weigthMode=="1")
+	{
+		ManualWeighDialog dlg;
+		dlg.waferLot=wafeLot;
+		dlg.DoModal();
+		waferSelectListCtr.SetItemText(row,2,dlg.manualWeighValue);
+		//传来的重量数据非空
+		if (!dlg.manualWeighValue.IsEmpty())
+		{
+			//保存或更新该wafer的第一次称重记录
+			try
+			{
+				CString msg;
+				MySqlUtil mysql(msg);
+				CString sql;
+				sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source, weight) VALUES ('%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",wafeLot,waferSource,dlg.manualWeighValue,dlg.manualWeighValue);
+				mysql.InsertData(sql,msg);
+			}
+			catch (const char * info)
+			{
+				MessageBox(info);
+			}
+		}
 	}
 }

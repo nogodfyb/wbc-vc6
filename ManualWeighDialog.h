@@ -15,11 +15,14 @@ class ManualWeighDialog : public CDialog
 // Construction
 public:
 	ManualWeighDialog(CWnd* pParent = NULL);   // standard constructor
+	CString waferLot;
+	CString manualWeighValue;
 
 // Dialog Data
 	//{{AFX_DATA(ManualWeighDialog)
 	enum { IDD = MANUAL_WEIGH_DIALOG };
-		// NOTE: the ClassWizard will add data members here
+	CEdit	manualWeighEditCtr;
+	CStatic	waferLotTextCtr;
 	//}}AFX_DATA
 
 
@@ -37,6 +40,7 @@ protected:
 	//{{AFX_MSG(ManualWeighDialog)
 	virtual void OnOK();
 	virtual void OnCancel();
+	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

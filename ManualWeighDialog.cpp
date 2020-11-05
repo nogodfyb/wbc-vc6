@@ -10,6 +10,7 @@
 #undef THIS_FILE
 static char THIS_FILE[] = __FILE__;
 #endif
+#include "ValiadteUtils.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // ManualWeighDialog dialog
@@ -28,7 +29,8 @@ void ManualWeighDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(ManualWeighDialog)
-		// NOTE: the ClassWizard will add DDX and DDV calls here
+	DDX_Control(pDX, IDC_EDIT1, manualWeighEditCtr);
+	DDX_Control(pDX, WAFER_LOT_TEXT, waferLotTextCtr);
 	//}}AFX_DATA_MAP
 }
 
@@ -45,7 +47,16 @@ END_MESSAGE_MAP()
 void ManualWeighDialog::OnOK() 
 {
 	// TODO: Add extra validation here
-	
+	CString input;
+	manualWeighEditCtr.GetWindowText(input);
+	if (ValiadteUtils::validateWeight(input))
+	{
+		manualWeighValue=input;
+	}else{
+		MessageBox("填入重量数据不合法!");
+		manualWeighEditCtr.SetWindowText("");
+		return;
+	}
 	CDialog::OnOK();
 }
 
@@ -55,4 +66,14 @@ void ManualWeighDialog::OnCancel()
 	// TODO: Add extra cleanup here
 	
 	CDialog::OnCancel();
+}
+
+BOOL ManualWeighDialog::OnInitDialog() 
+{
+	CDialog::OnInitDialog();
+	
+	// TODO: Add extra initialization here
+	waferLotTextCtr.SetWindowText(waferLot);
+	return TRUE;  // return TRUE unless you set the focus to a control
+	              // EXCEPTION: OCX Property Pages should return FALSE
 }

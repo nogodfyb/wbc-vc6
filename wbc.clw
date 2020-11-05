@@ -13,16 +13,16 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=7
-Resource1=MAIN_DIALOG
+Resource1=SETTING_DIALOG
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
 Resource3=MANUAL_WEIGH_DIALOG
 Class5=CheckToolsDlg
-Resource4=CHECK_TOOLS_DIALOG
+Resource4=MAIN_DIALOG
 Class6=SettingDialog
 Resource5=IDD_ABOUTBOX
 Class7=ManualWeighDialog
-Resource6=SETTING_DIALOG
+Resource6=CHECK_TOOLS_DIALOG
 Resource7=IDR_MENU1
 
 [CLS:CWbcApp]
@@ -39,7 +39,7 @@ ImplementationFile=wbcDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=ID_MENUITEM32771
+LastObject=CWbcDlg
 
 [CLS:CAboutDlg]
 Type=0
@@ -68,7 +68,7 @@ LastObject=IDC_EDIT1
 [DLG:MAIN_DIALOG]
 Type=1
 Class=CWbcDlg
-ControlCount=18
+ControlCount=19
 Control1=IDC_STATIC,button,1342177287
 Control2=IDC_STATIC,static,1342308352
 Control3=IDC_EDIT1,edit,1350631584
@@ -87,6 +87,7 @@ Control15=IDC_STATIC,static,1342308352
 Control16=IDC_COMBO1,combobox,1344339970
 Control17=IDC_BUTTON1,button,1342242816
 Control18=IDC_BUTTON2,button,1073807360
+Control19=IDC_LIST2,SysListView32,1350631425
 
 [DLG:CHECK_TOOLS_DIALOG]
 Type=1
@@ -153,9 +154,13 @@ VirtualFilter=dWC
 [DLG:MANUAL_WEIGH_DIALOG]
 Type=1
 Class=ManualWeighDialog
-ControlCount=2
+ControlCount=6
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
+Control3=IDC_STATIC,static,1342308352
+Control4=WAFER_LOT_TEXT,static,1342308352
+Control5=IDC_STATIC,static,1342308352
+Control6=IDC_EDIT1,edit,1350631552
 
 [CLS:ManualWeighDialog]
 Type=0
@@ -163,7 +168,7 @@ HeaderFile=ManualWeighDialog.h
 ImplementationFile=ManualWeighDialog.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=IDCANCEL
+LastObject=ID_MENUITEM32771
 VirtualFilter=dWC
 
 [MNU:IDR_MENU1]

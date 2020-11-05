@@ -25,6 +25,8 @@ public:
 	static bool validateSpeed(CString speed);
 	//校验真空
 	static bool validateVacuum(CString vacuum);
+	//校验重量
+	static bool validateWeight(CString weight);
 };
 
 #endif // !defined(AFX_VALIADTEUTILS_H__BF7A0A2E_F624_42B4_AB43_ECE7AB249EE1__INCLUDED_)

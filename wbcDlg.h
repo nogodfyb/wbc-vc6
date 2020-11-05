@@ -21,6 +21,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CWbcDlg)
 	enum { IDD = MAIN_DIALOG };
+	CMyListCtrl	firstWeighWaferListCtr;
 	CComboBox	planIdCbxCtr;
 	CDateTimeCtrl	planDateCtr;
 	CMyListCtrl	waferSelectListCtr;
@@ -39,6 +40,7 @@ public:
 	void OnScanWafer();
 	void OnScanWaferFistWeigh();
 	void initSelectWaferListCtr();
+	void initFirstWeighWaferListCtr();
 	void initPlanIdCbxCtr();
 	void getSetting();
 	CString serialPort;

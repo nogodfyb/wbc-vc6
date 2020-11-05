@@ -148,3 +148,28 @@ bool ValiadteUtils::validateVacuum(CString vacuum){
 	return true;
 	
 }
+
+bool ValiadteUtils::validateWeight(CString weight){
+	float num=atof(weight);
+	if (num <=0.0f || num > 100.0f)
+	{
+		return false;
+	}
+	int count=0;
+	//遍历每一个字符
+	for (int i=0;i<weight.GetLength();i++)
+	{
+		char ch=weight.GetAt(i);
+		int num=ch-'0';
+		if(ch=='.'){
+			count++;
+		}else if(num<0||num>9){
+			return false;
+		}
+	}
+	//超过两个小数点非法
+	if(count>1){
+		return false;
+	}
+	return true;
+}
