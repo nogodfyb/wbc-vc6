@@ -41,9 +41,12 @@ public:
 	void OnScanWaferFistWeigh();
 	void initSelectWaferListCtr();
 	void initFirstWeighWaferListCtr();
+	void completeFirstWeighWaferListCtr();
 	void initPlanIdCbxCtr();
 	void getSetting();
 	void refreshPlasmaRemainTime();
+	void manualFirstWeigh(CString waferLot,CString waferSource, int currentRow);
+	void manualFirstWeigh(CString waferLot,CString waferSource);
 	CString serialPort;
 	CString weigthMode;
 // Implementation

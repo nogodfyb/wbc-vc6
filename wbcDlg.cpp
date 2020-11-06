@@ -254,19 +254,9 @@ void CWbcDlg::OnScanWaferFistWeigh(){
 	{
 		CStringArray array;
 		MyUtils::splitStr(wafer,'^',array);
-		for (int i=0;i<waferSelectListCtr.GetItemCount();i++)
-		{
-			CString waferLot=waferSelectListCtr.GetItemText(i,1);
-			if (waferLot==array.GetAt(3))
-			{
-				MessageBox("已存在!");
-				return;
-			}
-		}
-		//将waferSource和waferLot填充到第一行
-		waferSelectListCtr.InsertItem(0,array.GetAt(1));
-		waferSelectListCtr.SetItemText(0,1,array.GetAt(3));
-		waferSelectListCtr.AdjustColumnWidth();
+		CString waferLot=array.GetAt(3);
+		CString waferSource=array.GetAt(1);
+		manualFirstWeigh(waferLot,waferSource);
 	} 
 	else
 	{
@@ -295,11 +285,16 @@ void CWbcDlg::initFirstWeighWaferListCtr(){
 	//设置风格  整行选中 加入网格线
 	firstWeighWaferListCtr.SetExtendedStyle(firstWeighWaferListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	firstWeighWaferListCtr.AdjustColumnWidth();
+	completeFirstWeighWaferListCtr();
+}
+//填充第一次称重的listCtr
+void CWbcDlg::completeFirstWeighWaferListCtr(){
 	//将第一次称重还未进行第二次称重的数据填充到表格
 	CString msg;
 	MySqlUtil mysql(msg);
 	CString sql="SELECT wafer_source,wafer_lot,weight from wbc20_first_weigh_record";
 	mysql.SelectDataAndToList(sql,msg,&firstWeighWaferListCtr);
+	refreshPlasmaRemainTime();
 }
 //初始化计划号下拉框
 void CWbcDlg::initPlanIdCbxCtr(){
@@ -404,12 +399,12 @@ void CWbcDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 void CWbcDlg::OnMenuitem32771() 
 {
 	// TODO: Add your command handler code here
-	CString wafeLot;
+	CString waferLot;
 	CString waferSource;
 	int row = waferSelectListCtr.GetSelectionMark();
-	wafeLot=waferSelectListCtr.GetItemText(row, 1);
+	waferLot=waferSelectListCtr.GetItemText(row, 1);
 	waferSource=waferSelectListCtr.GetItemText(row,0);
-	if (wafeLot.IsEmpty())
+	if (waferLot.IsEmpty())
 	{
 		MessageBox("当前未选中任何wafer!");
 		return;
@@ -417,26 +412,59 @@ void CWbcDlg::OnMenuitem32771()
 	//手动模式
 	if (weigthMode=="1")
 	{
-		ManualWeighDialog dlg;
-		dlg.waferLot=wafeLot;
-		dlg.DoModal();
-		waferSelectListCtr.SetItemText(row,2,dlg.manualWeighValue);
-		//传来的重量数据非空
-		if (!dlg.manualWeighValue.IsEmpty())
+		manualFirstWeigh(waferLot,waferSource,row);
+	}
+}
+//手动第一次称重从wafer查询类别中选中
+void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int currentRow){
+	ManualWeighDialog dlg;
+	dlg.waferLot=waferLot;
+	dlg.DoModal();
+	waferSelectListCtr.SetItemText(currentRow,2,dlg.manualWeighValue);
+	//传来的重量数据非空
+	if (!dlg.manualWeighValue.IsEmpty())
+	{
+		//保存或更新该wafer的第一次称重记录
+		try
 		{
-			//保存或更新该wafer的第一次称重记录
-			try
-			{
-				CString msg;
-				MySqlUtil mysql(msg);
-				CString sql;
-				sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source, weight) VALUES ('%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",wafeLot,waferSource,dlg.manualWeighValue,dlg.manualWeighValue);
-				mysql.InsertData(sql,msg);
-			}
-			catch (const char * info)
-			{
-				MessageBox(info);
-			}
+			CString msg;
+			MySqlUtil mysql(msg);
+			CString sql;
+			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source, weight) VALUES ('%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,dlg.manualWeighValue,dlg.manualWeighValue);
+			mysql.InsertData(sql,msg);
+			firstWeighWaferListCtr.DeleteAllItems();
+			//重新初始化
+			completeFirstWeighWaferListCtr();
+		}
+		catch (const char * info)
+		{
+			MessageBox(info);
+		}
+	}
+}
+//手动第一次称重
+void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource){
+	ManualWeighDialog dlg;
+	dlg.waferLot=waferLot;
+	dlg.DoModal();
+	//传来的重量数据非空
+	if (!dlg.manualWeighValue.IsEmpty())
+	{
+		//保存或更新该wafer的第一次称重记录
+		try
+		{
+			CString msg;
+			MySqlUtil mysql(msg);
+			CString sql;
+			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source, weight) VALUES ('%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,dlg.manualWeighValue,dlg.manualWeighValue);
+			mysql.InsertData(sql,msg);
+			firstWeighWaferListCtr.DeleteAllItems();
+			//重新初始化
+			completeFirstWeighWaferListCtr();
+		}
+		catch (const char * info)
+		{
+			MessageBox(info);
 		}
 	}
 }
@@ -496,7 +524,8 @@ void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
 		
 		// 判断使ListCtrl不同颜色现实的条件
 		CString strTemp = firstWeighWaferListCtr.GetItemText(nItem,3);
-		if (strTemp == "无记录")
+		int state=atoi(strTemp);
+		if (strTemp == "无记录"||state<=0)
 		{
 			m_clrText = RGB(255,0,0);
 		}
