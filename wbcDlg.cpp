@@ -99,6 +99,9 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON2, OnButton2)
 	ON_WM_CONTEXTMENU()
 	ON_COMMAND(ID_MENUITEM32771, OnMenuitem32771)
+	ON_WM_TIMER()
+	//自定义绘制listCtr
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_LIST2, OnCustomdrawMyList)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -137,6 +140,8 @@ BOOL CWbcDlg::OnInitDialog()
 	initPlanIdCbxCtr();
 	initFirstWeighWaferListCtr();
 	getSetting();
+	//创建定时器
+	SetTimer(IDTIMER1,5000,0);
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -282,7 +287,7 @@ void CWbcDlg::initSelectWaferListCtr(){
 
 //初始化第一次称重的listCtr
 void CWbcDlg::initFirstWeighWaferListCtr(){
-	CString str[4] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma")};
+	CString str[4] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma剩余时间(分钟)")};
 	for (size_t i = 0; i < 4; i++)
 	{
 		firstWeighWaferListCtr.InsertColumn(i, str[i], LVCFMT_LEFT, 100);
@@ -290,6 +295,11 @@ void CWbcDlg::initFirstWeighWaferListCtr(){
 	//设置风格  整行选中 加入网格线
 	firstWeighWaferListCtr.SetExtendedStyle(firstWeighWaferListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	firstWeighWaferListCtr.AdjustColumnWidth();
+	//将第一次称重还未进行第二次称重的数据填充到表格
+	CString msg;
+	MySqlUtil mysql(msg);
+	CString sql="SELECT wafer_source,wafer_lot,weight from wbc20_first_weigh_record";
+	mysql.SelectDataAndToList(sql,msg,&firstWeighWaferListCtr);
 }
 //初始化计划号下拉框
 void CWbcDlg::initPlanIdCbxCtr(){
@@ -321,6 +331,11 @@ void CWbcDlg::OnButton1()
 		CString sql;
 		sql.Format("SELECT ws,wl from wafer_list_mes_org WHERE schid='%s'",planDate+"-"+planId);
 		mysql.SelectDataAndToList(sql,msg,&waferSelectListCtr);
+		if (waferSelectListCtr.GetItemCount()==0)
+		{
+			MessageBox("未查询到芯片信息!");
+			return;
+		}
 		//如果列表不为空;遍历每一行从第一次称重记录里查询第一次称重数据;并在该行填充
 		for (int i=0;i<waferSelectListCtr.GetItemCount();i++)
 		{
@@ -423,5 +438,73 @@ void CWbcDlg::OnMenuitem32771()
 				MessageBox(info);
 			}
 		}
+	}
+}
+
+//定时器处理
+void CWbcDlg::OnTimer(UINT nIDEvent) 
+{
+	// TODO: Add your message handler code here and/or call default
+	if (nIDEvent==IDTIMER1)
+	{
+		refreshPlasmaRemainTime();
+	}
+	
+	CDialog::OnTimer(nIDEvent);
+}
+
+//刷新Plasma剩余时间
+void CWbcDlg::refreshPlasmaRemainTime(){
+	CString msg;
+	MySqlUtil mysql(msg);
+	//遍历表格;取每一行的waferLot;查询该wafer的Plasma剩余时间
+	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
+	{
+		CString waferLot=firstWeighWaferListCtr.GetItemText(i,1);
+		CString sql;
+		sql.Format("SELECT 30-TIMESTAMPDIFF(MINUTE, in_time, NOW()) from plasma_rec WHERE wl='%s' ORDER BY r_id DESC LIMIT 1",waferLot);
+		CStringArray array;
+		mysql.SelectData(sql,msg,array);
+		if (array.GetSize()==1)
+		{
+			firstWeighWaferListCtr.SetItemText(i,3,array.GetAt(0));
+		}else{
+			firstWeighWaferListCtr.SetItemText(i,3,"无记录");
+		}
+	}
+}
+//自定义绘制
+void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
+	NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>( pNMHDR );
+	
+    // Take the default processing unless we set this to something else below.
+    *pResult = 0;
+	
+    // First thing - check the draw stage. If it's the control's prepaint
+    // stage, then tell Windows we want messages for every item.
+    if ( CDDS_PREPAINT == pLVCD->nmcd.dwDrawStage )
+	{
+        *pResult = CDRF_NOTIFYITEMDRAW;
+	}
+	
+	// This is the notification message for an item. We'll request
+	// notifications before each subitem's prepaint stage.
+	else if ( pLVCD->nmcd.dwDrawStage==CDDS_ITEMPREPAINT )
+	{
+		COLORREF m_crTextBk , m_clrText;
+		int nItem = static_cast<int> (pLVCD->nmcd.dwItemSpec);
+		
+		// 判断使ListCtrl不同颜色现实的条件
+		CString strTemp = firstWeighWaferListCtr.GetItemText(nItem,3);
+		if (strTemp == "无记录")
+		{
+			m_clrText = RGB(255,0,0);
+		}
+		else
+		{
+			m_clrText = RGB(0,0,0);
+		}
+		pLVCD->clrText = m_clrText;
+		*pResult = CDRF_DODEFAULT;
 	}
 }

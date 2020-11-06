@@ -2,6 +2,8 @@
 // Microsoft Developer Studio generated include file.
 // Used by wbc.rc
 //
+//
+#define IDTIMER1 1
 #define IDM_ABOUTBOX                    0x0010
 #define IDD_ABOUTBOX                    100
 #define IDS_ABOUTBOX                    101

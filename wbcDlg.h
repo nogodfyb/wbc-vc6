@@ -43,6 +43,7 @@ public:
 	void initFirstWeighWaferListCtr();
 	void initPlanIdCbxCtr();
 	void getSetting();
+	void refreshPlasmaRemainTime();
 	CString serialPort;
 	CString weigthMode;
 // Implementation
@@ -61,6 +62,8 @@ protected:
 	afx_msg void OnButton2();
 	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
 	afx_msg void OnMenuitem32771();
+	afx_msg void OnTimer(UINT nIDEvent);
+	afx_msg void OnCustomdrawMyList ( NMHDR* pNMHDR, LRESULT* pResult );
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
