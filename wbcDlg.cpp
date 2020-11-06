@@ -79,6 +79,7 @@ void CWbcDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CWbcDlg)
+	DDX_Control(pDX, IDC_EDIT3, epEditCtr);
 	DDX_Control(pDX, IDC_LIST2, firstWeighWaferListCtr);
 	DDX_Control(pDX, IDC_COMBO1, planIdCbxCtr);
 	DDX_Control(pDX, IDC_DATETIMEPICKER1, planDateCtr);
@@ -209,6 +210,12 @@ void CWbcDlg::OnOK()
 	if(GetDlgItem(IDC_EDIT2)==GetFocus())
 	{
 		OnScanWaferFistWeigh();
+		return;
+	}
+	//扫银浆
+	if(GetDlgItem(IDC_EDIT3)==GetFocus())
+	{
+		MessageBox("扫银浆");
 		return;
 	}
 
@@ -417,6 +424,18 @@ void CWbcDlg::OnMenuitem32771()
 }
 //手动第一次称重从wafer查询类别中选中
 void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int currentRow){
+	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
+	{
+		CString currentWaferLot=firstWeighWaferListCtr.GetItemText(i,1);
+		if (currentWaferLot==waferLot)
+		{
+			if(MessageBox(TEXT("已有称重数据,是否再次称重?"),TEXT("再次确认"),MB_OKCANCEL)!=IDOK)
+			{
+				return;
+			}
+			break;
+		}
+	}
 	ManualWeighDialog dlg;
 	dlg.waferLot=waferLot;
 	dlg.DoModal();
@@ -444,6 +463,18 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int current
 }
 //手动第一次称重
 void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource){
+	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
+	{
+		CString currentWaferLot=firstWeighWaferListCtr.GetItemText(i,1);
+		if (currentWaferLot==waferLot)
+		{
+			if(MessageBox(TEXT("已有称重数据,是否再次称重?"),TEXT("再次确认"),MB_OKCANCEL)!=IDOK)
+			{
+				return;
+			}
+			break;
+		}
+	}
 	ManualWeighDialog dlg;
 	dlg.waferLot=waferLot;
 	dlg.DoModal();
@@ -490,12 +521,15 @@ void CWbcDlg::refreshPlasmaRemainTime(){
 	{
 		CString waferLot=firstWeighWaferListCtr.GetItemText(i,1);
 		CString sql;
-		sql.Format("SELECT 30-TIMESTAMPDIFF(MINUTE, in_time, NOW()) from plasma_rec WHERE wl='%s' ORDER BY r_id DESC LIMIT 1",waferLot);
+		sql.Format("SELECT 30-TIMESTAMPDIFF(MINUTE, in_time, NOW()),is_over_count from plasma_rec WHERE wl='%s' ORDER BY r_id DESC LIMIT 1",waferLot);
 		CStringArray array;
 		mysql.SelectData(sql,msg,array);
-		if (array.GetSize()==1)
+		if (array.GetSize()==2)
 		{
-			firstWeighWaferListCtr.SetItemText(i,3,array.GetAt(0));
+			if (array.GetAt(1)=="1")
+			{
+				firstWeighWaferListCtr.SetItemText(i,3,array.GetAt(0)+"***清洗超次");
+			}else firstWeighWaferListCtr.SetItemText(i,3,array.GetAt(0));
 		}else{
 			firstWeighWaferListCtr.SetItemText(i,3,"无记录");
 		}
@@ -525,13 +559,13 @@ void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
 		// 判断使ListCtrl不同颜色现实的条件
 		CString strTemp = firstWeighWaferListCtr.GetItemText(nItem,3);
 		int state=atoi(strTemp);
-		if (strTemp == "无记录"||state<=0)
+		if (state>0)
 		{
-			m_clrText = RGB(255,0,0);
+			m_clrText = RGB(0,0,0);
 		}
 		else
 		{
-			m_clrText = RGB(0,0,0);
+			m_clrText = RGB(255,0,0);
 		}
 		pLVCD->clrText = m_clrText;
 		*pResult = CDRF_DODEFAULT;

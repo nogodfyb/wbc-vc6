@@ -21,6 +21,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CWbcDlg)
 	enum { IDD = MAIN_DIALOG };
+	CEdit	epEditCtr;
 	CMyListCtrl	firstWeighWaferListCtr;
 	CComboBox	planIdCbxCtr;
 	CDateTimeCtrl	planDateCtr;
