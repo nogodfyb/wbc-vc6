@@ -147,9 +147,8 @@ BOOL CWbcDlg::OnInitDialog()
 	getSetting();
 	//创建定时器
 	SetTimer(IDTIMER1,5000,0);
-	//SetTimer(IDTIMER2,5000,0);
+	SetTimer(IDTIMER2,5000,0);
 	refreshEpoRemainTime();
-	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -253,6 +252,10 @@ void CWbcDlg::OnScanWafer(){
 		lastCheckCtr.SetWindowText(dlg.lastCheckTime);
 		//设置上次点检id
 		idTextCtr.SetWindowText(dlg.lastCheckId);
+		//设置上次点检工具信息
+		lastCheckScraperSn=dlg.expectedScraper;
+		lastCheckSteelMeshSn=dlg.expectedSteelMesh;
+		lastCheckShimSn=dlg.expectedShim;
 	}else{
 		MessageBox("芯片二维码格式不正确!");
 	}
@@ -309,8 +312,8 @@ void CWbcDlg::initSelectWaferListCtr(){
 
 //初始化第一次称重的listCtr
 void CWbcDlg::initFirstWeighWaferListCtr(){
-	CString str[4] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma剩余时间(分钟)")};
-	for (size_t i = 0; i < 4; i++)
+	CString str[6] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma"),TEXT("刷胶工具"),TEXT("银浆")};
+	for (size_t i = 0; i < 6; i++)
 	{
 		firstWeighWaferListCtr.InsertColumn(i, str[i], LVCFMT_LEFT, 100);
 	}
@@ -321,8 +324,8 @@ void CWbcDlg::initFirstWeighWaferListCtr(){
 }
 //初始化第二次称重的listCtr
 void CWbcDlg::initSecondWeighWaferListCtr(){
-	CString str[4] = { TEXT("WaferLot"),TEXT("刷胶前重量"), TEXT("刷胶后重量"),TEXT("胶重")};
-	for (int i=0;i<4;i++)
+	CString str[5] = { TEXT("WaferSource"),TEXT("WaferLot"),TEXT("刷胶前重量"), TEXT("刷胶后重量"),TEXT("胶重")};
+	for (int i=0;i<5;i++)
 	{
 		secondWeighWaferListCtr.InsertColumn(i,str[i],LVCFMT_LEFT,100);
 	}
@@ -408,7 +411,6 @@ void CWbcDlg::getSetting(){
 	// TODO: Add your control notification handler code here
 	CFile file;
 	bool state=file.Open("setting.ini",CFile::modeRead,NULL); 
-	int i=0;
 	DWORD len=file.GetLength( );
 	char * arr=new char[len+1];
 	arr[len]=0;  //0终止字符串，用于输出。
@@ -449,7 +451,7 @@ void CWbcDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 }
 
 //点击刷胶前称重菜单
-void CWbcDlg::OnMenuitem32771() 
+void CWbcDlg::OnMenuitem32771() //刷胶前称重
 {
 	// TODO: Add your command handler code here
 	CString waferLot;
@@ -468,8 +470,7 @@ void CWbcDlg::OnMenuitem32771()
 		manualFirstWeigh(waferLot,waferSource,row);
 	}
 }
-//刷胶后称重
-void CWbcDlg::OnMenuitem32772() 
+void CWbcDlg::OnMenuitem32772() //刷胶后称重
 {
 	// TODO: Add your command handler code here
 	CString plasmaRemain;
@@ -477,25 +478,60 @@ void CWbcDlg::OnMenuitem32772()
 	plasmaRemain=firstWeighWaferListCtr.GetItemText(currentRow,3);
 	int minutes=atoi(plasmaRemain);
 	CString waferLot=firstWeighWaferListCtr.GetItemText(currentRow,1);
+	CString waferSource=firstWeighWaferListCtr.GetItemText(currentRow,0);
 	if (waferLot.IsEmpty())
 	{
 		MessageBox("当前未选中任何wafer!");
 		return;
 	}
-	if (minutes<=0)
-	{
-		MessageBox("Plasma不满足第二次称重的条件!");
-		return;
-	} 
+// 	if (minutes<=0)
+// 	{
+// 		MessageBox("Plasma不满足第二次称重的条件!");
+// 		return;
+// 	} 
 	//手动模式
 	if (weigthMode=="1")
 	{
-
+		manualSecondWeigh(waferLot,waferSource);
 	}
 }
+//匹配刷胶工具和银浆
+void CWbcDlg::matchTools(){
 
+	CString lastCheckId;
+	idTextCtr.GetWindowText(lastCheckId);
+	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
+	{
 
-
+		CString waferSource=firstWeighWaferListCtr.GetItemText(i,0);
+		if (lastCheckId=="******"||lastCheckId.IsEmpty())
+		{
+			firstWeighWaferListCtr.SetItemText(i,4,"未点检");
+			continue;
+		}
+		CString msg;
+		MySqlUtil mysql(msg);
+		CStringArray array;
+		CString sql;
+		sql.Format("SELECT steel_mesh_sn,shim_sn,scraper_sn,ep_pn from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
+		mysql.SelectData(sql,msg,array);
+		if (currentEpPn!=array.GetAt(3))
+		{
+			firstWeighWaferListCtr.SetItemText(i,5,"不匹配");
+		}else{
+			firstWeighWaferListCtr.SetItemText(i,5,"匹配");
+		}
+		if (array.GetSize()!=4)
+		{
+			firstWeighWaferListCtr.SetItemText(i,4,"异常");
+			continue;
+		}
+		if(lastCheckSteelMeshSn!=array.GetAt(0)||lastCheckShimSn!=array.GetAt(1)||lastCheckScraperSn!=array.GetAt(2)){
+			firstWeighWaferListCtr.SetItemText(i,4,"不匹配");
+		}
+		firstWeighWaferListCtr.SetItemText(i,4,"匹配");
+	}
+}
 //手动第一次称重从wafer查询类别中选中
 void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int currentRow){
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
@@ -574,7 +610,7 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource){
 	}
 }
 //手动第二次称重
-void CWbcDlg::manualSecondWeigh(CString waferLot){
+void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource){
 
 }
 
@@ -585,6 +621,7 @@ void CWbcDlg::OnTimer(UINT nIDEvent)
 	if (nIDEvent==IDTIMER1)
 	{
 		refreshPlasmaRemainTime();
+		matchTools();
 	}
 	if (nIDEvent==IDTIMER2)
 	{
@@ -616,6 +653,7 @@ void CWbcDlg::refreshPlasmaRemainTime(){
 			firstWeighWaferListCtr.SetItemText(i,3,"无记录");
 		}
 	}
+	firstWeighWaferListCtr.AdjustColumnWidth();
 }
 //刷新银浆上机时间
 void CWbcDlg::refreshEpoRemainTime()
@@ -625,10 +663,10 @@ void CWbcDlg::refreshEpoRemainTime()
 	bool state=file.Open("epo.dll",CFile::modeRead,NULL); 
 	if (!state)
 	{
-		MessageBox("打开银浆本地存储文件失败!");
+		//MessageBox("打开银浆本地存储文件失败!");
+		epPromptTextCtr.SetWindowText("没有银浆扫描记录!");
 		return;
 	}
-	int i=0;
 	DWORD len=file.GetLength( );
 	char * arr=new char[len+1];
 	arr[len]=0;  //0终止字符串，用于输出。
@@ -637,13 +675,15 @@ void CWbcDlg::refreshEpoRemainTime()
 	CString epoStr(arr);
 	CStringArray array;
 	MyUtils::splitStr(epoStr,';',array);
+	CString epSn=array.GetAt(3);
+	CString epPn=array.GetAt(0);
+	currentEpPn=epPn;
 	CTime lastDate=MyUtils::strToCTime(array.GetAt(5));
-	CString str=lastDate.Format(_T("%Y%m%d%H%M"));
-	MessageBox(str);
 	CTime now=CTime::GetCurrentTime();
 	CTimeSpan span=now-lastDate;
 	CString msg;
-	msg.Format("%d",span.GetMinutes());
+	msg.Format("%d",span.GetTotalMinutes());
+	epPromptTextCtr.SetWindowText("距离上次扫描银浆条码已经过去:"+msg+"分钟!银浆序列号:"+epSn+" 物料编码:"+epPn);
 	delete arr;
 	
 }

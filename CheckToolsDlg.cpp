@@ -117,23 +117,23 @@ void CheckToolsDlg::selectToolsInfo(){
 		CString msg;
 		MySqlUtil mysqlUtil(msg);
 		CString sql;
-		sql.Format("SELECT description,sn from wbc20_wafer_tool_relation,wbc20_tool WHERE tool_id=wbc20_tool.id AND wafer_source='%s' ORDER BY type",waferSource);
+		sql.Format("SELECT steel_mesh_sn,shim_sn,scraper_sn from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
 		CStringArray array;
 		mysqlUtil.SelectData(sql,msg,array);
-		if(array.GetSize()!=6){
+		if(array.GetSize()!=3){
 			MessageBox("刷胶工具未知!请联系管理员!");
 			CDialog::OnOK();
 			return;
 		}
 		//设置刮刀信息
-		scraperTextCtr.SetWindowText(array.GetAt(0));
-		expectedScraper=array.GetAt(1);
+		scraperTextCtr.SetWindowText(array.GetAt(2));
+		expectedScraper=array.GetAt(2);
 		//设置钢网信息
-		steelMeshTextCtr.SetWindowText(array.GetAt(2));
-		expectedSteelMesh=array.GetAt(3);
+		steelMeshTextCtr.SetWindowText(array.GetAt(0));
+		expectedSteelMesh=array.GetAt(0);
 		//设置垫片信息
-		shimTextCtr.SetWindowText(array.GetAt(4));
-		expectedShim=array.GetAt(5);
+		shimTextCtr.SetWindowText(array.GetAt(1));
+		expectedShim=array.GetAt(1);
 	}
 	catch (const char * info)
 	{

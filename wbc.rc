@@ -98,30 +98,30 @@ BEGIN
     LTEXT           "******",LAST_CHECK_TEXT,322,34,78,9
     LTEXT           "ID:",IDC_STATIC,459,36,13,8
     LTEXT           "******",ID_TEXT,479,37,42,8
-    GROUPBOX        "芯片查询(右击相应行刷胶前称重)",IDC_STATIC,26,100,228,
+    GROUPBOX        "芯片查询(右击相应行刷胶前称重)",IDC_STATIC,26,100,187,
                     340
     LTEXT           "扫描芯片:",IDC_STATIC,324,144,35,8
     EDITTEXT        IDC_EDIT2,367,142,123,14,ES_PASSWORD | ES_AUTOHSCROLL
     CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | WS_BORDER | 
-                    WS_TABSTOP,31,204,215,147
-    GROUPBOX        "刷胶前称重记录(右击相应行刷胶后称重)",IDC_STATIC,266,
-                    100,273,340
+                    WS_TABSTOP,34,206,171,147
+    GROUPBOX        "刷胶前称重记录(右击相应行刷胶后称重)",IDC_STATIC,226,
+                    100,313,340
     LTEXT           "计划日期:",IDC_STATIC,31,147,35,8
     CONTROL         "DateTimePicker1",IDC_DATETIMEPICKER1,"SysDateTimePick32",
                     DTS_RIGHTALIGN | WS_TABSTOP,71,143,56,15
-    LTEXT           "计划号：",IDC_STATIC,135,147,31,8
-    COMBOBOX        IDC_COMBO1,171,146,48,97,CBS_DROPDOWN | WS_VSCROLL | 
+    LTEXT           "计划号：",IDC_STATIC,36,174,31,8
+    COMBOBOX        IDC_COMBO1,71,170,48,97,CBS_DROPDOWN | WS_VSCROLL | 
                     WS_TABSTOP
-    PUSHBUTTON      "查询",IDC_BUTTON1,108,172,50,14
+    PUSHBUTTON      "查询",IDC_BUTTON1,153,145,50,14
     PUSHBUTTON      "设置",IDC_BUTTON2,570,34,50,14,NOT WS_VISIBLE
     CONTROL         "List2",IDC_LIST2,"SysListView32",LVS_REPORT | WS_BORDER | 
-                    WS_TABSTOP,277,206,254,145
+                    WS_TABSTOP,231,206,300,145
     LTEXT           "扫银浆:",IDC_STATIC,329,168,27,8
     EDITTEXT        IDC_EDIT3,367,166,124,14,ES_PASSWORD | ES_AUTOHSCROLL
     GROUPBOX        "刷胶后称重记录",IDC_STATIC,549,103,298,337
     CONTROL         "List3",IDC_LIST3,"SysListView32",LVS_REPORT | WS_BORDER | 
                     WS_TABSTOP,556,206,283,145
-    LTEXT           "Static",EP_PROMPT_TEXT,298,73,163,8
+    LTEXT           "Static",EP_PROMPT_TEXT,257,76,309,8
 END
 
 CHECK_TOOLS_DIALOG DIALOG DISCARDABLE  0, 0, 655, 351

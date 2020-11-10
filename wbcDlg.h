@@ -53,9 +53,16 @@ public:
 	void refreshEpoRemainTime();
 	void manualFirstWeigh(CString waferLot,CString waferSource, int currentRow);
 	void manualFirstWeigh(CString waferLot,CString waferSource);
-	void manualSecondWeigh(CString waferLot);
+	void manualSecondWeigh(CString waferLot,CString waferSource);
+	void matchTools();
 	CString serialPort;
 	CString weigthMode;
+	//上次点检信息
+	CString lastCheckScraperSn;
+	CString lastCheckSteelMeshSn;
+	CString lastCheckShimSn;
+	//当前银浆物料码
+	CString currentEpPn;
 // Implementation
 protected:
 	HICON m_hIcon;
