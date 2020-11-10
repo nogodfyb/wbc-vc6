@@ -21,6 +21,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(CWbcDlg)
 	enum { IDD = MAIN_DIALOG };
+	CStatic	epPromptTextCtr;
+	CMyListCtrl	secondWeighWaferListCtr;
 	CEdit	epEditCtr;
 	CMyListCtrl	firstWeighWaferListCtr;
 	CComboBox	planIdCbxCtr;
@@ -40,14 +42,18 @@ public:
 
 	void OnScanWafer();
 	void OnScanWaferFistWeigh();
+	void OnScanEp();
 	void initSelectWaferListCtr();
 	void initFirstWeighWaferListCtr();
+	void initSecondWeighWaferListCtr();
 	void completeFirstWeighWaferListCtr();
 	void initPlanIdCbxCtr();
 	void getSetting();
 	void refreshPlasmaRemainTime();
+	void refreshEpoRemainTime();
 	void manualFirstWeigh(CString waferLot,CString waferSource, int currentRow);
 	void manualFirstWeigh(CString waferLot,CString waferSource);
+	void manualSecondWeigh(CString waferLot);
 	CString serialPort;
 	CString weigthMode;
 // Implementation
@@ -68,8 +74,10 @@ protected:
 	afx_msg void OnMenuitem32771();
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnCustomdrawMyList ( NMHDR* pNMHDR, LRESULT* pResult );
+	afx_msg void OnMenuitem32772();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
+private:
 };
 
 //{{AFX_INSERT_LOCATION}}

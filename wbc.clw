@@ -12,18 +12,19 @@ Class1=CWbcApp
 Class2=CWbcDlg
 Class3=CAboutDlg
 
-ResourceCount=7
-Resource1=CHECK_TOOLS_DIALOG
+ResourceCount=8
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=MANUAL_WEIGH_DIALOG
+Resource3=CHECK_TOOLS_DIALOG
 Class5=CheckToolsDlg
-Resource4=IDD_ABOUTBOX
+Resource4=SETTING_DIALOG
 Class6=SettingDialog
-Resource5=MAIN_DIALOG
+Resource5=MANUAL_WEIGH_DIALOG
 Class7=ManualWeighDialog
-Resource6=SETTING_DIALOG
+Resource6=MAIN_DIALOG
 Resource7=IDR_MENU1
+Resource8=IDR_MENU2
 
 [CLS:CWbcApp]
 Type=0
@@ -68,7 +69,7 @@ LastObject=IDC_EDIT1
 [DLG:MAIN_DIALOG]
 Type=1
 Class=CWbcDlg
-ControlCount=21
+ControlCount=24
 Control1=IDC_STATIC,button,1342177287
 Control2=IDC_STATIC,static,1342308352
 Control3=IDC_EDIT1,edit,1350631584
@@ -90,6 +91,9 @@ Control18=IDC_BUTTON2,button,1073807360
 Control19=IDC_LIST2,SysListView32,1350631425
 Control20=IDC_STATIC,static,1342308352
 Control21=IDC_EDIT3,edit,1350631584
+Control22=IDC_STATIC,button,1342177287
+Control23=IDC_LIST3,SysListView32,1350631425
+Control24=EP_PROMPT_TEXT,static,1342308352
 
 [DLG:CHECK_TOOLS_DIALOG]
 Type=1
@@ -177,5 +181,11 @@ VirtualFilter=dWC
 Type=1
 Class=?
 Command1=ID_MENUITEM32771
+CommandCount=1
+
+[MNU:IDR_MENU2]
+Type=1
+Class=?
+Command1=ID_MENUITEM32772
 CommandCount=1
 

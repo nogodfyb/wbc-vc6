@@ -10,6 +10,7 @@
 #include "MyUtils.h"
 #include "SettingDialog.h"
 #include "ManualWeighDialog.h"
+#include "Epo.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -79,6 +80,8 @@ void CWbcDlg::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(CWbcDlg)
+	DDX_Control(pDX, EP_PROMPT_TEXT, epPromptTextCtr);
+	DDX_Control(pDX, IDC_LIST3, secondWeighWaferListCtr);
 	DDX_Control(pDX, IDC_EDIT3, epEditCtr);
 	DDX_Control(pDX, IDC_LIST2, firstWeighWaferListCtr);
 	DDX_Control(pDX, IDC_COMBO1, planIdCbxCtr);
@@ -101,8 +104,8 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_WM_CONTEXTMENU()
 	ON_COMMAND(ID_MENUITEM32771, OnMenuitem32771)
 	ON_WM_TIMER()
-	//自定义绘制listCtr
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_LIST2, OnCustomdrawMyList)
+	ON_COMMAND(ID_MENUITEM32772, OnMenuitem32772)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -140,9 +143,12 @@ BOOL CWbcDlg::OnInitDialog()
 	initSelectWaferListCtr();
 	initPlanIdCbxCtr();
 	initFirstWeighWaferListCtr();
+	initSecondWeighWaferListCtr();
 	getSetting();
 	//创建定时器
 	SetTimer(IDTIMER1,5000,0);
+	//SetTimer(IDTIMER2,5000,0);
+	refreshEpoRemainTime();
 	
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -215,7 +221,7 @@ void CWbcDlg::OnOK()
 	//扫银浆
 	if(GetDlgItem(IDC_EDIT3)==GetFocus())
 	{
-		MessageBox("扫银浆");
+		OnScanEp();
 		return;
 	}
 
@@ -270,6 +276,25 @@ void CWbcDlg::OnScanWaferFistWeigh(){
 		MessageBox("芯片二维码格式不正确");
 	}
 }
+//扫银浆
+void CWbcDlg::OnScanEp(){
+	CString qrCode;
+	epEditCtr.GetWindowText(qrCode);
+	Epo epo(qrCode);
+	CTime now=CTime::GetCurrentTime();
+	CString nowStr=now.Format(_T("%Y%m%d%H%M"));
+	epEditCtr.SetWindowText("");
+	if (epo.isLegal(now))
+	{
+	}else{
+		MessageBox("扫描银浆不合法!");
+		return;
+	}
+	FILE *pFile=fopen("epo.dll","w");
+	fwrite(qrCode+";"+nowStr,1,strlen(qrCode+";"+nowStr),pFile);
+	fclose(pFile);
+
+}
 //初始化芯片查询的listCtr
 void CWbcDlg::initSelectWaferListCtr(){
 	CString str[3] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量")};
@@ -293,6 +318,16 @@ void CWbcDlg::initFirstWeighWaferListCtr(){
 	firstWeighWaferListCtr.SetExtendedStyle(firstWeighWaferListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	firstWeighWaferListCtr.AdjustColumnWidth();
 	completeFirstWeighWaferListCtr();
+}
+//初始化第二次称重的listCtr
+void CWbcDlg::initSecondWeighWaferListCtr(){
+	CString str[4] = { TEXT("WaferLot"),TEXT("刷胶前重量"), TEXT("刷胶后重量"),TEXT("胶重")};
+	for (int i=0;i<4;i++)
+	{
+		secondWeighWaferListCtr.InsertColumn(i,str[i],LVCFMT_LEFT,100);
+	}
+	secondWeighWaferListCtr.SetExtendedStyle(secondWeighWaferListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	secondWeighWaferListCtr.AdjustColumnWidth();
 }
 //填充第一次称重的listCtr
 void CWbcDlg::completeFirstWeighWaferListCtr(){
@@ -390,6 +425,7 @@ void CWbcDlg::getSetting(){
 void CWbcDlg::OnContextMenu(CWnd* pWnd, CPoint point) 
 {
 	// TODO: Add your message handler code here
+	//关联芯片查询listCtr
 	CRect  rect; //定义矩形区域
 	GetDlgItem(IDC_LIST1) -> GetWindowRect(&rect);  //获得控件相对于屏幕的位置坐标
 	if(rect.PtInRect(point))  //右击点在指定控件上
@@ -399,10 +435,20 @@ void CWbcDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 		CMenu * subMenu = popMenu.GetSubMenu(0);//获得第0列子菜单的指针
 		subMenu->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON, point.x, point.y, this);  //在指定位置显示浮动弹出菜单，并追踪弹出菜单中被选择的项
 	}
+	//关联刷胶前称重listCtr
+	CRect  rect2; //定义矩形区域
+	GetDlgItem(IDC_LIST2) -> GetWindowRect(&rect2);  //获得控件相对于屏幕的位置坐标
+	if(rect2.PtInRect(point))  //右击点在指定控件上
+	{
+		CMenu popMenu;//弹出菜单
+		popMenu.LoadMenu(IDR_MENU2);//根据资源ID关联菜单资源
+		CMenu * subMenu = popMenu.GetSubMenu(0);//获得第0列子菜单的指针
+		subMenu->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON, point.x, point.y, this);  //在指定位置显示浮动弹出菜单，并追踪弹出菜单中被选择的项
+	}
 	
 }
 
-//点击称重菜单
+//点击刷胶前称重菜单
 void CWbcDlg::OnMenuitem32771() 
 {
 	// TODO: Add your command handler code here
@@ -422,6 +468,34 @@ void CWbcDlg::OnMenuitem32771()
 		manualFirstWeigh(waferLot,waferSource,row);
 	}
 }
+//刷胶后称重
+void CWbcDlg::OnMenuitem32772() 
+{
+	// TODO: Add your command handler code here
+	CString plasmaRemain;
+	int currentRow =firstWeighWaferListCtr.GetSelectionMark();
+	plasmaRemain=firstWeighWaferListCtr.GetItemText(currentRow,3);
+	int minutes=atoi(plasmaRemain);
+	CString waferLot=firstWeighWaferListCtr.GetItemText(currentRow,1);
+	if (waferLot.IsEmpty())
+	{
+		MessageBox("当前未选中任何wafer!");
+		return;
+	}
+	if (minutes<=0)
+	{
+		MessageBox("Plasma不满足第二次称重的条件!");
+		return;
+	} 
+	//手动模式
+	if (weigthMode=="1")
+	{
+
+	}
+}
+
+
+
 //手动第一次称重从wafer查询类别中选中
 void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int currentRow){
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
@@ -499,6 +573,10 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource){
 		}
 	}
 }
+//手动第二次称重
+void CWbcDlg::manualSecondWeigh(CString waferLot){
+
+}
 
 //定时器处理
 void CWbcDlg::OnTimer(UINT nIDEvent) 
@@ -507,6 +585,10 @@ void CWbcDlg::OnTimer(UINT nIDEvent)
 	if (nIDEvent==IDTIMER1)
 	{
 		refreshPlasmaRemainTime();
+	}
+	if (nIDEvent==IDTIMER2)
+	{
+		refreshEpoRemainTime();
 	}
 	
 	CDialog::OnTimer(nIDEvent);
@@ -534,6 +616,36 @@ void CWbcDlg::refreshPlasmaRemainTime(){
 			firstWeighWaferListCtr.SetItemText(i,3,"无记录");
 		}
 	}
+}
+//刷新银浆上机时间
+void CWbcDlg::refreshEpoRemainTime()
+{
+	//读取上次上胶时间
+	CFile file;
+	bool state=file.Open("epo.dll",CFile::modeRead,NULL); 
+	if (!state)
+	{
+		MessageBox("打开银浆本地存储文件失败!");
+		return;
+	}
+	int i=0;
+	DWORD len=file.GetLength( );
+	char * arr=new char[len+1];
+	arr[len]=0;  //0终止字符串，用于输出。
+	file.Read(arr,len);   //Read( void* lpBuf, UINT nCount ) lpBuf是用于接收读取到的数据的Buf指针nCount是从文件读取的字节数
+	file.Close();
+	CString epoStr(arr);
+	CStringArray array;
+	MyUtils::splitStr(epoStr,';',array);
+	CTime lastDate=MyUtils::strToCTime(array.GetAt(5));
+	CString str=lastDate.Format(_T("%Y%m%d%H%M"));
+	MessageBox(str);
+	CTime now=CTime::GetCurrentTime();
+	CTimeSpan span=now-lastDate;
+	CString msg;
+	msg.Format("%d",span.GetMinutes());
+	delete arr;
+	
 }
 //自定义绘制
 void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
@@ -571,3 +683,5 @@ void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
 		*pResult = CDRF_DODEFAULT;
 	}
 }
+
+

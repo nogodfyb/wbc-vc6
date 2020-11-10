@@ -47,3 +47,13 @@ void MyUtils::completeZero(CString &input){
 		}
 	}
 }
+
+CTime MyUtils::strToCTime(CString input){
+	CString year=input.Mid(0,4);
+	CString month=input.Mid(4,2);
+	CString day=input.Mid(6,2);
+	CString hour=input.Mid(8,2);
+	CString minute=input.Mid(10,2);
+	CTime date(atoi(year),atoi(month),atoi(day),atoi(hour),atoi(minute),0);
+	return date;
+}
