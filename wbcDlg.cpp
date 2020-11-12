@@ -716,7 +716,16 @@ void CWbcDlg::OnTimer(UINT nIDEvent)
 //刷新Plasma剩余时间
 void CWbcDlg::refreshPlasmaRemainTime(){
 	CString msg;
-	MySqlUtil mysql(msg);
+	MySqlUtil mysql;
+	try
+	{
+		mysql.ConnMySQL(msg);
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		return;
+	}
 	//遍历表格;取每一行的waferLot;查询该wafer的Plasma剩余时间
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{

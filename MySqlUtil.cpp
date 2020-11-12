@@ -24,10 +24,6 @@ MySqlUtil::MySqlUtil()
 
 MySqlUtil::MySqlUtil(CString &msg){
 	ConnMySQL(msg);
-	if (!msg.IsEmpty())
-	{
-		throw "数据库连接失败!";
-	}
 }
 
 MySqlUtil::~MySqlUtil()
@@ -55,18 +51,30 @@ int MySqlUtil::ConnMySQL(CString &Msg)
     if (mysql_init(&mysql) == NULL)
     {
         Msg=mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "数据库连接失败1";
+		}
         return 0;
     }
 
     if (mysql_real_connect(&mysql, HOST, USER, PASSWORD, DATABASE, PORT, NULL, 0) == NULL)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "数据库连接失败:端口号或账号密码错误!";
+		}
         return 0;
     }
 
     if (mysql_set_character_set(&mysql, "GBK") != 0)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "数据库连接失败3";
+		}
         return 0;
     }
     return 1;
