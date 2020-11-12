@@ -40,6 +40,7 @@
 #define IDC_LIST2                       1023
 #define IDC_LIST3                       1024
 #define EP_PROMPT_TEXT                  1026
+#define IDC_BUTTON3                     1027
 #define ID_MENUITEM32771                32771
 #define ID_MENUITEM32772                32772
 
@@ -49,7 +50,7 @@
 #ifndef APSTUDIO_READONLY_SYMBOLS
 #define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32773
-#define _APS_NEXT_CONTROL_VALUE         1027
+#define _APS_NEXT_CONTROL_VALUE         1028
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -13,17 +13,17 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=8
-Resource1=MANUAL_WEIGH_DIALOG
+Resource1=IDR_MENU1
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=MAIN_DIALOG
+Resource3=CHECK_TOOLS_DIALOG
 Class5=CheckToolsDlg
-Resource4=IDR_MENU1
+Resource4=IDD_ABOUTBOX
 Class6=SettingDialog
-Resource5=IDD_ABOUTBOX
+Resource5=SETTING_DIALOG
 Class7=ManualWeighDialog
-Resource6=SETTING_DIALOG
-Resource7=CHECK_TOOLS_DIALOG
+Resource6=MAIN_DIALOG
+Resource7=MANUAL_WEIGH_DIALOG
 Resource8=IDR_MENU2
 
 [CLS:CWbcApp]
@@ -69,7 +69,7 @@ LastObject=IDC_EDIT1
 [DLG:MAIN_DIALOG]
 Type=1
 Class=CWbcDlg
-ControlCount=24
+ControlCount=25
 Control1=IDC_STATIC,button,1342177287
 Control2=IDC_STATIC,static,1342308352
 Control3=IDC_EDIT1,edit,1350631584
@@ -94,6 +94,7 @@ Control21=IDC_EDIT3,edit,1350631584
 Control22=IDC_STATIC,button,1342177287
 Control23=IDC_LIST3,SysListView32,1350631425
 Control24=EP_PROMPT_TEXT,static,1342308352
+Control25=IDC_BUTTON3,button,1342242816
 
 [DLG:CHECK_TOOLS_DIALOG]
 Type=1

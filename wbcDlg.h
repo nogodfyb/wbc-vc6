@@ -53,7 +53,7 @@ public:
 	void refreshEpoRemainTime();
 	void manualFirstWeigh(CString waferLot,CString waferSource, int currentRow);
 	void manualFirstWeigh(CString waferLot,CString waferSource);
-	void manualSecondWeigh(CString waferLot,CString waferSource);
+	void manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight);
 	void matchTools();
 	CString serialPort;
 	CString weigthMode;
@@ -82,6 +82,7 @@ protected:
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnCustomdrawMyList ( NMHDR* pNMHDR, LRESULT* pResult );
 	afx_msg void OnMenuitem32772();
+	afx_msg void OnButton3();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

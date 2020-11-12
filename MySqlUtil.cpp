@@ -33,7 +33,6 @@ MySqlUtil::MySqlUtil(CString &msg){
 MySqlUtil::~MySqlUtil()
 {
 	mysql_close(&mysql);
-
 }
 
 //¿ªÆôÊÂÎñ

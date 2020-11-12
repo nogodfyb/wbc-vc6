@@ -106,6 +106,7 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_WM_TIMER()
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_LIST2, OnCustomdrawMyList)
 	ON_COMMAND(ID_MENUITEM32772, OnMenuitem32772)
+	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -329,16 +330,24 @@ void CWbcDlg::initSecondWeighWaferListCtr(){
 	{
 		secondWeighWaferListCtr.InsertColumn(i,str[i],LVCFMT_LEFT,100);
 	}
-	secondWeighWaferListCtr.SetExtendedStyle(secondWeighWaferListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
+	secondWeighWaferListCtr.SetExtendedStyle(secondWeighWaferListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES|LVS_EX_CHECKBOXES);
 	secondWeighWaferListCtr.AdjustColumnWidth();
 }
 //填充第一次称重的listCtr
 void CWbcDlg::completeFirstWeighWaferListCtr(){
 	//将第一次称重还未进行第二次称重的数据填充到表格
-	CString msg;
-	MySqlUtil mysql(msg);
-	CString sql="SELECT wafer_source,wafer_lot,weight from wbc20_first_weigh_record";
-	mysql.SelectDataAndToList(sql,msg,&firstWeighWaferListCtr);
+	try
+	{
+		CString msg;
+		MySqlUtil mysql(msg);
+		CString sql="SELECT wafer_source,wafer_lot,weight from wbc20_first_weigh_record";
+		mysql.SelectDataAndToList(sql,msg,&firstWeighWaferListCtr);
+	}
+	catch (const char *info)
+	{
+		MessageBox(info);
+		return;
+	}
 	refreshPlasmaRemainTime();
 }
 //初始化计划号下拉框
@@ -394,6 +403,7 @@ void CWbcDlg::OnButton1()
 	catch (const char * info)
 	{
 		MessageBox(info);
+		return;
 	}
 }
 
@@ -403,6 +413,26 @@ void CWbcDlg::OnButton2()
 	// TODO: Add your control notification handler code here
 	SettingDialog dlg;
 	dlg.DoModal();
+	
+}
+void CWbcDlg::OnButton3() //提交称重记录
+{
+	// TODO: Add your control notification handler code here
+	//遍历所有行，查看是否有被选中的
+	bool flag=false;
+	for (int i=0;i<secondWeighWaferListCtr.GetItemCount();i++)
+	{
+		flag=secondWeighWaferListCtr.GetCheck(i);
+		if (flag)
+		{
+			break;
+		}
+	}
+	if (!flag)
+	{
+		MessageBox("未选中任何需要提交的记录!");
+		return;
+	}
 	
 }
 
@@ -479,6 +509,7 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 	int minutes=atoi(plasmaRemain);
 	CString waferLot=firstWeighWaferListCtr.GetItemText(currentRow,1);
 	CString waferSource=firstWeighWaferListCtr.GetItemText(currentRow,0);
+	CString firstWeight=firstWeighWaferListCtr.GetItemText(currentRow,2);
 	if (waferLot.IsEmpty())
 	{
 		MessageBox("当前未选中任何wafer!");
@@ -492,7 +523,7 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 	//手动模式
 	if (weigthMode=="1")
 	{
-		manualSecondWeigh(waferLot,waferSource);
+		manualSecondWeigh(waferLot,waferSource,firstWeight);
 	}
 }
 //匹配刷胶工具和银浆
@@ -509,12 +540,21 @@ void CWbcDlg::matchTools(){
 			firstWeighWaferListCtr.SetItemText(i,4,"未点检");
 			continue;
 		}
-		CString msg;
-		MySqlUtil mysql(msg);
+
 		CStringArray array;
-		CString sql;
-		sql.Format("SELECT steel_mesh_sn,shim_sn,scraper_sn,ep_pn from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
-		mysql.SelectData(sql,msg,array);
+		try
+		{
+			CString msg;
+			MySqlUtil mysql(msg);
+			CString sql;
+			sql.Format("SELECT steel_mesh_sn,shim_sn,scraper_sn,ep_pn from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
+			mysql.SelectData(sql,msg,array);
+		}
+		catch (const char * info)
+		{
+			MessageBox(info);
+			return;
+		}
 		if (currentEpPn!=array.GetAt(3))
 		{
 			firstWeighWaferListCtr.SetItemText(i,5,"不匹配");
@@ -568,6 +608,7 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int current
 		catch (const char * info)
 		{
 			MessageBox(info);
+			return;
 		}
 	}
 }
@@ -606,12 +647,53 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource){
 		catch (const char * info)
 		{
 			MessageBox(info);
+			return;
 		}
 	}
 }
 //手动第二次称重
-void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource){
-
+void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight){
+	for (int i=0;i<secondWeighWaferListCtr.GetItemCount();i++)
+	{
+		CString currentWaferLot=secondWeighWaferListCtr.GetItemText(i,1);
+		if (currentWaferLot==waferLot)
+		{
+			if(MessageBox(TEXT("已有称重数据,是否再次称重?"),TEXT("再次确认"),MB_OKCANCEL)!=IDOK)
+			{
+				return;
+			}
+			//重新称重
+			ManualWeighDialog dlg;
+			dlg.waferLot=waferLot;
+			dlg.DoModal();
+			if (!dlg.manualWeighValue.IsEmpty())
+			{
+				secondWeighWaferListCtr.SetItemText(i,3,dlg.manualWeighValue);
+				double epWeight=atof(dlg.manualWeighValue)-atof(firstWeight);
+				CString epWeightStr;
+				epWeightStr.Format("%g", epWeight);
+				secondWeighWaferListCtr.SetItemText(i,4,epWeightStr);
+			}
+			return;
+		}
+	}
+	ManualWeighDialog dlg;
+	dlg.waferLot=waferLot;
+	dlg.DoModal();
+	//传来的重量数据非空
+	if (!dlg.manualWeighValue.IsEmpty())
+	{
+		int endRow=secondWeighWaferListCtr.GetItemCount();
+		secondWeighWaferListCtr.InsertItem(endRow,waferSource);
+		secondWeighWaferListCtr.SetItemText(endRow,1,waferLot);
+		secondWeighWaferListCtr.SetItemText(endRow,2,firstWeight);
+		secondWeighWaferListCtr.SetItemText(endRow,3,dlg.manualWeighValue);
+		double epWeight=atof(dlg.manualWeighValue)-atof(firstWeight);
+		CString epWeightStr;
+		epWeightStr.Format("%g", epWeight);
+		secondWeighWaferListCtr.SetItemText(endRow,4,epWeightStr);
+		secondWeighWaferListCtr.AdjustColumnWidth();
+	}
 }
 
 //定时器处理
@@ -638,11 +720,20 @@ void CWbcDlg::refreshPlasmaRemainTime(){
 	//遍历表格;取每一行的waferLot;查询该wafer的Plasma剩余时间
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{
-		CString waferLot=firstWeighWaferListCtr.GetItemText(i,1);
-		CString sql;
-		sql.Format("SELECT 30-TIMESTAMPDIFF(MINUTE, in_time, NOW()),is_over_count from plasma_rec WHERE wl='%s' ORDER BY r_id DESC LIMIT 1",waferLot);
+		
 		CStringArray array;
-		mysql.SelectData(sql,msg,array);
+		try
+		{
+			CString waferLot=firstWeighWaferListCtr.GetItemText(i,1);
+			CString sql;
+			sql.Format("SELECT 30-TIMESTAMPDIFF(MINUTE, in_time, NOW()),is_over_count from plasma_rec WHERE wl='%s' ORDER BY r_id DESC LIMIT 1",waferLot);
+			mysql.SelectData(sql,msg,array);
+		}
+		catch (const char * info)
+		{
+			MessageBox(info);
+			return;
+		}
 		if (array.GetSize()==2)
 		{
 			if (array.GetAt(1)=="1")
@@ -723,5 +814,7 @@ void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
 		*pResult = CDRF_DODEFAULT;
 	}
 }
+
+
 
 
