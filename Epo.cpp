@@ -39,6 +39,7 @@ Epo::Epo(CString qrcodeString)
 	//minute
 	CString minute=exceedTimeString.Mid(8,2);
 	exceedTime=CTime(atoi(year),atoi(month),atoi(day),atoi(hour),atoi(minute),0);
+	exceedTimeStr=exceedTime.Format(_T("%Y-%m-%d %H:%M:%S"));
 	
 	CString beginTimeString=array.GetAt(1);
 	//year
@@ -52,7 +53,7 @@ Epo::Epo(CString qrcodeString)
 	//minute
 	CString minute2=beginTimeString.Mid(8,2);
     beginTime=CTime(atoi(year2),atoi(month2),atoi(day2),atoi(hour2),atoi(minute2),0);
-	
+	beginTimeStr=beginTime.Format(_T("%Y-%m-%d %H:%M:%S"));
 	serialNumber=array.GetAt(3);
 	gongyi=array.GetAt(4);
 	
@@ -66,6 +67,9 @@ Epo::Epo(CString partNumber,CTime beginTime,CTime exceedTime,CString serialNumbe
 	this->gongyi=gongyi;
 }
 
+Epo::Epo(){
+
+}
 Epo::~Epo()
 {
 	

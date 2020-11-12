@@ -8,6 +8,7 @@
 #pragma once
 #endif // _MSC_VER > 1000
 #include "CMyListCtrl.h"
+#include "Epo.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CWbcDlg dialog
@@ -61,8 +62,8 @@ public:
 	CString lastCheckScraperSn;
 	CString lastCheckSteelMeshSn;
 	CString lastCheckShimSn;
-	//当前银浆物料码
-	CString currentEpPn;
+	//当前上机银浆
+	Epo currentEpo;
 // Implementation
 protected:
 	HICON m_hIcon;

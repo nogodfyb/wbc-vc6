@@ -173,3 +173,22 @@ bool ValiadteUtils::validateWeight(CString weight){
 	}
 	return true;
 }
+
+bool ValiadteUtils::validateEpo(CString ep){
+	if (ep.GetLength()<20)
+	{
+		return false;
+	}
+	//¼ÆÊý
+	int count=0;
+	for (int i=0;i<ep.GetLength();i++)
+	{
+		if(ep.GetAt(i)==';'){
+			count++;
+		}
+	}
+	if(count!=4){
+		return false;
+	}
+	return true;
+}

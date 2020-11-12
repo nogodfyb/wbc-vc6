@@ -20,8 +20,10 @@ public:
 	CString partNumber;
 	//开始时间
 	CTime beginTime;
+	CString beginTimeStr;
 	//过期时间
 	CTime exceedTime;
+	CString exceedTimeStr;
 	//序列号
 	CString serialNumber;
 	//工艺

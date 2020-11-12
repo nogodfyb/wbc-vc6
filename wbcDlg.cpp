@@ -284,20 +284,23 @@ void CWbcDlg::OnScanWaferFistWeigh(){
 void CWbcDlg::OnScanEp(){
 	CString qrCode;
 	epEditCtr.GetWindowText(qrCode);
+	epEditCtr.SetWindowText("");
+	if (!ValiadteUtils::validateEpo(qrCode))
+	{
+		MessageBox("扫描银浆不合法!");
+		return;
+	}
 	Epo epo(qrCode);
 	CTime now=CTime::GetCurrentTime();
 	CString nowStr=now.Format(_T("%Y%m%d%H%M"));
-	epEditCtr.SetWindowText("");
-	if (epo.isLegal(now))
+	if (!epo.isLegal(now))
 	{
-	}else{
 		MessageBox("扫描银浆不合法!");
 		return;
 	}
 	FILE *pFile=fopen("epo.dll","w");
 	fwrite(qrCode+";"+nowStr,1,strlen(qrCode+";"+nowStr),pFile);
 	fclose(pFile);
-
 }
 //初始化芯片查询的listCtr
 void CWbcDlg::initSelectWaferListCtr(){
@@ -555,7 +558,7 @@ void CWbcDlg::matchTools(){
 			MessageBox(info);
 			return;
 		}
-		if (currentEpPn!=array.GetAt(3))
+		if (currentEpo.partNumber!=array.GetAt(3))
 		{
 			firstWeighWaferListCtr.SetItemText(i,5,"不匹配");
 		}else{
@@ -773,17 +776,17 @@ void CWbcDlg::refreshEpoRemainTime()
 	file.Read(arr,len);   //Read( void* lpBuf, UINT nCount ) lpBuf是用于接收读取到的数据的Buf指针nCount是从文件读取的字节数
 	file.Close();
 	CString epoStr(arr);
+	//存储当前银浆信息
+	currentEpo=Epo(epoStr);
 	CStringArray array;
 	MyUtils::splitStr(epoStr,';',array);
-	CString epSn=array.GetAt(3);
-	CString epPn=array.GetAt(0);
-	currentEpPn=epPn;
+	//上一次扫描时间
 	CTime lastDate=MyUtils::strToCTime(array.GetAt(5));
 	CTime now=CTime::GetCurrentTime();
 	CTimeSpan span=now-lastDate;
-	CString msg;
-	msg.Format("%d",span.GetTotalMinutes());
-	epPromptTextCtr.SetWindowText("距离上次扫描银浆条码已经过去:"+msg+"分钟!银浆序列号:"+epSn+" 物料编码:"+epPn);
+	CString lastScanTime;
+	lastScanTime.Format("%d",span.GetTotalMinutes());
+	epPromptTextCtr.SetWindowText("距离上次扫描银浆条码已经过去:"+lastScanTime+"分钟!银浆序列号:"+currentEpo.serialNumber+" 物料编码:"+currentEpo.partNumber);
 	delete arr;
 	
 }
