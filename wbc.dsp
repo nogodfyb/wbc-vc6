@@ -106,6 +106,10 @@ SOURCE=.\ManualWeighDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\MyRepository.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\MySqlUtil.cpp
 # End Source File
 # Begin Source File
@@ -160,6 +164,10 @@ SOURCE=.\Epo.h
 # Begin Source File
 
 SOURCE=.\ManualWeighDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\MyRepository.h
 # End Source File
 # Begin Source File
 

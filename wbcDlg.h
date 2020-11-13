@@ -52,8 +52,8 @@ public:
 	void getSetting();
 	void refreshPlasmaRemainTime();
 	void refreshEpoRemainTime();
-	void manualFirstWeigh(CString waferLot,CString waferSource, int currentRow);
-	void manualFirstWeigh(CString waferLot,CString waferSource);
+	void manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice, int currentRow);
+	void manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice);
 	void manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight);
 	void matchTools();
 	CString serialPort;

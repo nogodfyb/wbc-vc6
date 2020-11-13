@@ -6,19 +6,20 @@
 --------------------Configuration: wbc - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPE34D.tmp" with contents
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSP1DB3.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/wbc.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
 "D:\vc6\wbc\wbcDlg.cpp"
 ]
-Creating command line "cl.exe @C:\Users\FYB\AppData\Local\Temp\RSPE34D.tmp" 
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPE34E.tmp" with contents
+Creating command line "cl.exe @C:\Users\FYB\AppData\Local\Temp\RSP1DB3.tmp" 
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSP1DB4.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/wbc.pdb" /debug /machine:I386 /out:"Debug/wbc.exe" /pdbtype:sept 
 .\Debug\CheckToolsDlg.obj
 .\Debug\CMyListCtrl.obj
 .\Debug\Epo.obj
 .\Debug\ManualWeighDialog.obj
+.\Debug\MyRepository.obj
 .\Debug\MySqlUtil.obj
 .\Debug\MyUtils.obj
 .\Debug\SettingDialog.obj
@@ -29,18 +30,18 @@ Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPE34E.tmp" with conte
 .\Debug\wbcDlg.obj
 .\Debug\wbc.res
 ]
-Creating command line "link.exe @C:\Users\FYB\AppData\Local\Temp\RSPE34E.tmp"
+Creating command line "link.exe @C:\Users\FYB\AppData\Local\Temp\RSP1DB4.tmp"
 <h3>Output Window</h3>
 Compiling...
 wbcDlg.cpp
-D:\vc6\wbc\wbcDlg.cpp(428) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-D:\vc6\wbc\wbcDlg.cpp(446) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-D:\vc6\wbc\wbcDlg.cpp(453) : warning C4305: 'argument' : truncation from 'const int' to 'char'
-D:\vc6\wbc\wbcDlg.cpp(453) : warning C4309: 'argument' : truncation of constant value
-D:\vc6\wbc\wbcDlg.cpp(766) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-D:\vc6\wbc\wbcDlg.cpp(811) : warning C4101: 'm_crTextBk' : unreferenced local variable
+D:\vc6\wbc\wbcDlg.cpp(431) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+D:\vc6\wbc\wbcDlg.cpp(510) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+D:\vc6\wbc\wbcDlg.cpp(517) : warning C4305: 'argument' : truncation from 'const int' to 'char'
+D:\vc6\wbc\wbcDlg.cpp(517) : warning C4309: 'argument' : truncation of constant value
+D:\vc6\wbc\wbcDlg.cpp(831) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
+D:\vc6\wbc\wbcDlg.cpp(876) : warning C4101: 'm_crTextBk' : unreferenced local variable
 Linking...
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPE3DC.tmp" with contents
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSP1E70.tmp" with contents
 [
 /nologo /o"Debug/wbc.bsc" 
 .\Debug\StdAfx.sbr
@@ -48,6 +49,7 @@ Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPE3DC.tmp" with conte
 .\Debug\CMyListCtrl.sbr
 .\Debug\Epo.sbr
 .\Debug\ManualWeighDialog.sbr
+.\Debug\MyRepository.sbr
 .\Debug\MySqlUtil.sbr
 .\Debug\MyUtils.sbr
 .\Debug\SettingDialog.sbr
@@ -55,7 +57,7 @@ Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPE3DC.tmp" with conte
 .\Debug\ValiadteUtils.sbr
 .\Debug\wbc.sbr
 .\Debug\wbcDlg.sbr]
-Creating command line "bscmake.exe @C:\Users\FYB\AppData\Local\Temp\RSPE3DC.tmp"
+Creating command line "bscmake.exe @C:\Users\FYB\AppData\Local\Temp\RSP1E70.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 

@@ -11,6 +11,8 @@
 #include "SettingDialog.h"
 #include "ManualWeighDialog.h"
 #include "Epo.h"
+#include "MyRepository.h"
+#include "ShiftUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -237,8 +239,8 @@ void CWbcDlg::OnCancel()
 	CDialog::OnCancel();
 }
 
-//扫描枪扫描wafer
-void CWbcDlg::OnScanWafer(){
+void CWbcDlg::OnScanWafer()//点检扫描wafer
+{
 	CString wafer;
 	waferCtr.GetWindowText(wafer);
 	if (ValiadteUtils::validateWafer(wafer))
@@ -262,8 +264,8 @@ void CWbcDlg::OnScanWafer(){
 	}
 	waferCtr.SetWindowText("");
 }
-//第一次称重前扫描wafer
-void CWbcDlg::OnScanWaferFistWeigh(){
+void CWbcDlg::OnScanWaferFistWeigh()//第一次称重前扫描wafer
+{
 	CString wafer;
 	firstWeighWaferEditCtr.GetWindowText(wafer);
 	firstWeighWaferEditCtr.SetWindowText("");
@@ -273,7 +275,8 @@ void CWbcDlg::OnScanWaferFistWeigh(){
 		MyUtils::splitStr(wafer,'^',array);
 		CString waferLot=array.GetAt(3);
 		CString waferSource=array.GetAt(1);
-		manualFirstWeigh(waferLot,waferSource);
+		CString waferDevice=array.GetAt(0);
+		manualFirstWeigh(waferLot,waferSource,waferDevice);
 	} 
 	else
 	{
@@ -304,8 +307,8 @@ void CWbcDlg::OnScanEp(){
 }
 //初始化芯片查询的listCtr
 void CWbcDlg::initSelectWaferListCtr(){
-	CString str[3] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量")};
-	for (size_t i = 0; i < 3; i++)
+	CString str[4] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("WaferDevice"),TEXT("刷胶前重量")};
+	for (size_t i = 0; i < 4; i++)
 	{
 		waferSelectListCtr.InsertColumn(i, str[i], LVCFMT_LEFT, 100);
 	}
@@ -366,7 +369,7 @@ void CWbcDlg::initPlanIdCbxCtr(){
 }
 
 //芯片查询
-void CWbcDlg::OnButton1() 
+void CWbcDlg::OnButton1() //芯片查询
 {
 	// TODO: Add your control notification handler code here
 	try
@@ -381,7 +384,7 @@ void CWbcDlg::OnButton1()
 		MySqlUtil mysql(msg);
 		//查询数据并渲染
 		CString sql;
-		sql.Format("SELECT ws,wl from wafer_list_mes_org WHERE schid='%s'",planDate+"-"+planId);
+		sql.Format("SELECT ws,wl,tt from wafer_list_mes_org WHERE schid='%s'",planDate+"-"+planId);
 		mysql.SelectDataAndToList(sql,msg,&waferSelectListCtr);
 		if (waferSelectListCtr.GetItemCount()==0)
 		{
@@ -399,7 +402,7 @@ void CWbcDlg::OnButton1()
 			//设置重量
 			if (array.GetSize()==1)
 			{
-				waferSelectListCtr.SetItemText(i,2,array.GetAt(0));
+				waferSelectListCtr.SetItemText(i,3,array.GetAt(0));
 			}
 		}
 	}
@@ -435,6 +438,67 @@ void CWbcDlg::OnButton3() //提交称重记录
 	{
 		MessageBox("未选中任何需要提交的记录!");
 		return;
+	}
+	//得到当前班次
+	ShiftUtils shiftUtils;
+	CString shift=shiftUtils.getShiftByNow();
+	//查询当次点检人工号
+	CString msg;
+	MySqlUtil mysql(msg);
+	CStringArray array;
+	CString sql;
+	CString id;
+	idTextCtr.GetWindowText(id);
+	sql.Format("SELECT bn from wbc20_check_record WHERE id='%s'",id);
+	mysql.SelectData(sql,msg,array);
+	CString bn=array.GetAt(0);
+	//机器号
+	CString machineCode="2FC01";
+	//遍历第一次称重列表
+	for (int k=0;k<secondWeighWaferListCtr.GetItemCount();k++)
+	{
+		CString waferLot=secondWeighWaferListCtr.GetItemText(i,1);
+		CString firstWeight=secondWeighWaferListCtr.GetItemText(i,2);
+		CString secondWeight=secondWeighWaferListCtr.GetItemText(i,3);
+		CString waferSource=secondWeighWaferListCtr.GetItemText(i,0);
+		//根据waferLot查询第一次称重的时间
+		CString sql2;
+		CStringArray array2;
+		sql2.Format("SELECT update_time,wafer_device from wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
+		mysql.SelectData(sql2,msg,array2);
+		CString firstWeighTime=array2.GetAt(0);
+		CString waferDevice=array2.GetAt(1);
+		//根据waferSource查询waferSize
+		CString sql3;
+		CStringArray array3;
+		sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
+		mysql.SelectData(sql3,msg,array3);
+		CString waferSize=array3.GetAt(0);
+
+
+		
+
+
+		CStringArray params;
+		params.Add(shift);//参数1 班次
+		params.Add(bn);//参数2 工号
+		params.Add(machineCode);//参数3 机器号
+		params.Add(currentEpo.serialNumber);//参数4 银浆序列号
+		params.Add(currentEpo.beginTimeStr);//参数5 银浆解冻完成时间
+		params.Add(currentEpo.exceedTimeStr);//参数6 银浆过期时间
+		params.Add(firstWeight);//参数7 第一次称重的重量
+		params.Add(firstWeighTime); //参数8 第一次称重时间
+		params.Add(secondWeight);//参数9 第二次称重重量
+		params.Add(waferDevice);//参数10 芯片型号
+		params.Add(waferSource);//参数11 waferSource
+		params.Add(waferLot);//参数12 waferLot 
+		params.Add(waferSize);//参数13 waferSize
+		params.Add("0");//参数14 是否超重
+		params.Add(lastCheckScraperSn);//参数15 刮刀sn
+		params.Add(lastCheckSteelMeshSn);//参数16 钢网sn
+		params.Add(lastCheckShimSn);//参数17 垫片sn
+		CString insertSql=MyRepository::insertSecondWeighRecord(params);
+		mysql.InsertData(insertSql,msg);
 	}
 	
 }
@@ -492,6 +556,7 @@ void CWbcDlg::OnMenuitem32771() //刷胶前称重
 	int row = waferSelectListCtr.GetSelectionMark();
 	waferLot=waferSelectListCtr.GetItemText(row, 1);
 	waferSource=waferSelectListCtr.GetItemText(row,0);
+	CString waferDevice=waferSelectListCtr.GetItemText(row,2);
 	if (waferLot.IsEmpty())
 	{
 		MessageBox("当前未选中任何wafer!");
@@ -500,7 +565,7 @@ void CWbcDlg::OnMenuitem32771() //刷胶前称重
 	//手动模式
 	if (weigthMode=="1")
 	{
-		manualFirstWeigh(waferLot,waferSource,row);
+		manualFirstWeigh(waferLot,waferSource,waferDevice,row);
 	}
 }
 void CWbcDlg::OnMenuitem32772() //刷胶后称重
@@ -576,7 +641,7 @@ void CWbcDlg::matchTools(){
 	}
 }
 //手动第一次称重从wafer查询类别中选中
-void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int currentRow){
+void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice, int currentRow){
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{
 		CString currentWaferLot=firstWeighWaferListCtr.GetItemText(i,1);
@@ -592,7 +657,7 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int current
 	ManualWeighDialog dlg;
 	dlg.waferLot=waferLot;
 	dlg.DoModal();
-	waferSelectListCtr.SetItemText(currentRow,2,dlg.manualWeighValue);
+	waferSelectListCtr.SetItemText(currentRow,3,dlg.manualWeighValue);
 	//传来的重量数据非空
 	if (!dlg.manualWeighValue.IsEmpty())
 	{
@@ -602,7 +667,7 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int current
 			CString msg;
 			MySqlUtil mysql(msg);
 			CString sql;
-			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source, weight) VALUES ('%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,dlg.manualWeighValue,dlg.manualWeighValue);
+			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source,wafer_device, weight) VALUES ('%s','%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,waferDevice,dlg.manualWeighValue,dlg.manualWeighValue);
 			mysql.InsertData(sql,msg);
 			firstWeighWaferListCtr.DeleteAllItems();
 			//重新初始化
@@ -616,7 +681,7 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource, int current
 	}
 }
 //手动第一次称重
-void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource){
+void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice){
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{
 		CString currentWaferLot=firstWeighWaferListCtr.GetItemText(i,1);
@@ -641,7 +706,7 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource){
 			CString msg;
 			MySqlUtil mysql(msg);
 			CString sql;
-			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source, weight) VALUES ('%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,dlg.manualWeighValue,dlg.manualWeighValue);
+			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source,wafer_device, weight) VALUES ('%s','%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,waferDevice,dlg.manualWeighValue,dlg.manualWeighValue);
 			mysql.InsertData(sql,msg);
 			firstWeighWaferListCtr.DeleteAllItems();
 			//重新初始化
