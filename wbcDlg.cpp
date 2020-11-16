@@ -13,6 +13,7 @@
 #include "Epo.h"
 #include "MyRepository.h"
 #include "ShiftUtils.h"
+#include "ExceptionRegisterDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -109,6 +110,7 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_LIST2, OnCustomdrawMyList)
 	ON_COMMAND(ID_MENUITEM32772, OnMenuitem32772)
 	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
+	ON_COMMAND(ID_MENUITEM32773, OnMenuitem32773)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -544,7 +546,16 @@ void CWbcDlg::OnContextMenu(CWnd* pWnd, CPoint point)
 		CMenu * subMenu = popMenu.GetSubMenu(0);//获得第0列子菜单的指针
 		subMenu->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON, point.x, point.y, this);  //在指定位置显示浮动弹出菜单，并追踪弹出菜单中被选择的项
 	}
-	
+	//关联异常登记菜单
+	CRect  rect3; //定义矩形区域
+	GetDlgItem(IDC_LIST3) -> GetWindowRect(&rect3);  //获得控件相对于屏幕的位置坐标
+	if(rect3.PtInRect(point))  //右击点在指定控件上
+	{
+		CMenu popMenu;//弹出菜单
+		popMenu.LoadMenu(IDR_MENU3);//根据资源ID关联菜单资源
+		CMenu * subMenu = popMenu.GetSubMenu(0);//获得第0列子菜单的指针
+		subMenu->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON, point.x, point.y, this);  //在指定位置显示浮动弹出菜单，并追踪弹出菜单中被选择的项
+	}
 }
 
 //点击刷胶前称重菜单
@@ -593,6 +604,22 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 	{
 		manualSecondWeigh(waferLot,waferSource,firstWeight);
 	}
+}
+void CWbcDlg::OnMenuitem32773() //异常登记
+{
+	// TODO: Add your command handler code here
+	int currentRow =secondWeighWaferListCtr.GetSelectionMark();
+	CString waferLot=secondWeighWaferListCtr.GetItemText(currentRow,1);
+	if (waferLot.IsEmpty())
+	{
+		MessageBox("当前未选中任何wafer!");
+		return;
+	}
+	ExceptionRegisterDialog dlg;
+	dlg.waferLot=waferLot;
+	dlg.DoModal();
+
+
 }
 //匹配刷胶工具和银浆
 void CWbcDlg::matchTools(){
@@ -891,6 +918,8 @@ void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
 		*pResult = CDRF_DODEFAULT;
 	}
 }
+
+
 
 
 

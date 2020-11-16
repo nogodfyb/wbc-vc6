@@ -102,6 +102,10 @@ SOURCE=.\Epo.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ExceptionRegisterDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ManualWeighDialog.cpp
 # End Source File
 # Begin Source File
@@ -160,6 +164,10 @@ SOURCE=.\CMyListCtrl.h
 # Begin Source File
 
 SOURCE=.\Epo.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ExceptionRegisterDialog.h
 # End Source File
 # Begin Source File
 

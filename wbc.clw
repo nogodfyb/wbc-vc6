@@ -2,29 +2,32 @@
 
 [General Info]
 Version=1
-LastClass=CWbcDlg
+LastClass=ExceptionRegisterDialog
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
 
-ClassCount=7
+ClassCount=8
 Class1=CWbcApp
 Class2=CWbcDlg
 Class3=CAboutDlg
 
-ResourceCount=8
+ResourceCount=10
 Resource1=MAIN_DIALOG
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=CHECK_TOOLS_DIALOG
+Resource3=MANUAL_WEIGH_DIALOG
 Class5=CheckToolsDlg
-Resource4=SETTING_DIALOG
+Resource4=CHECK_TOOLS_DIALOG
 Class6=SettingDialog
-Resource5=IDD_ABOUTBOX
+Resource5=IDR_MENU1
 Class7=ManualWeighDialog
-Resource6=IDR_MENU1
-Resource7=MANUAL_WEIGH_DIALOG
-Resource8=IDR_MENU2
+Resource6=IDR_MENU2
+Resource7=IDD_ABOUTBOX
+Resource8=EXCEPTION_REGISTER
+Resource9=SETTING_DIALOG
+Class8=ExceptionRegisterDialog
+Resource10=IDR_MENU3
 
 [CLS:CWbcApp]
 Type=0
@@ -189,4 +192,34 @@ Type=1
 Class=?
 Command1=ID_MENUITEM32772
 CommandCount=1
+
+[MNU:IDR_MENU3]
+Type=1
+Class=?
+Command1=ID_MENUITEM32773
+CommandCount=1
+
+[DLG:EXCEPTION_REGISTER]
+Type=1
+Class=ExceptionRegisterDialog
+ControlCount=10
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_STATIC,static,1342308352
+Control4=WAFER_LOT_TEXT,static,1342308352
+Control5=IDC_STATIC,static,1342308352
+Control6=IDC_COMBO1,combobox,1344339970
+Control7=IDC_STATIC,static,1342308352
+Control8=IDC_EDIT1,edit,1350631552
+Control9=IDC_STATIC,static,1342308352
+Control10=IDC_COMBO2,combobox,1344340226
+
+[CLS:ExceptionRegisterDialog]
+Type=0
+HeaderFile=ExceptionRegisterDialog.h
+ImplementationFile=ExceptionRegisterDialog.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=ExceptionRegisterDialog
+VirtualFilter=dWC
 
