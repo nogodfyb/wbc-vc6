@@ -476,9 +476,14 @@ void CWbcDlg::OnButton3() //提交称重记录
 		sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
 		mysql.SelectData(sql3,msg,array3);
 		CString waferSize=array3.GetAt(0);
+		//根据waferLot查询存储到map中的异常登记记录
+		CString exceptionReason;
+		CString handlePlan;
+		CString remark;
+		CString handleResult;
 
 
-		
+
 
 
 		CStringArray params;
@@ -499,6 +504,10 @@ void CWbcDlg::OnButton3() //提交称重记录
 		params.Add(lastCheckScraperSn);//参数15 刮刀sn
 		params.Add(lastCheckSteelMeshSn);//参数16 钢网sn
 		params.Add(lastCheckShimSn);//参数17 垫片sn
+		params.Add(exceptionReason);//参数18 异常原因
+		params.Add(handlePlan); //参数19 处理方案
+		params.Add(remark);//参数20 备注
+		params.Add(handleResult);//参数21 处理结果
 		CString insertSql=MyRepository::insertSecondWeighRecord(params);
 		mysql.InsertData(insertSql,msg);
 	}
@@ -621,8 +630,9 @@ void CWbcDlg::OnMenuitem32773() //异常登记
 
 
 }
-//匹配刷胶工具和银浆
-void CWbcDlg::matchTools(){
+
+void CWbcDlg::matchTools()//匹配刷胶工具和银浆
+{
 
 	CString lastCheckId;
 	idTextCtr.GetWindowText(lastCheckId);
@@ -663,6 +673,7 @@ void CWbcDlg::matchTools(){
 		}
 		if(lastCheckSteelMeshSn!=array.GetAt(0)||lastCheckShimSn!=array.GetAt(1)||lastCheckScraperSn!=array.GetAt(2)){
 			firstWeighWaferListCtr.SetItemText(i,4,"不匹配");
+			continue;
 		}
 		firstWeighWaferListCtr.SetItemText(i,4,"匹配");
 	}

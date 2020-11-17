@@ -13,18 +13,18 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=10
-Resource1=MAIN_DIALOG
+Resource1=IDR_MENU2
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=MANUAL_WEIGH_DIALOG
+Resource3=MAIN_DIALOG
 Class5=CheckToolsDlg
 Resource4=CHECK_TOOLS_DIALOG
 Class6=SettingDialog
 Resource5=IDR_MENU1
 Class7=ManualWeighDialog
-Resource6=IDR_MENU2
-Resource7=IDD_ABOUTBOX
-Resource8=EXCEPTION_REGISTER
+Resource6=MANUAL_WEIGH_DIALOG
+Resource7=EXCEPTION_REGISTER
+Resource8=IDD_ABOUTBOX
 Resource9=SETTING_DIALOG
 Class8=ExceptionRegisterDialog
 Resource10=IDR_MENU3
@@ -202,7 +202,7 @@ CommandCount=1
 [DLG:EXCEPTION_REGISTER]
 Type=1
 Class=ExceptionRegisterDialog
-ControlCount=10
+ControlCount=16
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
 Control3=IDC_STATIC,static,1342308352
@@ -213,6 +213,12 @@ Control7=IDC_STATIC,static,1342308352
 Control8=IDC_EDIT1,edit,1350631552
 Control9=IDC_STATIC,static,1342308352
 Control10=IDC_COMBO2,combobox,1344340226
+Control11=IDC_STATIC,static,1342308352
+Control12=IDC_EDIT2,edit,1350631552
+Control13=IDC_STATIC,static,1342308352
+Control14=IDC_EDIT3,edit,1350631584
+Control15=IDC_STATIC,static,1342308352
+Control16=IDC_EDIT4,edit,1350631552
 
 [CLS:ExceptionRegisterDialog]
 Type=0

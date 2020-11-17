@@ -19,6 +19,9 @@ public:
 // Dialog Data
 	//{{AFX_DATA(ExceptionRegisterDialog)
 	enum { IDD = EXCEPTION_REGISTER };
+	CEdit	handlePlanEditCtr;
+	CEdit	passwordEditCtr;
+	CEdit	usernameEditCtr;
 	CComboBox	handleResultCbxCtr;
 	CEdit	remarkEditCtr;
 	CComboBox	exceptionReasonCbxCtr;
@@ -27,7 +30,7 @@ public:
 
 	CString waferLot;
 	void initExceptionReasonCbxCtr() ;
-
+	void setException(CString waferLot);
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(ExceptionRegisterDialog)

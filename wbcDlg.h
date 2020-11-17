@@ -35,6 +35,9 @@ public:
 	CEdit	waferCtr;
 	//}}AFX_DATA
 
+	//´æ´¢Òì³£¼ÇÂ¼map
+	CMapStringToString exceptionMap;
+
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CWbcDlg)
 	protected:

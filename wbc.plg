@@ -6,20 +6,19 @@
 --------------------Configuration: wbc - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating command line "rc.exe /l 0x804 /fo"Debug/wbc.res" /d "_DEBUG" /d "_AFXDLL" "D:\vc6\wbc\wbc.rc"" 
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPEAF0.tmp" with contents
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPBFE5.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/wbc.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
-"D:\vc6\wbc\wbcDlg.cpp"
 "D:\vc6\wbc\ExceptionRegisterDialog.cpp"
 ]
-Creating command line "cl.exe @C:\Users\FYB\AppData\Local\Temp\RSPEAF0.tmp" 
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPEAF1.tmp" with contents
+Creating command line "cl.exe @C:\Users\FYB\AppData\Local\Temp\RSPBFE5.tmp" 
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPBFE6.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/wbc.pdb" /debug /machine:I386 /out:"Debug/wbc.exe" /pdbtype:sept 
 .\Debug\CheckToolsDlg.obj
 .\Debug\CMyListCtrl.obj
 .\Debug\Epo.obj
+.\Debug\ExceptionRegisterDialog.obj
 .\Debug\ManualWeighDialog.obj
 .\Debug\MyRepository.obj
 .\Debug\MySqlUtil.obj
@@ -31,31 +30,20 @@ Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPEAF1.tmp" with conte
 .\Debug\wbc.obj
 .\Debug\wbcDlg.obj
 .\Debug\wbc.res
-.\Debug\ExceptionRegisterDialog.obj
 ]
-Creating command line "link.exe @C:\Users\FYB\AppData\Local\Temp\RSPEAF1.tmp"
+Creating command line "link.exe @C:\Users\FYB\AppData\Local\Temp\RSPBFE6.tmp"
 <h3>Output Window</h3>
-Compiling resources...
 Compiling...
 ExceptionRegisterDialog.cpp
-Generating Code...
-Compiling...
-wbcDlg.cpp
-D:\vc6\wbc\wbcDlg.cpp(433) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-D:\vc6\wbc\wbcDlg.cpp(512) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-D:\vc6\wbc\wbcDlg.cpp(519) : warning C4305: 'argument' : truncation from 'const int' to 'char'
-D:\vc6\wbc\wbcDlg.cpp(519) : warning C4309: 'argument' : truncation of constant value
-D:\vc6\wbc\wbcDlg.cpp(858) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
-D:\vc6\wbc\wbcDlg.cpp(903) : warning C4101: 'm_crTextBk' : unreferenced local variable
-Generating Code...
 Linking...
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPEC69.tmp" with contents
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPC0A3.tmp" with contents
 [
 /nologo /o"Debug/wbc.bsc" 
 .\Debug\StdAfx.sbr
 .\Debug\CheckToolsDlg.sbr
 .\Debug\CMyListCtrl.sbr
 .\Debug\Epo.sbr
+.\Debug\ExceptionRegisterDialog.sbr
 .\Debug\ManualWeighDialog.sbr
 .\Debug\MyRepository.sbr
 .\Debug\MySqlUtil.sbr
@@ -64,16 +52,15 @@ Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPEC69.tmp" with conte
 .\Debug\ShiftUtils.sbr
 .\Debug\ValiadteUtils.sbr
 .\Debug\wbc.sbr
-.\Debug\wbcDlg.sbr
-.\Debug\ExceptionRegisterDialog.sbr]
-Creating command line "bscmake.exe @C:\Users\FYB\AppData\Local\Temp\RSPEC69.tmp"
+.\Debug\wbcDlg.sbr]
+Creating command line "bscmake.exe @C:\Users\FYB\AppData\Local\Temp\RSPC0A3.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 
 
 
 <h3>Results</h3>
-wbc.exe - 0 error(s), 6 warning(s)
+wbc.exe - 0 error(s), 0 warning(s)
 </pre>
 </body>
 </html>
