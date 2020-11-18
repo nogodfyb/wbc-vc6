@@ -13,19 +13,19 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=10
-Resource1=MAIN_DIALOG
+Resource1=IDR_MENU1
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=IDR_MENU2
+Resource3=MAIN_DIALOG
 Class5=CheckToolsDlg
-Resource4=EXCEPTION_REGISTER
+Resource4=IDR_MENU2
 Class6=SettingDialog
-Resource5=IDR_MENU1
+Resource5=EXCEPTION_REGISTER
 Class7=ManualWeighDialog
 Resource6=CHECK_TOOLS_DIALOG
-Resource7=MANUAL_WEIGH_DIALOG
+Resource7=IDD_ABOUTBOX
 Resource8=SETTING_DIALOG
-Resource9=IDD_ABOUTBOX
+Resource9=MANUAL_WEIGH_DIALOG
 Class8=ExceptionRegisterDialog
 Resource10=IDR_MENU3
 

@@ -29,6 +29,8 @@ public:
 	static bool validateWeight(CString weight);
 	//校验银浆二维码
 	static bool validateEpo(CString ep);
+	//校验wafer胶重是否超标
+	static bool validateEpoWeight(CString waferSize,CString weight);
 };
 
 #endif // !defined(AFX_VALIADTEUTILS_H__BF7A0A2E_F624_42B4_AB43_ECE7AB249EE1__INCLUDED_)

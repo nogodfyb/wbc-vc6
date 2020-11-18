@@ -192,3 +192,24 @@ bool ValiadteUtils::validateEpo(CString ep){
 	}
 	return true;
 }
+
+bool ValiadteUtils::validateEpoWeight(CString waferSize,CString weight){
+	if (waferSize=="5")
+	{
+		float weightF=atof(weight);
+		if (weightF<0.5f||weightF>1.0f)
+		{
+			return false;
+		}
+	}
+
+	if (waferSize=="6")
+	{
+		float weightF=atof(weight);
+		if (weightF<0.7f||weightF>1.4f)
+		{
+			return false;
+		}
+	}
+	return true;
+}

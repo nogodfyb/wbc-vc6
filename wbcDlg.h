@@ -85,6 +85,7 @@ protected:
 	afx_msg void OnMenuitem32771();
 	afx_msg void OnTimer(UINT nIDEvent);
 	afx_msg void OnCustomdrawMyList ( NMHDR* pNMHDR, LRESULT* pResult );
+	afx_msg void OnCustomdrawMyList2 ( NMHDR* pNMHDR, LRESULT* pResult );
 	afx_msg void OnMenuitem32772();
 	afx_msg void OnButton3();
 	afx_msg void OnMenuitem32773();

@@ -108,6 +108,7 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_COMMAND(ID_MENUITEM32771, OnMenuitem32771)
 	ON_WM_TIMER()
 	ON_NOTIFY(NM_CUSTOMDRAW, IDC_LIST2, OnCustomdrawMyList)
+	ON_NOTIFY(NM_CUSTOMDRAW, IDC_LIST3, OnCustomdrawMyList2)
 	ON_COMMAND(ID_MENUITEM32772, OnMenuitem32772)
 	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
 	ON_COMMAND(ID_MENUITEM32773, OnMenuitem32773)
@@ -321,7 +322,7 @@ void CWbcDlg::initSelectWaferListCtr(){
 
 //初始化第一次称重的listCtr
 void CWbcDlg::initFirstWeighWaferListCtr(){
-	CString str[6] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma"),TEXT("刷胶工具"),TEXT("银浆")};
+	CString str[6] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma(剩余分钟)"),TEXT("刷胶工具"),TEXT("银浆")};
 	for (size_t i = 0; i < 6; i++)
 	{
 		firstWeighWaferListCtr.InsertColumn(i, str[i], LVCFMT_LEFT, 100);
@@ -333,8 +334,8 @@ void CWbcDlg::initFirstWeighWaferListCtr(){
 }
 //初始化第二次称重的listCtr
 void CWbcDlg::initSecondWeighWaferListCtr(){
-	CString str[6] = { TEXT("WaferSource"),TEXT("WaferLot"),TEXT("刷胶前重量"), TEXT("刷胶后重量"),TEXT("胶重"),TEXT("异常登记")};
-	for (int i=0;i<6;i++)
+	CString str[7] = { TEXT("WaferSource"),TEXT("WaferLot"),TEXT("刷胶前重量"), TEXT("刷胶后重量"),TEXT("胶重"),TEXT("异常登记"),TEXT("标准")};
+	for (int i=0;i<7;i++)
 	{
 		secondWeighWaferListCtr.InsertColumn(i,str[i],LVCFMT_LEFT,100);
 	}
@@ -516,7 +517,11 @@ void CWbcDlg::OnButton3() //提交称重记录
 		sql6.Format("SELECT shim_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND shim_sn=sn",waferSource);
 		mysql.SelectData(sql6,msg,array6);
 		CString shimLife=array6.GetAt(1);
+		//胶重是否超过标准
+		CString overWeight=secondWeighWaferListCtr.GetItemText(k,6);
 
+
+		
 		CStringArray params;
 		params.Add(shift);//参数1 班次
 		params.Add(bn);//参数2 工号
@@ -531,7 +536,7 @@ void CWbcDlg::OnButton3() //提交称重记录
 		params.Add(waferSource);//参数11 waferSource
 		params.Add(waferLot);//参数12 waferLot 
 		params.Add(waferSize);//参数13 waferSize
-		params.Add("0");//参数14 是否超重
+		params.Add(overWeight);//参数14 是否超重
 		params.Add(lastCheckScraperSn);//参数15 刮刀sn
 		params.Add(lastCheckSteelMeshSn);//参数16 钢网sn
 		params.Add(lastCheckShimSn);//参数17 垫片sn
@@ -548,6 +553,13 @@ void CWbcDlg::OnButton3() //提交称重记录
 		CString sql7;
 		sql7.Format("UPDATE wbc20_tool SET life=life-1 WHERE sn in ('%s','%s','%s')",array4.GetAt(0),array5.GetAt(0),array6.GetAt(0));
 		mysql.UpdateData(sql7,msg);
+		//提交称重记录之后 删除该wafer第一次称重记录
+		CString sql8;
+		sql8.Format("DELETE from wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
+		mysql.DeleteData(sql8,msg);
+		//更新第一次称重记录表
+		firstWeighWaferListCtr.DeleteAllItems();
+		completeFirstWeighWaferListCtr();
 		secondWeighWaferListCtr.DeleteItem(k);
 	}
 	
@@ -633,7 +645,12 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 	CString plasmaRemain;
 	int currentRow =firstWeighWaferListCtr.GetSelectionMark();
 	plasmaRemain=firstWeighWaferListCtr.GetItemText(currentRow,3);
+	//剩余分钟数
 	int minutes=atoi(plasmaRemain);
+	//刷胶工具匹配情况
+	CString toolsMatch=firstWeighWaferListCtr.GetItemText(currentRow,4);
+	//银浆匹配情况
+	CString epoMatch=firstWeighWaferListCtr.GetItemText(currentRow,5);
 	CString waferLot=firstWeighWaferListCtr.GetItemText(currentRow,1);
 	CString waferSource=firstWeighWaferListCtr.GetItemText(currentRow,0);
 	CString firstWeight=firstWeighWaferListCtr.GetItemText(currentRow,2);
@@ -642,11 +659,11 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 		MessageBox("当前未选中任何wafer!");
 		return;
 	}
-// 	if (minutes<=0)
-// 	{
-// 		MessageBox("Plasma不满足第二次称重的条件!");
-// 		return;
-// 	} 
+	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
+	{
+		MessageBox("Plasma不满足第二次称重的条件!");
+		return;
+	} 
 	//手动模式
 	if (weigthMode=="1")
 	{
@@ -820,6 +837,15 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 }
 //手动第二次称重
 void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight){
+	//根据waferSource查询waferSize
+	CString msg;
+	MySqlUtil mysql(msg);
+	CString sql3;
+	CStringArray array3;
+	sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
+	mysql.SelectData(sql3,msg,array3);
+	CString waferSize=array3.GetAt(0);
+
 	for (int i=0;i<secondWeighWaferListCtr.GetItemCount();i++)
 	{
 		CString currentWaferLot=secondWeighWaferListCtr.GetItemText(i,1);
@@ -840,6 +866,10 @@ void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString fir
 				CString epWeightStr;
 				epWeightStr.Format("%g", epWeight);
 				secondWeighWaferListCtr.SetItemText(i,4,epWeightStr);
+				bool over=ValiadteUtils::validateEpoWeight(waferSize,epWeightStr);
+				CString overWeight;
+				over?overWeight="OK":overWeight="NG";
+				secondWeighWaferListCtr.SetItemText(i,6,overWeight);
 			}
 			return;
 		}
@@ -860,6 +890,10 @@ void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString fir
 		CString epWeightStr;
 		epWeightStr.Format("%g", epWeight);
 		secondWeighWaferListCtr.SetItemText(endRow,4,epWeightStr);
+		bool over=ValiadteUtils::validateEpoWeight(waferSize,epWeightStr);
+		CString overWeight;
+		over?overWeight="OK":overWeight="NG";
+		secondWeighWaferListCtr.SetItemText(endRow,6,overWeight);
 		secondWeighWaferListCtr.AdjustColumnWidth();
 	}
 }
@@ -955,7 +989,7 @@ void CWbcDlg::refreshEpoRemainTime()
 	delete arr;
 	
 }
-//自定义绘制
+//自定义绘制list2
 void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
 	NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>( pNMHDR );
 	
@@ -979,7 +1013,11 @@ void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
 		// 判断使ListCtrl不同颜色现实的条件
 		CString strTemp = firstWeighWaferListCtr.GetItemText(nItem,3);
 		int state=atoi(strTemp);
-		if (state>0)
+		//刷胶工具匹配情况
+		CString toolsMatch=firstWeighWaferListCtr.GetItemText(nItem,4);
+		//银浆匹配情况
+		CString epoMatch=firstWeighWaferListCtr.GetItemText(nItem,5);
+		if (state>0&&toolsMatch=="匹配"&&epoMatch=="匹配")
 		{
 			m_clrText = RGB(0,0,0);
 		}
@@ -990,6 +1028,45 @@ void CWbcDlg::OnCustomdrawMyList( NMHDR* pNMHDR, LRESULT* pResult){
 		pLVCD->clrText = m_clrText;
 		*pResult = CDRF_DODEFAULT;
 	}
+}
+
+
+//自定义绘制list3
+void CWbcDlg::OnCustomdrawMyList2( NMHDR* pNMHDR, LRESULT* pResult){
+	NMLVCUSTOMDRAW* pLVCD = reinterpret_cast<NMLVCUSTOMDRAW*>( pNMHDR );
+	
+    // Take the default processing unless we set this to something else below.
+    *pResult = 0;
+	
+    // First thing - check the draw stage. If it's the control's prepaint
+    // stage, then tell Windows we want messages for every item.
+    if ( CDDS_PREPAINT == pLVCD->nmcd.dwDrawStage )
+	{
+        *pResult = CDRF_NOTIFYITEMDRAW;
+	}
+	
+	// This is the notification message for an item. We'll request
+	// notifications before each subitem's prepaint stage.
+	else if ( pLVCD->nmcd.dwDrawStage==CDDS_ITEMPREPAINT )
+	{
+		COLORREF m_crTextBk , m_clrText;
+		int nItem = static_cast<int> (pLVCD->nmcd.dwItemSpec);
+		
+		// 判断使ListCtrl不同颜色现实的条件
+		CString strTemp = secondWeighWaferListCtr.GetItemText(nItem,6);
+		if (strTemp=="OK")
+		{
+			m_clrText = RGB(0,0,0);
+		}
+		else
+		{
+			m_clrText = RGB(255,0,0);
+		}
+		pLVCD->clrText = m_clrText;
+		*pResult = CDRF_DODEFAULT;
+	}
+	
+	
 }
 
 
