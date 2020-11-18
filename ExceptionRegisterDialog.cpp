@@ -5,6 +5,8 @@
 #include "wbc.h"
 #include "ExceptionRegisterDialog.h"
 #include "wbcDlg.h"
+#include "MySqlUtil.h"
+#include "MyUtils.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -51,7 +53,10 @@ END_MESSAGE_MAP()
 void ExceptionRegisterDialog::OnOK() //填写异常记录
 {
 	// TODO: Add extra validation here
-	setException(waferLot);
+	if (!setException(waferLot))
+	{
+		return;
+	}
 	
 	CDialog::OnOK();
 }
@@ -72,6 +77,7 @@ BOOL ExceptionRegisterDialog::OnInitDialog()
 	initExceptionReasonCbxCtr();
 	handleResultCbxCtr.AddString("OK");
 	handleResultCbxCtr.AddString("NG");
+	reloadRecord();
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -93,11 +99,25 @@ void ExceptionRegisterDialog::initExceptionReasonCbxCtr() //初始化异常原因下拉框
 	exceptionReasonCbxCtr.AddString("来料检查异物");
 
 }
-void ExceptionRegisterDialog::setException(CString waferLot) //存储异常记录到map
+bool ExceptionRegisterDialog::setException(CString waferLot) //存储异常记录到map
 {
+	CString username;
+	usernameEditCtr.GetWindowText(username);
+	CString password;
+	passwordEditCtr.GetWindowText(password);
+	CString sql;
+	CString msg;
+	CStringArray array;
+	MySqlUtil mysql(msg);
+	sql.Format("SELECT bn from diesaw_user WHERE bn='%s' AND pw=MD5('%s')",username,password);
+	mysql.SelectData(sql,msg,array);
+	if(array.GetSize()!=1){
+		MessageBox("工号和密码不正确");
+		return false;
+	}
+	
 	CWnd * parent=GetParent();
 	CWbcDlg * wbcDlg=(CWbcDlg *)parent;
-	CStringArray array;
 	//异常原因
 	CString exceptionReason;
 	exceptionReasonCbxCtr.GetWindowText(exceptionReason);
@@ -115,6 +135,21 @@ void ExceptionRegisterDialog::setException(CString waferLot) //存储异常记录到map
 	handleResultCbxCtr.GetWindowText(handleResult);
 
 	//存储到map
+	CString value=exceptionReason+";"+handlePlan+";"+remark+";"+handleResult;
+	wbcDlg->exceptionMap.SetAt(waferLot,value);
+	MessageBox("登记成功!");
+	return true;
+}
 
+void ExceptionRegisterDialog::reloadRecord(){
 
+	if (!exceptionRecordBefore.IsEmpty())
+	{
+		CStringArray array;
+		MyUtils::splitStr(exceptionRecordBefore,';',array);
+		exceptionReasonCbxCtr.SetWindowText(array.GetAt(0));
+		handlePlanEditCtr.SetWindowText(array.GetAt(1));
+		remarkEditCtr.SetWindowText(array.GetAt(2));
+		handleResultCbxCtr.SetWindowText(array.GetAt(3));
+	}
 }

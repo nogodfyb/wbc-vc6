@@ -29,8 +29,10 @@ public:
 	//}}AFX_DATA
 
 	CString waferLot;
+	CString exceptionRecordBefore;
 	void initExceptionReasonCbxCtr() ;
-	void setException(CString waferLot);
+	bool setException(CString waferLot);
+	void reloadRecord();
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(ExceptionRegisterDialog)

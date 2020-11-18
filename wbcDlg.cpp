@@ -333,8 +333,8 @@ void CWbcDlg::initFirstWeighWaferListCtr(){
 }
 //初始化第二次称重的listCtr
 void CWbcDlg::initSecondWeighWaferListCtr(){
-	CString str[5] = { TEXT("WaferSource"),TEXT("WaferLot"),TEXT("刷胶前重量"), TEXT("刷胶后重量"),TEXT("胶重")};
-	for (int i=0;i<5;i++)
+	CString str[6] = { TEXT("WaferSource"),TEXT("WaferLot"),TEXT("刷胶前重量"), TEXT("刷胶后重量"),TEXT("胶重"),TEXT("异常登记")};
+	for (int i=0;i<6;i++)
 	{
 		secondWeighWaferListCtr.InsertColumn(i,str[i],LVCFMT_LEFT,100);
 	}
@@ -457,12 +457,18 @@ void CWbcDlg::OnButton3() //提交称重记录
 	//机器号
 	CString machineCode="2FC01";
 	//遍历第一次称重列表
-	for (int k=0;k<secondWeighWaferListCtr.GetItemCount();k++)
+	int length=secondWeighWaferListCtr.GetItemCount();
+	for (int k=length-1;k>=0;k--)
 	{
-		CString waferLot=secondWeighWaferListCtr.GetItemText(i,1);
-		CString firstWeight=secondWeighWaferListCtr.GetItemText(i,2);
-		CString secondWeight=secondWeighWaferListCtr.GetItemText(i,3);
-		CString waferSource=secondWeighWaferListCtr.GetItemText(i,0);
+		bool check=secondWeighWaferListCtr.GetCheck(k);
+		if (!check)
+		{
+			continue;	
+		}
+		CString waferLot=secondWeighWaferListCtr.GetItemText(k,1);
+		CString firstWeight=secondWeighWaferListCtr.GetItemText(k,2);
+		CString secondWeight=secondWeighWaferListCtr.GetItemText(k,3);
+		CString waferSource=secondWeighWaferListCtr.GetItemText(k,0);
 		//根据waferLot查询第一次称重的时间
 		CString sql2;
 		CStringArray array2;
@@ -481,10 +487,35 @@ void CWbcDlg::OnButton3() //提交称重记录
 		CString handlePlan;
 		CString remark;
 		CString handleResult;
-
-
-
-
+		CString exceptionRecord;
+		bool state=exceptionMap.Lookup(waferLot,exceptionRecord);
+		if (state)
+		{
+			CStringArray result;
+			MyUtils::splitStr(exceptionRecord,';',result);
+			exceptionReason=result.GetAt(0);
+			handlePlan=result.GetAt(1);
+			remark=result.GetAt(2);
+			handleResult=result.GetAt(3);
+		}
+		//根据waferSource查询刮刀寿命
+		CString sql4;
+		CStringArray array4;
+		sql4.Format("SELECT scraper_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND scraper_sn=sn",waferSource);
+		mysql.SelectData(sql4,msg,array4);
+		CString scraperLife=array4.GetAt(1);
+		//根据waferSource查询钢网寿命
+		CString sql5;
+		CStringArray array5;
+		sql5.Format("SELECT steel_mesh_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND steel_mesh_sn=sn",waferSource);
+		mysql.SelectData(sql5,msg,array5);
+		CString steelMeshLife=array5.GetAt(1);
+		//根据waferSource查询垫片寿命
+		CString sql6;
+		CStringArray array6;
+		sql6.Format("SELECT shim_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND shim_sn=sn",waferSource);
+		mysql.SelectData(sql6,msg,array6);
+		CString shimLife=array6.GetAt(1);
 
 		CStringArray params;
 		params.Add(shift);//参数1 班次
@@ -508,8 +539,16 @@ void CWbcDlg::OnButton3() //提交称重记录
 		params.Add(handlePlan); //参数19 处理方案
 		params.Add(remark);//参数20 备注
 		params.Add(handleResult);//参数21 处理结果
+		params.Add(scraperLife);//参数22 刮刀寿命
+		params.Add(steelMeshLife);//参数23 钢网寿命
+		params.Add(shimLife);//参数24 垫片寿命
 		CString insertSql=MyRepository::insertSecondWeighRecord(params);
 		mysql.InsertData(insertSql,msg);
+		//更新各个工具的寿命
+		CString sql7;
+		sql7.Format("UPDATE wbc20_tool SET life=life-1 WHERE sn in ('%s','%s','%s')",array4.GetAt(0),array5.GetAt(0),array6.GetAt(0));
+		mysql.UpdateData(sql7,msg);
+		secondWeighWaferListCtr.DeleteItem(k);
 	}
 	
 }
@@ -626,8 +665,30 @@ void CWbcDlg::OnMenuitem32773() //异常登记
 	}
 	ExceptionRegisterDialog dlg;
 	dlg.waferLot=waferLot;
+	//模态窗口关闭前查询当前waferLot有无存储异常登记信息
+	CString exceptionRecordBefore;
+	bool beforeState=exceptionMap.Lookup(waferLot,exceptionRecordBefore);
+	if (beforeState)
+	{
+		dlg.exceptionRecordBefore=exceptionRecordBefore;
+	}
 	dlg.DoModal();
-
+	//模态窗口关闭后查询当前waferLot有无存储异常登记信息
+	CString exceptionRecordAfter;
+	bool afterState=exceptionMap.Lookup(waferLot,exceptionRecordAfter);
+	//已登记
+	if (afterState)
+	{
+		//查询waferLot所在行
+		for (int i=0;i<secondWeighWaferListCtr.GetItemCount();i++)
+		{
+			CString currentWaferLot=secondWeighWaferListCtr.GetItemText(i,1);
+			if (waferLot==currentWaferLot)
+			{
+				secondWeighWaferListCtr.SetItemText(i,5,"已登记");
+			}
+		}
+	}
 
 }
 
@@ -794,6 +855,7 @@ void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString fir
 		secondWeighWaferListCtr.SetItemText(endRow,1,waferLot);
 		secondWeighWaferListCtr.SetItemText(endRow,2,firstWeight);
 		secondWeighWaferListCtr.SetItemText(endRow,3,dlg.manualWeighValue);
+		secondWeighWaferListCtr.SetItemText(endRow,5,"未登记");
 		double epWeight=atof(dlg.manualWeighValue)-atof(firstWeight);
 		CString epWeightStr;
 		epWeightStr.Format("%g", epWeight);
