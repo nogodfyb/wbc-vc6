@@ -512,7 +512,12 @@ void CWbcDlg::OnButton3() //提交称重记录
 			CStringArray array3;
 			sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
 			mysql.SelectData(sql3,msg,array3);
-			CString waferSize=array3.GetAt(0);
+			//如果数据库中存在对应关系
+			CString waferSize;
+			if (array3.GetSize()==1)
+			{
+				waferSize=array3.GetAt(0);
+			}
 			//根据waferLot查询存储到map中的异常登记记录
 			CString exceptionReason;
 			CString handlePlan;
@@ -536,19 +541,31 @@ void CWbcDlg::OnButton3() //提交称重记录
 			CStringArray array4;
 			sql4.Format("SELECT scraper_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND scraper_sn=sn",waferSource);
 			mysql.SelectData(sql4,msg,array4);
-			CString scraperLife=array4.GetAt(1);
+			CString scraperLife;
+			if (array4.GetSize()==2)
+			{
+				scraperLife=array4.GetAt(1);
+			}
 			//根据waferSource查询钢网寿命
 			CString sql5;
 			CStringArray array5;
 			sql5.Format("SELECT steel_mesh_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND steel_mesh_sn=sn",waferSource);
 			mysql.SelectData(sql5,msg,array5);
-			CString steelMeshLife=array5.GetAt(1);
+			CString steelMeshLife;
+			if (array5.GetSize()==2)
+			{
+				steelMeshLife=array5.GetAt(1);
+			}
 			//根据waferSource查询垫片寿命
 			CString sql6;
 			CStringArray array6;
 			sql6.Format("SELECT shim_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND shim_sn=sn",waferSource);
 			mysql.SelectData(sql6,msg,array6);
-			CString shimLife=array6.GetAt(1);
+			CString shimLife;
+			if (array6.GetSize()==2)
+			{
+				shimLife=array6.GetAt(1);
+			}
 			//胶重是否超过标准
 			CString overWeight=secondWeighWaferListCtr.GetItemText(k,6);
 			
@@ -786,16 +803,16 @@ void CWbcDlg::matchTools()//匹配刷胶工具和银浆
 			MessageBox(info);
 			return;
 		}
+		if (array.GetSize()!=4)
+		{
+			firstWeighWaferListCtr.SetItemText(i,4,"异常");
+			continue;
+		}
 		if (currentEpo.partNumber!=array.GetAt(3))
 		{
 			firstWeighWaferListCtr.SetItemText(i,5,"不匹配");
 		}else{
 			firstWeighWaferListCtr.SetItemText(i,5,"匹配");
-		}
-		if (array.GetSize()!=4)
-		{
-			firstWeighWaferListCtr.SetItemText(i,4,"异常");
-			continue;
 		}
 		if(lastCheckSteelMeshSn!=array.GetAt(0)||lastCheckShimSn!=array.GetAt(1)||lastCheckScraperSn!=array.GetAt(2)){
 			firstWeighWaferListCtr.SetItemText(i,4,"不匹配");
@@ -897,7 +914,10 @@ void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString fir
 		CStringArray array3;
 		sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
 		mysql.SelectData(sql3,msg,array3);
-		waferSize=array3.GetAt(0);
+		if (array3.GetSize()==1)
+		{
+			waferSize=array3.GetAt(0);
+		}
 	}
 	catch (const char * info)
 	{

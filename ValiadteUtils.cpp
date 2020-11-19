@@ -194,6 +194,12 @@ bool ValiadteUtils::validateEpo(CString ep){
 }
 
 bool ValiadteUtils::validateEpoWeight(CString waferSize,CString weight){
+
+	if (waferSize.IsEmpty())
+	{
+		return false;
+	}
+	
 	if (waferSize=="5")
 	{
 		float weightF=atof(weight);
