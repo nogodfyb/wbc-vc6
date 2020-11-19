@@ -146,6 +146,10 @@ BOOL CWbcDlg::OnInitDialog()
 	SetIcon(m_hIcon, FALSE);		// Set small icon
 	
 	// TODO: Add extra initialization here
+	//初始化一些简单变量
+	needRestoreTimer=false;
+
+
 	initSelectWaferListCtr();
 	initPlanIdCbxCtr();
 	initFirstWeighWaferListCtr();
@@ -286,8 +290,9 @@ void CWbcDlg::OnScanWaferFistWeigh()//第一次称重前扫描wafer
 		MessageBox("芯片二维码格式不正确");
 	}
 }
-//扫银浆
-void CWbcDlg::OnScanEp(){
+
+void CWbcDlg::OnScanEp()//扫银浆
+{
 	CString qrCode;
 	epEditCtr.GetWindowText(qrCode);
 	epEditCtr.SetWindowText("");
@@ -303,6 +308,13 @@ void CWbcDlg::OnScanEp(){
 	{
 		MessageBox("扫描银浆不合法!");
 		return;
+	}
+	MessageBox("银浆已上机!");
+	//恢复刷新银浆上机时间的定时器
+	if (needRestoreTimer)
+	{
+		SetTimer(IDTIMER2,5000,0);
+		needRestoreTimer=false;
 	}
 	FILE *pFile=fopen("epo.dll","w");
 	fwrite(qrCode+";"+nowStr,1,strlen(qrCode+";"+nowStr),pFile);
@@ -489,6 +501,7 @@ void CWbcDlg::OnButton3() //提交称重记录
 		CString remark;
 		CString handleResult;
 		CString exceptionRecord;
+		CString dealPerson;
 		bool state=exceptionMap.Lookup(waferLot,exceptionRecord);
 		if (state)
 		{
@@ -498,6 +511,7 @@ void CWbcDlg::OnButton3() //提交称重记录
 			handlePlan=result.GetAt(1);
 			remark=result.GetAt(2);
 			handleResult=result.GetAt(3);
+			dealPerson=result.GetAt(4);
 		}
 		//根据waferSource查询刮刀寿命
 		CString sql4;
@@ -547,6 +561,7 @@ void CWbcDlg::OnButton3() //提交称重记录
 		params.Add(scraperLife);//参数22 刮刀寿命
 		params.Add(steelMeshLife);//参数23 钢网寿命
 		params.Add(shimLife);//参数24 垫片寿命
+		params.Add(dealPerson);//参数25 处理人
 		CString insertSql=MyRepository::insertSecondWeighRecord(params);
 		mysql.InsertData(insertSql,msg);
 		//更新各个工具的寿命
@@ -657,6 +672,11 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 	if (waferLot.IsEmpty())
 	{
 		MessageBox("当前未选中任何wafer!");
+		return;
+	}
+	if (currentEpoRunTime>120)
+	{
+		MessageBox("银浆上机时间已超过2小时!");
 		return;
 	}
 	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
@@ -983,9 +1003,24 @@ void CWbcDlg::refreshEpoRemainTime()
 	CTime lastDate=MyUtils::strToCTime(array.GetAt(5));
 	CTime now=CTime::GetCurrentTime();
 	CTimeSpan span=now-lastDate;
+	currentEpoRunTime=span.GetTotalMinutes();
 	CString lastScanTime;
 	lastScanTime.Format("%d",span.GetTotalMinutes());
 	epPromptTextCtr.SetWindowText("距离上次扫描银浆条码已经过去:"+lastScanTime+"分钟!银浆序列号:"+currentEpo.serialNumber+" 物料编码:"+currentEpo.partNumber);
+	if (span.GetTotalMinutes()>=120)
+	{
+		//已超时
+		epPromptTextCtr.SetWindowText("银浆上机已超过2小时!请重新点检!重新上银浆!");
+		AfxMessageBox("银浆上机已超过2小时!请重新点检!重新上银浆!");
+		//销毁定时器
+		KillTimer(IDTIMER2);
+		needRestoreTimer=true;
+		//将点检id置为******
+		idTextCtr.SetWindowText("******");
+		GetDlgItem(IDC_BUTTON3)->EnableWindow(false);
+	}else{
+		GetDlgItem(IDC_BUTTON3)->EnableWindow(true);
+	}
 	delete arr;
 	
 }

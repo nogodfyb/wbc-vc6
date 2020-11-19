@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=ExceptionRegisterDialog
+LastClass=CWbcDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
@@ -13,19 +13,19 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=10
-Resource1=IDR_MENU1
+Resource1=EXCEPTION_REGISTER
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=MAIN_DIALOG
+Resource3=IDR_MENU2
 Class5=CheckToolsDlg
-Resource4=IDR_MENU2
+Resource4=MANUAL_WEIGH_DIALOG
 Class6=SettingDialog
-Resource5=EXCEPTION_REGISTER
+Resource5=MAIN_DIALOG
 Class7=ManualWeighDialog
-Resource6=CHECK_TOOLS_DIALOG
+Resource6=IDR_MENU1
 Resource7=IDD_ABOUTBOX
-Resource8=SETTING_DIALOG
-Resource9=MANUAL_WEIGH_DIALOG
+Resource8=CHECK_TOOLS_DIALOG
+Resource9=SETTING_DIALOG
 Class8=ExceptionRegisterDialog
 Resource10=IDR_MENU3
 
@@ -43,7 +43,7 @@ ImplementationFile=wbcDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=CWbcDlg
+LastObject=ID_MENUITEM32773
 
 [CLS:CAboutDlg]
 Type=0

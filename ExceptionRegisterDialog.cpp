@@ -135,7 +135,7 @@ bool ExceptionRegisterDialog::setException(CString waferLot) //存储异常记录到map
 	handleResultCbxCtr.GetWindowText(handleResult);
 
 	//存储到map
-	CString value=exceptionReason+";"+handlePlan+";"+remark+";"+handleResult;
+	CString value=exceptionReason+";"+handlePlan+";"+remark+";"+handleResult+";"+username;
 	wbcDlg->exceptionMap.SetAt(waferLot,value);
 	MessageBox("登记成功!");
 	return true;

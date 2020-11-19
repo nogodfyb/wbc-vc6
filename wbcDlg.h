@@ -67,6 +67,11 @@ public:
 	CString lastCheckShimSn;
 	//当前上机银浆
 	Epo currentEpo;
+	//当前银浆上机时间
+	int currentEpoRunTime;
+	//是否需要重新恢复定时器
+	bool needRestoreTimer;
+
 // Implementation
 protected:
 	HICON m_hIcon;
