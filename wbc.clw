@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=CWbcDlg
+LastClass=CheckToolsDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
@@ -13,19 +13,19 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=10
-Resource1=EXCEPTION_REGISTER
+Resource1=SETTING_DIALOG
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=IDR_MENU2
+Resource3=MAIN_DIALOG
 Class5=CheckToolsDlg
-Resource4=MANUAL_WEIGH_DIALOG
+Resource4=IDR_MENU1
 Class6=SettingDialog
-Resource5=MAIN_DIALOG
+Resource5=EXCEPTION_REGISTER
 Class7=ManualWeighDialog
-Resource6=IDR_MENU1
+Resource6=CHECK_TOOLS_DIALOG
 Resource7=IDD_ABOUTBOX
-Resource8=CHECK_TOOLS_DIALOG
-Resource9=SETTING_DIALOG
+Resource8=MANUAL_WEIGH_DIALOG
+Resource9=IDR_MENU2
 Class8=ExceptionRegisterDialog
 Resource10=IDR_MENU3
 

@@ -279,7 +279,7 @@ BEGIN
     BEGIN
         LEFTMARGIN, 7
         RIGHTMARGIN, 878
-        TOPMARGIN, 7
+        TOPMARGIN, 6
         BOTTOMMARGIN, 440
     END
 

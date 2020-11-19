@@ -70,6 +70,9 @@ BOOL CheckToolsDlg::OnInitDialog()
 	waferSourceCtr.SetWindowText(waferSource);
 	selectToolsInfo();
 	initAppearanceCheckSelects();
+
+	//测试数据
+	myTest();
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -299,4 +302,22 @@ void CheckToolsDlg::OnButton1()
 		MessageBox(info);
 	}
 	
+}
+
+void CheckToolsDlg::myTest()//测试方法
+{
+	//填写刮刀外观
+	scraperCbxCtr.SetCurSel(1);
+	//填写钢网外观
+	steelMeshCbxCtr.SetCurSel(1);
+	//填写垫片外观
+	shimCbxCtr.SetCurSel(1);
+	//设置工号
+	bnEditCtr.SetWindowText("K8078");
+	//设置力量
+	powerEditCtr.SetWindowText("2.4");
+	//设置速度
+	speedEditCtr.SetWindowText("7");
+	//设置真空
+	vacuumEditCtr.SetWindowText("-50");
 }

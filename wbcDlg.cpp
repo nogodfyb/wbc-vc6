@@ -459,124 +459,152 @@ void CWbcDlg::OnButton3() //提交称重记录
 	CString shift=shiftUtils.getShiftByNow();
 	//查询当次点检人工号
 	CString msg;
-	MySqlUtil mysql(msg);
+	MySqlUtil mysql;
 	CStringArray array;
-	CString sql;
-	CString id;
-	idTextCtr.GetWindowText(id);
-	sql.Format("SELECT bn from wbc20_check_record WHERE id='%s'",id);
-	mysql.SelectData(sql,msg,array);
-	CString bn=array.GetAt(0);
+	//第一次称重列表的行数
+	int length;
+	//工号
+	CString bn;
 	//机器号
-	CString machineCode="2FC01";
-	//遍历第一次称重列表
-	int length=secondWeighWaferListCtr.GetItemCount();
-	for (int k=length-1;k>=0;k--)
+	CString machineCode;
+	try
 	{
-		bool check=secondWeighWaferListCtr.GetCheck(k);
-		if (!check)
-		{
-			continue;	
-		}
-		CString waferLot=secondWeighWaferListCtr.GetItemText(k,1);
-		CString firstWeight=secondWeighWaferListCtr.GetItemText(k,2);
-		CString secondWeight=secondWeighWaferListCtr.GetItemText(k,3);
-		CString waferSource=secondWeighWaferListCtr.GetItemText(k,0);
-		//根据waferLot查询第一次称重的时间
-		CString sql2;
-		CStringArray array2;
-		sql2.Format("SELECT update_time,wafer_device from wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
-		mysql.SelectData(sql2,msg,array2);
-		CString firstWeighTime=array2.GetAt(0);
-		CString waferDevice=array2.GetAt(1);
-		//根据waferSource查询waferSize
-		CString sql3;
-		CStringArray array3;
-		sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
-		mysql.SelectData(sql3,msg,array3);
-		CString waferSize=array3.GetAt(0);
-		//根据waferLot查询存储到map中的异常登记记录
-		CString exceptionReason;
-		CString handlePlan;
-		CString remark;
-		CString handleResult;
-		CString exceptionRecord;
-		CString dealPerson;
-		bool state=exceptionMap.Lookup(waferLot,exceptionRecord);
-		if (state)
-		{
-			CStringArray result;
-			MyUtils::splitStr(exceptionRecord,';',result);
-			exceptionReason=result.GetAt(0);
-			handlePlan=result.GetAt(1);
-			remark=result.GetAt(2);
-			handleResult=result.GetAt(3);
-			dealPerson=result.GetAt(4);
-		}
-		//根据waferSource查询刮刀寿命
-		CString sql4;
-		CStringArray array4;
-		sql4.Format("SELECT scraper_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND scraper_sn=sn",waferSource);
-		mysql.SelectData(sql4,msg,array4);
-		CString scraperLife=array4.GetAt(1);
-		//根据waferSource查询钢网寿命
-		CString sql5;
-		CStringArray array5;
-		sql5.Format("SELECT steel_mesh_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND steel_mesh_sn=sn",waferSource);
-		mysql.SelectData(sql5,msg,array5);
-		CString steelMeshLife=array5.GetAt(1);
-		//根据waferSource查询垫片寿命
-		CString sql6;
-		CStringArray array6;
-		sql6.Format("SELECT shim_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND shim_sn=sn",waferSource);
-		mysql.SelectData(sql6,msg,array6);
-		CString shimLife=array6.GetAt(1);
-		//胶重是否超过标准
-		CString overWeight=secondWeighWaferListCtr.GetItemText(k,6);
+		mysql.ConnMySQL(msg);
+		CString sql;
+		CString id;
+		idTextCtr.GetWindowText(id);
+		sql.Format("SELECT bn from wbc20_check_record WHERE id='%s'",id);
+		mysql.SelectData(sql,msg,array);
+		bn=array.GetAt(0);
+		machineCode="2FC01";
+		length=secondWeighWaferListCtr.GetItemCount();
 
-
-		
-		CStringArray params;
-		params.Add(shift);//参数1 班次
-		params.Add(bn);//参数2 工号
-		params.Add(machineCode);//参数3 机器号
-		params.Add(currentEpo.serialNumber);//参数4 银浆序列号
-		params.Add(currentEpo.beginTimeStr);//参数5 银浆解冻完成时间
-		params.Add(currentEpo.exceedTimeStr);//参数6 银浆过期时间
-		params.Add(firstWeight);//参数7 第一次称重的重量
-		params.Add(firstWeighTime); //参数8 第一次称重时间
-		params.Add(secondWeight);//参数9 第二次称重重量
-		params.Add(waferDevice);//参数10 芯片型号
-		params.Add(waferSource);//参数11 waferSource
-		params.Add(waferLot);//参数12 waferLot 
-		params.Add(waferSize);//参数13 waferSize
-		params.Add(overWeight);//参数14 是否超重
-		params.Add(lastCheckScraperSn);//参数15 刮刀sn
-		params.Add(lastCheckSteelMeshSn);//参数16 钢网sn
-		params.Add(lastCheckShimSn);//参数17 垫片sn
-		params.Add(exceptionReason);//参数18 异常原因
-		params.Add(handlePlan); //参数19 处理方案
-		params.Add(remark);//参数20 备注
-		params.Add(handleResult);//参数21 处理结果
-		params.Add(scraperLife);//参数22 刮刀寿命
-		params.Add(steelMeshLife);//参数23 钢网寿命
-		params.Add(shimLife);//参数24 垫片寿命
-		params.Add(dealPerson);//参数25 处理人
-		CString insertSql=MyRepository::insertSecondWeighRecord(params);
-		mysql.InsertData(insertSql,msg);
-		//更新各个工具的寿命
-		CString sql7;
-		sql7.Format("UPDATE wbc20_tool SET life=life-1 WHERE sn in ('%s','%s','%s')",array4.GetAt(0),array5.GetAt(0),array6.GetAt(0));
-		mysql.UpdateData(sql7,msg);
-		//提交称重记录之后 删除该wafer第一次称重记录
-		CString sql8;
-		sql8.Format("DELETE from wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
-		mysql.DeleteData(sql8,msg);
-		//更新第一次称重记录表
-		firstWeighWaferListCtr.DeleteAllItems();
-		completeFirstWeighWaferListCtr();
-		secondWeighWaferListCtr.DeleteItem(k);
 	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		return;
+	}
+	//开启事务
+	mysql.beginTransaction();
+	try
+	{
+		for (int k=length-1;k>=0;k--)
+		{
+			bool check=secondWeighWaferListCtr.GetCheck(k);
+			if (!check)
+			{
+				continue;	
+			}
+			CString waferLot=secondWeighWaferListCtr.GetItemText(k,1);
+			CString firstWeight=secondWeighWaferListCtr.GetItemText(k,2);
+			CString secondWeight=secondWeighWaferListCtr.GetItemText(k,3);
+			CString waferSource=secondWeighWaferListCtr.GetItemText(k,0);
+			//根据waferLot查询第一次称重的时间
+			CString sql2;
+			CStringArray array2;
+			sql2.Format("SELECT update_time,wafer_device from wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
+			mysql.SelectData(sql2,msg,array2);
+			CString firstWeighTime=array2.GetAt(0);
+			CString waferDevice=array2.GetAt(1);
+			//根据waferSource查询waferSize
+			CString sql3;
+			CStringArray array3;
+			sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
+			mysql.SelectData(sql3,msg,array3);
+			CString waferSize=array3.GetAt(0);
+			//根据waferLot查询存储到map中的异常登记记录
+			CString exceptionReason;
+			CString handlePlan;
+			CString remark;
+			CString handleResult;
+			CString exceptionRecord;
+			CString dealPerson;
+			bool state=exceptionMap.Lookup(waferLot,exceptionRecord);
+			if (state)
+			{
+				CStringArray result;
+				MyUtils::splitStr(exceptionRecord,';',result);
+				exceptionReason=result.GetAt(0);
+				handlePlan=result.GetAt(1);
+				remark=result.GetAt(2);
+				handleResult=result.GetAt(3);
+				dealPerson=result.GetAt(4);
+			}
+			//根据waferSource查询刮刀寿命
+			CString sql4;
+			CStringArray array4;
+			sql4.Format("SELECT scraper_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND scraper_sn=sn",waferSource);
+			mysql.SelectData(sql4,msg,array4);
+			CString scraperLife=array4.GetAt(1);
+			//根据waferSource查询钢网寿命
+			CString sql5;
+			CStringArray array5;
+			sql5.Format("SELECT steel_mesh_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND steel_mesh_sn=sn",waferSource);
+			mysql.SelectData(sql5,msg,array5);
+			CString steelMeshLife=array5.GetAt(1);
+			//根据waferSource查询垫片寿命
+			CString sql6;
+			CStringArray array6;
+			sql6.Format("SELECT shim_sn,life-1 from wbc20_tool_rule,wbc20_tool WHERE wafer_source='%s' AND shim_sn=sn",waferSource);
+			mysql.SelectData(sql6,msg,array6);
+			CString shimLife=array6.GetAt(1);
+			//胶重是否超过标准
+			CString overWeight=secondWeighWaferListCtr.GetItemText(k,6);
+			
+			
+			
+			CStringArray params;
+			params.Add(shift);//参数1 班次
+			params.Add(bn);//参数2 工号
+			params.Add(machineCode);//参数3 机器号
+			params.Add(currentEpo.serialNumber);//参数4 银浆序列号
+			params.Add(currentEpo.beginTimeStr);//参数5 银浆解冻完成时间
+			params.Add(currentEpo.exceedTimeStr);//参数6 银浆过期时间
+			params.Add(firstWeight);//参数7 第一次称重的重量
+			params.Add(firstWeighTime); //参数8 第一次称重时间
+			params.Add(secondWeight);//参数9 第二次称重重量
+			params.Add(waferDevice);//参数10 芯片型号
+			params.Add(waferSource);//参数11 waferSource
+			params.Add(waferLot);//参数12 waferLot 
+			params.Add(waferSize);//参数13 waferSize
+			params.Add(overWeight);//参数14 是否超重
+			params.Add(lastCheckScraperSn);//参数15 刮刀sn
+			params.Add(lastCheckSteelMeshSn);//参数16 钢网sn
+			params.Add(lastCheckShimSn);//参数17 垫片sn
+			params.Add(exceptionReason);//参数18 异常原因
+			params.Add(handlePlan); //参数19 处理方案
+			params.Add(remark);//参数20 备注
+			params.Add(handleResult);//参数21 处理结果
+			params.Add(scraperLife);//参数22 刮刀寿命
+			params.Add(steelMeshLife);//参数23 钢网寿命
+			params.Add(shimLife);//参数24 垫片寿命
+			params.Add(dealPerson);//参数25 处理人
+			CString insertSql=MyRepository::insertSecondWeighRecord(params);
+			mysql.InsertData(insertSql,msg);
+			//更新各个工具的寿命
+			CString sql7;
+			sql7.Format("UPDATE wbc20_tool SET life=life-1 WHERE sn in ('%s','%s','%s')",array4.GetAt(0),array5.GetAt(0),array6.GetAt(0));
+			mysql.UpdateData(sql7,msg);
+			//提交称重记录之后 删除该wafer第一次称重记录
+			CString sql8;
+			sql8.Format("DELETE from wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
+			mysql.DeleteData(sql8,msg);
+
+			secondWeighWaferListCtr.DeleteItem(k);
+		}
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		//回滚,不提交
+		mysql.rollbackTransaction();
+		return;
+	}
+	mysql.commitTransaction();
+	//更新第一次称重记录表
+	firstWeighWaferListCtr.DeleteAllItems();
+	completeFirstWeighWaferListCtr();
 	
 }
 
@@ -679,11 +707,11 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 		MessageBox("银浆上机时间已超过2小时!");
 		return;
 	}
-	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
-	{
-		MessageBox("Plasma不满足第二次称重的条件!");
-		return;
-	} 
+// 	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
+// 	{
+// 		MessageBox("Plasma不满足第二次称重的条件!");
+// 		return;
+// 	} 
 	//手动模式
 	if (weigthMode=="1")
 	{
@@ -858,14 +886,24 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 //手动第二次称重
 void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight){
 	//根据waferSource查询waferSize
-	CString msg;
-	MySqlUtil mysql(msg);
-	CString sql3;
-	CStringArray array3;
-	sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
-	mysql.SelectData(sql3,msg,array3);
-	CString waferSize=array3.GetAt(0);
 
+
+	CString waferSize;
+	try
+	{
+		CString msg;
+		MySqlUtil mysql(msg);
+		CString sql3;
+		CStringArray array3;
+		sql3.Format("SELECT wafer_size from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
+		mysql.SelectData(sql3,msg,array3);
+		waferSize=array3.GetAt(0);
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		return;
+	}
 	for (int i=0;i<secondWeighWaferListCtr.GetItemCount();i++)
 	{
 		CString currentWaferLot=secondWeighWaferListCtr.GetItemText(i,1);

@@ -108,14 +108,22 @@ bool ExceptionRegisterDialog::setException(CString waferLot) //存储异常记录到map
 	CString sql;
 	CString msg;
 	CStringArray array;
-	MySqlUtil mysql(msg);
-	sql.Format("SELECT bn from diesaw_user WHERE bn='%s' AND pw=MD5('%s')",username,password);
-	mysql.SelectData(sql,msg,array);
-	if(array.GetSize()!=1){
-		MessageBox("工号和密码不正确");
-		return false;
+
+	try
+	{
+		MySqlUtil mysql(msg);
+		sql.Format("SELECT bn from diesaw_user WHERE bn='%s' AND pw=MD5('%s')",username,password);
+		mysql.SelectData(sql,msg,array);
+		if(array.GetSize()!=1){
+			MessageBox("工号和密码不正确");
+			return false;
+		}
 	}
-	
+	catch (const char * info)
+	{
+		MessageBox(info);
+	}	
+
 	CWnd * parent=GetParent();
 	CWbcDlg * wbcDlg=(CWbcDlg *)parent;
 	//异常原因

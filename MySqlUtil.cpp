@@ -33,8 +33,7 @@ MySqlUtil::~MySqlUtil()
 
 //开启事务
 void MySqlUtil::beginTransaction() {
-    //关闭自动提交
-    mysql_autocommit(&mysql, 0);
+    mysql_query(&mysql, "start transaction");
 }
 
 //提交事务

@@ -21,6 +21,8 @@ public:
 	void onScanSteelMesh();
 	void onScanShim();
 	void initAppearanceCheckSelects();
+
+	void myTest();
 	//期望刀片信息
 	CString expectedScraper;
 	//刀片校验结果
@@ -74,6 +76,7 @@ protected:
 	virtual void OnOK();
 	virtual void OnCancel();
 	afx_msg void OnButton1();
+	
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
