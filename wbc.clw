@@ -13,27 +13,27 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=14
-Resource1=SETTING_DIALOG
+Resource1=IDD_ABOUTBOX
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=TOOLS_RELATION
+Resource3=CHECK_TOOLS_DIALOG
 Class5=CheckToolsDlg
-Resource4=MAIN_DIALOG
+Resource4=ADMIN_MAIN_DIALOG
 Class6=SettingDialog
-Resource5=IDR_MENU2
+Resource5=IDR_MENU1
 Class7=ManualWeighDialog
-Resource6=MANUAL_WEIGH_DIALOG
-Resource7=IDR_MENU1
-Resource8=IDD_ABOUTBOX
-Resource9=CHECK_TOOLS_DIALOG
+Resource6=ADD_TOOL_DIALOG
+Resource7=MAIN_DIALOG
+Resource8=MANUAL_WEIGH_DIALOG
+Resource9=EXCEPTION_REGISTER
 Class8=ExceptionRegisterDialog
-Resource10=ADMIN_MAIN_DIALOG
+Resource10=IDR_MENU2
 Class9=AdminMainDialog
-Resource11=ADD_TOOL_DIALOG
+Resource11=TOOLS_LIST_DIALOG
 Class10=ToolsListDialog
-Resource12=EXCEPTION_REGISTER
+Resource12=TOOLS_RELATION
 Class11=ToolsRelation
-Resource13=TOOLS_LIST_DIALOG
+Resource13=SETTING_DIALOG
 Class12=AddToolDialog
 Resource14=IDR_MENU3
 
@@ -287,7 +287,7 @@ VirtualFilter=dWC
 [DLG:ADD_TOOL_DIALOG]
 Type=1
 Class=AddToolDialog
-ControlCount=8
+ControlCount=10
 Control1=IDOK,button,1342242817
 Control2=IDCANCEL,button,1342242816
 Control3=IDC_STATIC,static,1342308352
@@ -296,6 +296,8 @@ Control5=IDC_STATIC,static,1342308352
 Control6=IDC_COMBO1,combobox,1344340226
 Control7=IDC_STATIC,static,1342308352
 Control8=IDC_EDIT2,edit,1350631552
+Control9=IDC_STATIC,static,1342308352
+Control10=IDC_EDIT3,edit,1350631552
 
 [CLS:AddToolDialog]
 Type=0
@@ -304,4 +306,5 @@ ImplementationFile=AddToolDialog.cpp
 BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
+LastObject=AddToolDialog
 

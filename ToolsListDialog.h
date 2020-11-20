@@ -23,6 +23,7 @@ public:
 	CMyListCtrl	toolsListCtr;
 	//}}AFX_DATA
 	void initToolsListCtr();
+	void getAllTools();
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -40,6 +41,7 @@ protected:
 	virtual void OnCancel();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnButton1();
+	
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

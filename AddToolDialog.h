@@ -19,6 +19,7 @@ public:
 // Dialog Data
 	//{{AFX_DATA(AddToolDialog)
 	enum { IDD = ADD_TOOL_DIALOG };
+	CEdit	descriptionEditCtr;
 	CEdit	lifeEditCtr;
 	CComboBox	typeCbxCtr;
 	CEdit	snEditCtr;
@@ -39,6 +40,7 @@ protected:
 	//{{AFX_MSG(AddToolDialog)
 	virtual void OnOK();
 	virtual void OnCancel();
+	virtual BOOL OnInitDialog();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

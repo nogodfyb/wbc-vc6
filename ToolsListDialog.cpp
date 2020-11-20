@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "wbc.h"
 #include "ToolsListDialog.h"
+#include "MySqlUtil.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -62,6 +63,7 @@ BOOL ToolsListDialog::OnInitDialog() //初始化
 	
 	// TODO: Add extra initialization here
 	initToolsListCtr();
+	getAllTools();
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
@@ -89,4 +91,35 @@ void ToolsListDialog::OnButton1() //添加工具
 	AddToolDialog dlg;
 	dlg.DoModal();
 	
+}
+void ToolsListDialog::getAllTools()//获取所有工具
+{
+
+	try
+	{
+		CString msg;
+		MySqlUtil mysql(msg);
+		CString sql;
+		sql.Format("SELECT sn,type,life,description,create_time,update_time FROM wbc20_tool");
+		mysql.SelectDataAndToList(sql,msg,&toolsListCtr);
+		//遍历列表将数字类型转换为
+		for (int i=0;i<toolsListCtr.GetItemCount();i++)
+		{
+			CString type=toolsListCtr.GetItemText(i,1);
+			if (type=="1")
+			{
+				toolsListCtr.SetItemText(i,1,"刮刀");
+			}else if (type=="2")
+			{
+				toolsListCtr.SetItemText(i,1,"钢网");
+			}else{
+				toolsListCtr.SetItemText(i,1,"垫片");
+			}
+		}
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+	}
+
 }
