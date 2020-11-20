@@ -14,6 +14,7 @@
 #include "MyRepository.h"
 #include "ShiftUtils.h"
 #include "ExceptionRegisterDialog.h"
+#include "AdminMainDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -112,6 +113,7 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_COMMAND(ID_MENUITEM32772, OnMenuitem32772)
 	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
 	ON_COMMAND(ID_MENUITEM32773, OnMenuitem32773)
+	ON_BN_CLICKED(IDC_BUTTON4, OnButton4)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -1167,3 +1169,10 @@ void CWbcDlg::OnCustomdrawMyList2( NMHDR* pNMHDR, LRESULT* pResult){
 
 
 
+
+void CWbcDlg::OnButton4() //后台管理
+{
+	// TODO: Add your control notification handler code here
+	AdminMainDialog dlg;
+	dlg.DoModal();
+}

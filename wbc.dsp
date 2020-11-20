@@ -90,6 +90,14 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
 # Begin Source File
 
+SOURCE=.\AddToolDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\AdminMainDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CheckToolsDlg.cpp
 # End Source File
 # Begin Source File
@@ -135,6 +143,14 @@ SOURCE=.\StdAfx.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\ToolsListDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\ToolsRelation.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\ValiadteUtils.cpp
 # End Source File
 # Begin Source File
@@ -153,6 +169,14 @@ SOURCE=.\wbcDlg.cpp
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl"
+# Begin Source File
+
+SOURCE=.\AddToolDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\AdminMainDialog.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\CheckToolsDlg.h
@@ -204,6 +228,14 @@ SOURCE=.\ShiftUtils.h
 # Begin Source File
 
 SOURCE=.\StdAfx.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ToolsListDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\ToolsRelation.h
 # End Source File
 # Begin Source File
 

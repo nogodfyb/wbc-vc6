@@ -17,6 +17,10 @@
 #define IDR_MENU2                       134
 #define IDR_MENU3                       135
 #define EXCEPTION_REGISTER              136
+#define ADMIN_MAIN_DIALOG               137
+#define TOOLS_LIST_DIALOG               138
+#define TOOLS_RELATION                  139
+#define ADD_TOOL_DIALOG                 140
 #define IDC_EDIT1                       1000
 #define CHECK_TOOLS_DLG_WS              1001
 #define SCRAPER_TEXT                    1002
@@ -43,6 +47,8 @@
 #define IDC_LIST3                       1024
 #define EP_PROMPT_TEXT                  1026
 #define IDC_BUTTON3                     1027
+#define IDC_BUTTON4                     1028
+#define IDC_TAB1                        1029
 #define ID_MENUITEM32771                32771
 #define ID_MENUITEM32772                32772
 #define ID_MENUITEM32773                32773
@@ -51,9 +57,9 @@
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        137
+#define _APS_NEXT_RESOURCE_VALUE        141
 #define _APS_NEXT_COMMAND_VALUE         32774
-#define _APS_NEXT_CONTROL_VALUE         1028
+#define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           101
 #endif
 #endif

@@ -94,6 +94,7 @@ protected:
 	afx_msg void OnMenuitem32772();
 	afx_msg void OnButton3();
 	afx_msg void OnMenuitem32773();
+	afx_msg void OnButton4();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:
