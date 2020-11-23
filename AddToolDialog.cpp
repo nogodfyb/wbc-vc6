@@ -51,8 +51,18 @@ void AddToolDialog::OnOK() //重写ok
 	//序列号
 	CString sn;
 	snEditCtr.GetWindowText(sn);
+	if (sn.IsEmpty())
+	{
+		MessageBox("序列号不能为空");
+		return;
+	}
 	//工具类型
 	CString type;
+	if (typeCbxCtr.GetCurSel()==-1)
+	{
+		MessageBox("工具类型必选!");
+		return;
+	}
 	typeCbxCtr.GetLBText(typeCbxCtr.GetCurSel(),type);
 	if (type=="刮刀")
 	{
@@ -66,22 +76,43 @@ void AddToolDialog::OnOK() //重写ok
 	//寿命
 	CString life;
 	lifeEditCtr.GetWindowText(life);
+	if (life.IsEmpty())
+	{
+		MessageBox("寿命不能为空!");
+		return;
+	}
 	//中文描述
 	CString description;
 	descriptionEditCtr.GetWindowText(description);
+	if (description.IsEmpty())
+	{
+		MessageBox("中文描述不能为空!");
+		return;
+	}
 
 	try
 	{
 		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
-		sql.Format("INSERT INTO wbc20_tool(sn, type, life, description) VALUES ('%s','%s','%s','%s')",sn,type,life,description);
-		mysql.InsertData(sql,msg);
-		MessageBox("添加成功");
+
+		//编辑模式
+		if (mode==1)
+		{
+			sql.Format("UPDATE wbc20_tool SET type='%s',life='%s',description='%s' WHERE sn='%s'",type,life,description,sn);
+			mysql.UpdateData(sql,msg);
+			MessageBox("修改成功!");
+		}else{
+			sql.Format("INSERT INTO wbc20_tool(sn, type, life, description) VALUES ('%s','%s','%s','%s')",sn,type,life,description);
+			mysql.InsertData(sql,msg);
+			MessageBox("添加成功!");
+		}
+
 	}
 	catch (const char * info)
 	{
 		MessageBox(info);
+		return;
 	}
 	
 	
@@ -105,7 +136,35 @@ BOOL AddToolDialog::OnInitDialog() //初始化
 	typeCbxCtr.AddString("刮刀");
 	typeCbxCtr.AddString("钢网");
 	typeCbxCtr.AddString("垫片");
+
+	//如果当前是修改模式
+	if (mode==1)
+	{
+		initEditForm();
+	}
 	
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
+
+void AddToolDialog::initEditForm()//初始化编辑表单
+{
+
+	snEditCtr.SetWindowText(sn);
+	snEditCtr.EnableWindow(false);
+	descriptionEditCtr.SetWindowText(description);
+	lifeEditCtr.SetWindowText(life);
+	int count=typeCbxCtr.GetCount();
+	for (int i=0;i<count;i++)
+	{
+		CString msg;
+		typeCbxCtr.GetLBText(i,msg);
+		if (msg==type)
+		{
+			typeCbxCtr.SetCurSel(i);
+			break;
+		}
+	}
+	
+}
+

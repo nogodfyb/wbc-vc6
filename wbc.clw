@@ -2,40 +2,43 @@
 
 [General Info]
 Version=1
-LastClass=AddToolDialog
+LastClass=AddRelationDialog
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
 
-ClassCount=12
+ClassCount=13
 Class1=CWbcApp
 Class2=CWbcDlg
 Class3=CAboutDlg
 
-ResourceCount=14
-Resource1=IDD_ABOUTBOX
+ResourceCount=16
+Resource1=IDR_MENU2
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=CHECK_TOOLS_DIALOG
+Resource3=MAIN_DIALOG
 Class5=CheckToolsDlg
-Resource4=ADMIN_MAIN_DIALOG
+Resource4=ADD_RELATION_DIALOG
 Class6=SettingDialog
 Resource5=IDR_MENU1
 Class7=ManualWeighDialog
-Resource6=ADD_TOOL_DIALOG
-Resource7=MAIN_DIALOG
-Resource8=MANUAL_WEIGH_DIALOG
+Resource6=SETTING_DIALOG
+Resource7=MANUAL_WEIGH_DIALOG
+Resource8=CHECK_TOOLS_DIALOG
 Resource9=EXCEPTION_REGISTER
 Class8=ExceptionRegisterDialog
-Resource10=IDR_MENU2
+Resource10=TOOLS_RELATION
 Class9=AdminMainDialog
 Resource11=TOOLS_LIST_DIALOG
 Class10=ToolsListDialog
-Resource12=TOOLS_RELATION
+Resource12=IDD_ABOUTBOX
 Class11=ToolsRelation
-Resource13=SETTING_DIALOG
+Resource13=ADD_TOOL_DIALOG
 Class12=AddToolDialog
 Resource14=IDR_MENU3
+Resource15=ADMIN_MAIN_DIALOG
+Class13=AddRelationDialog
+Resource16=IDR_MENU4
 
 [CLS:CWbcApp]
 Type=0
@@ -269,12 +272,14 @@ ImplementationFile=ToolsListDialog.cpp
 BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
-LastObject=IDC_LIST1
+LastObject=ID_MENUITEM32775
 
 [DLG:TOOLS_RELATION]
 Type=1
 Class=ToolsRelation
-ControlCount=0
+ControlCount=2
+Control1=IDC_LIST1,SysListView32,1350631425
+Control2=IDC_BUTTON1,button,1342242816
 
 [CLS:ToolsRelation]
 Type=0
@@ -283,6 +288,7 @@ ImplementationFile=ToolsRelation.cpp
 BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
+LastObject=ID_MENUITEM32771
 
 [DLG:ADD_TOOL_DIALOG]
 Type=1
@@ -293,7 +299,7 @@ Control2=IDCANCEL,button,1342242816
 Control3=IDC_STATIC,static,1342308352
 Control4=IDC_EDIT1,edit,1350631552
 Control5=IDC_STATIC,static,1342308352
-Control6=IDC_COMBO1,combobox,1344340226
+Control6=IDC_COMBO1,combobox,1344340227
 Control7=IDC_STATIC,static,1342308352
 Control8=IDC_EDIT2,edit,1350631552
 Control9=IDC_STATIC,static,1342308352
@@ -307,4 +313,39 @@ BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
 LastObject=AddToolDialog
+
+[MNU:IDR_MENU4]
+Type=1
+Class=?
+Command1=ID_MENUITEM32774
+Command2=ID_MENUITEM32775
+CommandCount=2
+
+[DLG:ADD_RELATION_DIALOG]
+Type=1
+Class=AddRelationDialog
+ControlCount=14
+Control1=IDOK,button,1342242817
+Control2=IDCANCEL,button,1342242816
+Control3=IDC_STATIC,static,1342308352
+Control4=IDC_STATIC,static,1342308352
+Control5=IDC_STATIC,static,1342308352
+Control6=IDC_STATIC,static,1342308352
+Control7=IDC_STATIC,static,1342308352
+Control8=IDC_STATIC,static,1342308352
+Control9=IDC_EDIT1,edit,1350631552
+Control10=IDC_EDIT2,edit,1350631552
+Control11=IDC_COMBO1,combobox,1344340227
+Control12=IDC_COMBO2,combobox,1344340227
+Control13=IDC_COMBO3,combobox,1344340227
+Control14=IDC_COMBO4,combobox,1344340227
+
+[CLS:AddRelationDialog]
+Type=0
+HeaderFile=AddRelationDialog.h
+ImplementationFile=AddRelationDialog.cpp
+BaseClass=CDialog
+Filter=D
+VirtualFilter=dWC
+LastObject=AddRelationDialog
 

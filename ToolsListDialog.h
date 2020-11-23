@@ -41,7 +41,9 @@ protected:
 	virtual void OnCancel();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnButton1();
-	
+	afx_msg void OnContextMenu(CWnd* pWnd, CPoint point);
+	afx_msg void OnMenuitem32774();
+	afx_msg void OnMenuitem32775();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

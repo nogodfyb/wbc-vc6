@@ -21,6 +21,8 @@
 #define TOOLS_LIST_DIALOG               138
 #define TOOLS_RELATION                  139
 #define ADD_TOOL_DIALOG                 140
+#define IDR_MENU4                       141
+#define ADD_RELATION_DIALOG             142
 #define IDC_EDIT1                       1000
 #define CHECK_TOOLS_DLG_WS              1001
 #define SCRAPER_TEXT                    1002
@@ -52,13 +54,15 @@
 #define ID_MENUITEM32771                32771
 #define ID_MENUITEM32772                32772
 #define ID_MENUITEM32773                32773
+#define ID_MENUITEM32774                32774
+#define ID_MENUITEM32775                32775
 
 // Next default values for new objects
 // 
 #ifdef APSTUDIO_INVOKED
 #ifndef APSTUDIO_READONLY_SYMBOLS
-#define _APS_NEXT_RESOURCE_VALUE        141
-#define _APS_NEXT_COMMAND_VALUE         32774
+#define _APS_NEXT_RESOURCE_VALUE        143
+#define _APS_NEXT_COMMAND_VALUE         32776
 #define _APS_NEXT_CONTROL_VALUE         1030
 #define _APS_NEXT_SYMED_VALUE           101
 #endif

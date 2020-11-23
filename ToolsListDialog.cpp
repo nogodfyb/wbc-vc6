@@ -37,6 +37,9 @@ void ToolsListDialog::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(ToolsListDialog, CDialog)
 	//{{AFX_MSG_MAP(ToolsListDialog)
 	ON_BN_CLICKED(IDC_BUTTON1, OnButton1)
+	ON_WM_CONTEXTMENU()
+	ON_COMMAND(ID_MENUITEM32774, OnMenuitem32774)
+	ON_COMMAND(ID_MENUITEM32775, OnMenuitem32775)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -90,6 +93,8 @@ void ToolsListDialog::OnButton1() //添加工具
 	// TODO: Add your control notification handler code here
 	AddToolDialog dlg;
 	dlg.DoModal();
+	toolsListCtr.DeleteAllItems();
+	getAllTools();
 	
 }
 void ToolsListDialog::getAllTools()//获取所有工具
@@ -116,6 +121,77 @@ void ToolsListDialog::getAllTools()//获取所有工具
 				toolsListCtr.SetItemText(i,1,"垫片");
 			}
 		}
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+	}
+
+}
+
+void ToolsListDialog::OnContextMenu(CWnd* pWnd, CPoint point) //菜单关联
+{
+	// TODO: Add your message handler code here
+	//关联刷胶工具列表
+	CRect  rect; //定义矩形区域
+	GetDlgItem(IDC_LIST1) -> GetWindowRect(&rect);  //获得控件相对于屏幕的位置坐标
+	if(rect.PtInRect(point))  //右击点在指定控件上
+	{
+		CMenu popMenu;//弹出菜单
+		popMenu.LoadMenu(IDR_MENU4);//根据资源ID关联菜单资源
+		CMenu * subMenu = popMenu.GetSubMenu(0);//获得第0列子菜单的指针
+		subMenu->TrackPopupMenu(TPM_LEFTALIGN|TPM_LEFTBUTTON, point.x, point.y, this);  //在指定位置显示浮动弹出菜单，并追踪弹出菜单中被选择的项
+	}
+	
+}
+
+void ToolsListDialog::OnMenuitem32774() //编辑
+{
+	// TODO: Add your command handler code here
+	int currentRow=toolsListCtr.GetSelectionMark();
+	//序列号
+	CString sn=toolsListCtr.GetItemText(currentRow,0);
+	//工具类型
+	CString type=toolsListCtr.GetItemText(currentRow,1);
+	//寿命
+	CString life=toolsListCtr.GetItemText(currentRow,2);
+	//描述
+	CString description=toolsListCtr.GetItemText(currentRow,3);
+	AddToolDialog dlg;
+	//将表单参数传递给弹出窗口
+	dlg.sn=sn;
+	dlg.type=type;
+	dlg.life=life;
+	dlg.description=description;
+	//打开编辑模式
+	dlg.mode=1;
+	dlg.DoModal();
+	toolsListCtr.DeleteAllItems();
+	getAllTools();
+
+}
+
+void ToolsListDialog::OnMenuitem32775() //删除
+{
+	// TODO: Add your command handler code here
+	if(MessageBox(TEXT("是否确认删除?"),TEXT("删除工具"),MB_OKCANCEL)!=IDOK)
+	{
+		return;
+	}
+	int currentRow=toolsListCtr.GetSelectionMark();
+	//序列号
+	CString sn=toolsListCtr.GetItemText(currentRow,0);
+
+	try
+	{
+		CString msg;
+		MySqlUtil mysql(msg);
+		CString sql;
+		sql.Format("DELETE from wbc20_tool WHERE sn='%s'",sn);
+		mysql.DeleteData(sql,msg);
+		MessageBox("删除成功!");
+		toolsListCtr.DeleteAllItems();
+		getAllTools();
 	}
 	catch (const char * info)
 	{

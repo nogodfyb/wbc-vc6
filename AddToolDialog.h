@@ -25,6 +25,16 @@ public:
 	CEdit	snEditCtr;
 	//}}AFX_DATA
 
+	//模式 1是修改
+	int mode;
+
+	CString sn;
+	CString type;
+	CString life;
+	CString description;
+
+	void initEditForm();
+
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -41,6 +51,7 @@ protected:
 	virtual void OnOK();
 	virtual void OnCancel();
 	virtual BOOL OnInitDialog();
+	
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

@@ -9,7 +9,7 @@
 
 /////////////////////////////////////////////////////////////////////////////
 // ToolsRelation dialog
-
+#include "CMyListCtrl.h"
 class ToolsRelation : public CDialog
 {
 // Construction
@@ -19,10 +19,10 @@ public:
 // Dialog Data
 	//{{AFX_DATA(ToolsRelation)
 	enum { IDD = TOOLS_RELATION };
-		// NOTE: the ClassWizard will add data members here
+	CMyListCtrl	toolsRelationListCtr;
 	//}}AFX_DATA
-
-
+	void initToolsRelationListCtr();
+	void getAllToolsRelation();
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(ToolsRelation)
@@ -37,6 +37,8 @@ protected:
 	//{{AFX_MSG(ToolsRelation)
 	virtual void OnOK();
 	virtual void OnCancel();
+	virtual BOOL OnInitDialog();
+	afx_msg void OnButton1();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
