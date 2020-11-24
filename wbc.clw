@@ -2,43 +2,47 @@
 
 [General Info]
 Version=1
-LastClass=AddRelationDialog
+LastClass=WeighRecordListDialog
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
 
-ClassCount=13
+ClassCount=15
 Class1=CWbcApp
 Class2=CWbcDlg
 Class3=CAboutDlg
 
-ResourceCount=16
-Resource1=IDR_MENU2
+ResourceCount=18
+Resource1=ADMIN_MAIN_DIALOG
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=MAIN_DIALOG
+Resource3=CHECK_RECORD_LIST
 Class5=CheckToolsDlg
-Resource4=ADD_RELATION_DIALOG
+Resource4=EXCEPTION_REGISTER
 Class6=SettingDialog
-Resource5=IDR_MENU1
+Resource5=IDD_ABOUTBOX
 Class7=ManualWeighDialog
-Resource6=SETTING_DIALOG
+Resource6=IDR_MENU1
 Resource7=MANUAL_WEIGH_DIALOG
-Resource8=CHECK_TOOLS_DIALOG
-Resource9=EXCEPTION_REGISTER
+Resource8=MAIN_DIALOG
+Resource9=ADD_TOOL_DIALOG
 Class8=ExceptionRegisterDialog
-Resource10=TOOLS_RELATION
+Resource10=WEIGH_RECORD_LIST
 Class9=AdminMainDialog
-Resource11=TOOLS_LIST_DIALOG
+Resource11=SETTING_DIALOG
 Class10=ToolsListDialog
-Resource12=IDD_ABOUTBOX
+Resource12=IDR_MENU2
 Class11=ToolsRelation
-Resource13=ADD_TOOL_DIALOG
+Resource13=ADD_RELATION_DIALOG
 Class12=AddToolDialog
-Resource14=IDR_MENU3
-Resource15=ADMIN_MAIN_DIALOG
+Resource14=TOOLS_LIST_DIALOG
+Resource15=TOOLS_RELATION
 Class13=AddRelationDialog
-Resource16=IDR_MENU4
+Resource16=CHECK_TOOLS_DIALOG
+Class14=CheckRecordListDialog
+Resource17=IDR_MENU3
+Class15=WeighRecordListDialog
+Resource18=IDR_MENU4
 
 [CLS:CWbcApp]
 Type=0
@@ -244,10 +248,8 @@ VirtualFilter=dWC
 [DLG:ADMIN_MAIN_DIALOG]
 Type=1
 Class=AdminMainDialog
-ControlCount=3
-Control1=IDOK,button,1342242817
-Control2=IDCANCEL,button,1342242816
-Control3=IDC_TAB1,SysTabControl32,1342177280
+ControlCount=1
+Control1=IDC_TAB1,SysTabControl32,1342177280
 
 [CLS:AdminMainDialog]
 Type=0
@@ -348,4 +350,44 @@ BaseClass=CDialog
 Filter=D
 VirtualFilter=dWC
 LastObject=AddRelationDialog
+
+[DLG:CHECK_RECORD_LIST]
+Type=1
+Class=CheckRecordListDialog
+ControlCount=6
+Control1=IDC_LIST1,SysListView32,1350631425
+Control2=IDC_STATIC,static,1342308352
+Control3=IDC_DATETIMEPICKER1,SysDateTimePick32,1342242848
+Control4=IDC_STATIC,static,1342308352
+Control5=IDC_DATETIMEPICKER2,SysDateTimePick32,1342242848
+Control6=IDC_BUTTON1,button,1342242816
+
+[CLS:CheckRecordListDialog]
+Type=0
+HeaderFile=CheckRecordListDialog.h
+ImplementationFile=CheckRecordListDialog.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=CheckRecordListDialog
+VirtualFilter=dWC
+
+[DLG:WEIGH_RECORD_LIST]
+Type=1
+Class=WeighRecordListDialog
+ControlCount=6
+Control1=IDC_LIST1,SysListView32,1350631425
+Control2=IDC_STATIC,static,1342308352
+Control3=IDC_STATIC,static,1342308352
+Control4=IDC_DATETIMEPICKER1,SysDateTimePick32,1342242848
+Control5=IDC_DATETIMEPICKER2,SysDateTimePick32,1342242848
+Control6=IDC_BUTTON1,button,1342242816
+
+[CLS:WeighRecordListDialog]
+Type=0
+HeaderFile=WeighRecordListDialog.h
+ImplementationFile=WeighRecordListDialog.cpp
+BaseClass=CDialog
+Filter=D
+LastObject=ID_MENUITEM32771
+VirtualFilter=dWC
 

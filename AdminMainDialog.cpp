@@ -74,6 +74,8 @@ BOOL AdminMainDialog::OnInitDialog()
 
 	page1.Create(TOOLS_LIST_DIALOG,&tabCtr);
 	page2.Create(TOOLS_RELATION,&tabCtr);
+	page3.Create(CHECK_RECORD_LIST,&tabCtr);
+	page4.Create(WEIGH_RECORD_LIST,&tabCtr);
 
 	//设定在Tab内显示的范围
 	CRect rc;
@@ -84,13 +86,19 @@ BOOL AdminMainDialog::OnInitDialog()
 	rc.right -= 0;
 	page1.MoveWindow(&rc);
 	page2.MoveWindow(&rc);
+	page3.MoveWindow(&rc);
+	page4.MoveWindow(&rc);
 
 	//把对话框对象指针保存起来
 	pDialog[0] = &page1;
 	pDialog[1] = &page2;
+	pDialog[2] = &page3;
+	pDialog[3] = &page4;
 	//显示初始页面
 	pDialog[0]->ShowWindow(SW_SHOW);
 	pDialog[1]->ShowWindow(SW_HIDE);
+	pDialog[2]->ShowWindow(SW_HIDE);
+	pDialog[3]->ShowWindow(SW_HIDE);
 	//保存当前选择
 	m_CurSelTab = 0;
 	

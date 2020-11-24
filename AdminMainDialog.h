@@ -11,6 +11,8 @@
 // AdminMainDialog dialog
 #include "ToolsListDialog.h"
 #include "ToolsRelation.h"
+#include "CheckRecordListDialog.h"
+#include "WeighRecordListDialog.h"
 
 class AdminMainDialog : public CDialog
 {
@@ -27,7 +29,9 @@ public:
 	int m_CurSelTab;
 	ToolsListDialog page1;
 	ToolsRelation page2;
-	CDialog* pDialog[2];
+	CheckRecordListDialog page3;
+	WeighRecordListDialog page4;
+	CDialog* pDialog[4];
 
 // Overrides
 	// ClassWizard generated virtual function overrides

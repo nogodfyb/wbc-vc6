@@ -102,6 +102,10 @@ SOURCE=.\AdminMainDialog.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\CheckRecordListDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\CheckToolsDlg.cpp
 # End Source File
 # Begin Source File
@@ -169,6 +173,10 @@ SOURCE=.\wbc.rc
 
 SOURCE=.\wbcDlg.cpp
 # End Source File
+# Begin Source File
+
+SOURCE=.\WeighRecordListDialog.cpp
+# End Source File
 # End Group
 # Begin Group "Header Files"
 
@@ -184,6 +192,10 @@ SOURCE=.\AddToolDialog.h
 # Begin Source File
 
 SOURCE=.\AdminMainDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\CheckRecordListDialog.h
 # End Source File
 # Begin Source File
 
@@ -256,6 +268,10 @@ SOURCE=.\wbc.h
 # Begin Source File
 
 SOURCE=.\wbcDlg.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\WeighRecordListDialog.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"

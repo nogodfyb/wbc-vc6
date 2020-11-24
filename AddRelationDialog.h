@@ -30,6 +30,14 @@ public:
 	void initSteelMeshCbxCtr();
 	void initShimCbxCtr();
 	void initScraperCbxCtr();
+	void initEditForm();
+	int mode;
+	CString waferSource;
+	CString waferSize;
+	CString steelMeshSn;
+	CString	shimSn;
+	CString scraperSn;
+	CString epPn;
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(AddRelationDialog)

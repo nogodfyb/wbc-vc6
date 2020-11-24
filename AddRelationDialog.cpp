@@ -50,7 +50,70 @@ END_MESSAGE_MAP()
 void AddRelationDialog::OnOK() //重写ok
 {
 	// TODO: Add extra validation here
-	
+	CString waferSource;
+	waferSourceEditCtr.GetWindowText(waferSource);
+	if (waferSource.IsEmpty())
+	{
+		MessageBox("waferSource不能为空!");
+		return;
+	}
+	CString waferSize;
+	if (waferSizeCbxCtr.GetCurSel()==-1)
+	{
+		MessageBox("未选芯片尺寸!");
+		return;
+	}
+	waferSizeCbxCtr.GetWindowText(waferSize);
+	CString steelMeshSn;
+	if (steelMeshCbxCtr.GetCurSel()==-1)
+	{
+		MessageBox("未选钢网sn");
+		return;
+	}
+	steelMeshCbxCtr.GetLBText(steelMeshCbxCtr.GetCurSel(),steelMeshSn);
+	CString shimSn;
+	if (shimCbxCtr.GetCurSel()==-1)
+	{
+		MessageBox("未选垫片sn");
+		return;
+	}
+	shimCbxCtr.GetLBText(shimCbxCtr.GetCurSel(),shimSn);
+	CString scraperSn;
+	if (scraperCbxCtr.GetCurSel()==-1)
+	{
+		MessageBox("未选刮刀sn");
+		return;
+	}
+	scraperCbxCtr.GetLBText(scraperCbxCtr.GetCurSel(),scraperSn);
+	CString epSn;
+	epPnEditCtr.GetWindowText(epSn);
+	if (epSn.IsEmpty())
+	{
+		MessageBox("银浆sn为空!");
+		return;
+	}
+	try
+	{
+		CString msg;
+		MySqlUtil mysql(msg);
+		CString sql;
+		if (mode==1)
+		{
+			sql.Format("UPDATE wbc20_tool_rule SET wafer_size='%s', steel_mesh_sn='%s', shim_sn='%s', scraper_sn='%s', ep_pn='%s' WHERE (wafer_source='%s')",waferSize,steelMeshSn,shimSn,scraperSn,epSn,waferSource);
+			mysql.UpdateData(sql,msg);
+			MessageBox("修改成功!");
+		}else{
+			sql.Format("INSERT INTO wbc20_tool_rule (wafer_source, wafer_size, steel_mesh_sn, shim_sn, scraper_sn, ep_pn)\
+				VALUES ('%s','%s','%s','%s','%s','%s')",waferSource,waferSize,steelMeshSn,shimSn,scraperSn,epSn);
+			mysql.InsertData(sql,msg);
+			MessageBox("添加成功!");
+		}
+
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+	}
 	CDialog::OnOK();
 }
 
@@ -71,6 +134,10 @@ BOOL AddRelationDialog::OnInitDialog() //初始化
 	initShimCbxCtr();
 	initScraperCbxCtr();
 	
+	if (mode==1)
+	{
+		initEditForm();
+	}
 	return TRUE;  // return TRUE unless you set the focus to a control
 	              // EXCEPTION: OCX Property Pages should return FALSE
 }
@@ -145,5 +212,61 @@ void AddRelationDialog::initScraperCbxCtr()//初始化刀片下拉框
 	{
 		MessageBox(info);
 		return;
+	}
+}
+
+void AddRelationDialog::initEditForm()//初始化编辑表单
+{
+
+	waferSourceEditCtr.SetWindowText(waferSource);
+	waferSourceEditCtr.EnableWindow(false);
+	epPnEditCtr.SetWindowText(epPn);
+	//芯片尺寸
+	int waferSizeCount=waferSizeCbxCtr.GetCount();
+	for (int i=0;i<waferSizeCount;i++)
+	{
+		CString msg;
+		waferSizeCbxCtr.GetLBText(i,msg);
+		if (msg==waferSize)
+		{
+			waferSizeCbxCtr.SetCurSel(i);
+			break;
+		}
+	}
+	//钢网sn
+	int steelMeshSnCount=steelMeshCbxCtr.GetCount();
+	for (int j=0;j<steelMeshSnCount;j++)
+	{
+		CString msg;
+		steelMeshCbxCtr.GetLBText(j,msg);
+		if (msg==steelMeshSn)
+		{
+			steelMeshCbxCtr.SetCurSel(j);
+			break;
+		}
+	}
+	//垫片sn
+	int shimSnCount=shimCbxCtr.GetCount();
+	for (int k=0;k<shimSnCount;k++)
+	{
+		CString msg;
+		shimCbxCtr.GetLBText(k,msg);
+		if (msg==shimSn)
+		{
+			shimCbxCtr.SetCurSel(k);
+			break;
+		}
+	}
+	//刮刀sn
+	int scraperSnCount=scraperCbxCtr.GetCount();
+	for (int m=0;m<scraperSn;m++)
+	{
+		CString msg;
+		scraperCbxCtr.GetLBText(m,msg);
+		if (msg==scraperSn)
+		{
+			scraperCbxCtr.SetCurSel(m);
+			break;
+		}
 	}
 }

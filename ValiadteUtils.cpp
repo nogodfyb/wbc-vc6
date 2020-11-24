@@ -5,6 +5,7 @@
 #include "stdafx.h"
 #include "wbc.h"
 #include "ValiadteUtils.h"
+#include "MyUtils.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -216,6 +217,23 @@ bool ValiadteUtils::validateEpoWeight(CString waferSize,CString weight){
 		{
 			return false;
 		}
+	}
+	return true;
+}
+
+bool ValiadteUtils::validDateInterval(CString beginTime,CString endTime){
+	
+	CStringArray array1;
+	CStringArray array2;
+	MyUtils::splitStr(beginTime,'/',array1);
+	MyUtils::splitStr(endTime,'/',array2);
+	CTime begin(atoi(array1.GetAt(0)),atoi(array1.GetAt(1)),atoi(array1.GetAt(2)),0,0,0);
+	CTime end(atoi(array2.GetAt(0)),atoi(array2.GetAt(1)),atoi(array2.GetAt(2)),0,0,0);
+	CTimeSpan span=end-begin;
+	int days=span.GetDays();
+	if (days<0||days>40)
+	{
+		return false;
 	}
 	return true;
 }
