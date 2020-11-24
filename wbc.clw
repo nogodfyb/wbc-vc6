@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=WeighRecordListDialog
+LastClass=AdminMainDialog
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
@@ -13,34 +13,34 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=18
-Resource1=ADMIN_MAIN_DIALOG
+Resource1=CHECK_TOOLS_DIALOG
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=CHECK_RECORD_LIST
+Resource3=IDR_MENU1
 Class5=CheckToolsDlg
-Resource4=EXCEPTION_REGISTER
+Resource4=SETTING_DIALOG
 Class6=SettingDialog
-Resource5=IDD_ABOUTBOX
+Resource5=IDR_MENU2
 Class7=ManualWeighDialog
-Resource6=IDR_MENU1
-Resource7=MANUAL_WEIGH_DIALOG
-Resource8=MAIN_DIALOG
+Resource6=IDR_MENU3
+Resource7=IDD_ABOUTBOX
+Resource8=TOOLS_LIST_DIALOG
 Resource9=ADD_TOOL_DIALOG
 Class8=ExceptionRegisterDialog
-Resource10=WEIGH_RECORD_LIST
+Resource10=TOOLS_RELATION
 Class9=AdminMainDialog
-Resource11=SETTING_DIALOG
+Resource11=EXCEPTION_REGISTER
 Class10=ToolsListDialog
-Resource12=IDR_MENU2
+Resource12=CHECK_RECORD_LIST
 Class11=ToolsRelation
-Resource13=ADD_RELATION_DIALOG
+Resource13=MAIN_DIALOG
 Class12=AddToolDialog
-Resource14=TOOLS_LIST_DIALOG
-Resource15=TOOLS_RELATION
+Resource14=MANUAL_WEIGH_DIALOG
+Resource15=ADD_RELATION_DIALOG
 Class13=AddRelationDialog
-Resource16=CHECK_TOOLS_DIALOG
+Resource16=WEIGH_RECORD_LIST
 Class14=CheckRecordListDialog
-Resource17=IDR_MENU3
+Resource17=ADMIN_MAIN_DIALOG
 Class15=WeighRecordListDialog
 Resource18=IDR_MENU4
 
@@ -248,8 +248,13 @@ VirtualFilter=dWC
 [DLG:ADMIN_MAIN_DIALOG]
 Type=1
 Class=AdminMainDialog
-ControlCount=1
+ControlCount=6
 Control1=IDC_TAB1,SysTabControl32,1342177280
+Control2=IDC_STATIC,static,1342308352
+Control3=IDC_EDIT1,edit,1350631552
+Control4=IDC_STATIC,static,1342308352
+Control5=IDC_EDIT2,edit,1350631584
+Control6=IDC_BUTTON1,button,1342242816
 
 [CLS:AdminMainDialog]
 Type=0
@@ -257,7 +262,7 @@ HeaderFile=AdminMainDialog.h
 ImplementationFile=AdminMainDialog.cpp
 BaseClass=CDialog
 Filter=D
-LastObject=IDC_TAB1
+LastObject=AdminMainDialog
 VirtualFilter=dWC
 
 [DLG:TOOLS_LIST_DIALOG]

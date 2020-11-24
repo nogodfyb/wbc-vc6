@@ -4,6 +4,7 @@
 #include "stdafx.h"
 #include "wbc.h"
 #include "AdminMainDialog.h"
+#include "MySqlUtil.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -28,6 +29,8 @@ void AdminMainDialog::DoDataExchange(CDataExchange* pDX)
 {
 	CDialog::DoDataExchange(pDX);
 	//{{AFX_DATA_MAP(AdminMainDialog)
+	DDX_Control(pDX, IDC_EDIT2, passwordEditCtr);
+	DDX_Control(pDX, IDC_EDIT1, usernameEditCtr);
 	DDX_Control(pDX, IDC_TAB1, tabCtr);
 	//}}AFX_DATA_MAP
 }
@@ -36,6 +39,7 @@ void AdminMainDialog::DoDataExchange(CDataExchange* pDX)
 BEGIN_MESSAGE_MAP(AdminMainDialog, CDialog)
 	//{{AFX_MSG_MAP(AdminMainDialog)
 	ON_NOTIFY(TCN_SELCHANGE, IDC_TAB1, OnSelchangeTab1)
+	ON_BN_CLICKED(IDC_BUTTON1, OnButton1)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -120,4 +124,35 @@ void AdminMainDialog::OnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult)
 	pDialog[m_CurSelTab]->ShowWindow(SW_SHOW);	
 	
 	*pResult = 0;
+}
+
+void AdminMainDialog::OnButton1() //登录后台管理
+{
+	// TODO: Add your control notification handler code here
+	CString username;
+	CString password;
+	usernameEditCtr.GetWindowText(username);
+	passwordEditCtr.GetWindowText(password);
+
+	try
+	{
+		CString msg;
+		MySqlUtil mysql(msg);
+		CString sql;
+		CStringArray array;
+		sql.Format("SELECT bn from diesaw_user WHERE bn='%s' AND pw=MD5('%s')",username,password);
+		mysql.SelectData(sql,msg,array);
+		if(array.GetSize()!=1){
+			MessageBox("工号和密码不正确");
+			return;
+		}else{
+			adminLogin=1;
+			MessageBox("登录成功!");
+		}
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+	}
+	
 }

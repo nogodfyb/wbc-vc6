@@ -24,6 +24,7 @@ public:
 	CMyListCtrl	weighRecordListCtr;
 	//}}AFX_DATA
 	void initWeighRecordListCtr();
+	bool isAdmin();
 
 
 // Overrides
@@ -42,6 +43,7 @@ protected:
 	virtual void OnCancel();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnButton1();
+	
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };

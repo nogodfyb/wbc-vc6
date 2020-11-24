@@ -6,6 +6,7 @@
 #include "WeighRecordListDialog.h"
 #include "ValiadteUtils.h"
 #include "MySqlUtil.h"
+#include "AdminMainDialog.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -87,6 +88,7 @@ void WeighRecordListDialog::initWeighRecordListCtr() //初始化listCtr
 
 void WeighRecordListDialog::OnButton1() //查询
 {
+
 	// TODO: Add your control notification handler code here
 	weighRecordListCtr.DeleteAllItems();
 	CString beginTime;
@@ -117,3 +119,15 @@ void WeighRecordListDialog::OnButton1() //查询
 	}
 	
 }
+
+bool WeighRecordListDialog::isAdmin()//管理员是否登录
+{
+	CWnd * parent=GetParent()->GetParent();
+	AdminMainDialog * adminDlg=(AdminMainDialog *)parent;
+	if (adminDlg->adminLogin==1)
+	{
+		return true;
+	}
+	return false;
+}
+

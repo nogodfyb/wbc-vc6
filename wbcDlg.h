@@ -37,6 +37,8 @@ public:
 
 	//存储异常记录map
 	CMapStringToString exceptionMap;
+	//当前银浆上机时间
+	int currentEpoRunTime;
 
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(CWbcDlg)
@@ -67,8 +69,7 @@ public:
 	CString lastCheckShimSn;
 	//当前上机银浆
 	Epo currentEpo;
-	//当前银浆上机时间
-	int currentEpoRunTime;
+
 	//是否需要重新恢复定时器
 	bool needRestoreTimer;
 

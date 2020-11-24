@@ -23,6 +23,8 @@ public:
 // Dialog Data
 	//{{AFX_DATA(AdminMainDialog)
 	enum { IDD = ADMIN_MAIN_DIALOG };
+	CEdit	passwordEditCtr;
+	CEdit	usernameEditCtr;
 	CTabCtrl	tabCtr;
 	//}}AFX_DATA
 	
@@ -32,6 +34,8 @@ public:
 	CheckRecordListDialog page3;
 	WeighRecordListDialog page4;
 	CDialog* pDialog[4];
+
+	int adminLogin;
 
 // Overrides
 	// ClassWizard generated virtual function overrides
@@ -49,6 +53,7 @@ protected:
 	virtual void OnCancel();
 	virtual BOOL OnInitDialog();
 	afx_msg void OnSelchangeTab1(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnButton1();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 };
