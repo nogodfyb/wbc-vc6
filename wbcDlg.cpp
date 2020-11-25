@@ -1049,7 +1049,7 @@ void CWbcDlg::refreshEpoRemainTime()
 	if (!state)
 	{
 		//MessageBox("打开银浆本地存储文件失败!");
-		epPromptTextCtr.SetWindowText("没有银浆扫描记录!");
+		epPromptTextCtr.SetWindowText("没有银浆扫描记录!记录文件不存在!");
 		return;
 	}
 	DWORD len=file.GetLength( );
@@ -1058,6 +1058,11 @@ void CWbcDlg::refreshEpoRemainTime()
 	file.Read(arr,len);   //Read( void* lpBuf, UINT nCount ) lpBuf是用于接收读取到的数据的Buf指针nCount是从文件读取的字节数
 	file.Close();
 	CString epoStr(arr);
+	if (epoStr.IsEmpty())
+	{
+		epPromptTextCtr.SetWindowText("不存在银浆上机记录!");
+		return;
+	}
 	//存储当前银浆信息
 	currentEpo=Epo(epoStr);
 	CStringArray array;
