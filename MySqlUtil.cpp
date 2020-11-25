@@ -72,7 +72,7 @@ int MySqlUtil::ConnMySQL(CString &Msg)
         Msg = mysql_error(&mysql);
 		if (!Msg.IsEmpty())
 		{
-			throw "数据库连接失败3";
+			throw "数据库连接失败2!";
 		}
         return 0;
     }
@@ -87,6 +87,10 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array,int * 
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "查询数据失败1";
+		}
         return ;
     }
     m_res = mysql_store_result(&mysql);
@@ -94,6 +98,10 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array,int * 
     if (m_res == NULL)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "查询数据失败2";
+		}
         return ;
     }
     while (m_row = mysql_fetch_row(m_res))
@@ -106,11 +114,6 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array,int * 
     *rowNums=mysql_num_rows(m_res);
     *colNums = mysql_num_fields(m_res);
     mysql_free_result(m_res);
-	if (!Msg.IsEmpty())
-	{
-		throw "查询数据失败!";
-		return;
-	}
     return ;
 }
 //查询数据
@@ -122,6 +125,11 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array)
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "查询数据失败!";
+			return;
+		}
         return ;
     }
     m_res = mysql_store_result(&mysql);
@@ -129,6 +137,11 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array)
     if (m_res == NULL)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "查询数据失败!";
+			return;
+		}
         return ;
     }
     while (m_row = mysql_fetch_row(m_res))
@@ -139,11 +152,6 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array)
         }
     }
     mysql_free_result(m_res);
-	if (!Msg.IsEmpty())
-	{
-		throw "查询数据失败!";
-		return;
-	}
     return ;
 }
 
@@ -155,6 +163,11 @@ void MySqlUtil::SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "查询数据失败!";
+			return;
+		}
         return ;
     }
     m_res = mysql_store_result(&mysql);
@@ -162,6 +175,11 @@ void MySqlUtil::SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list
     if (m_res == NULL)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "查询数据失败!";
+			return;
+		}
         return ;
     }
     while (m_row = mysql_fetch_row(m_res))
@@ -185,11 +203,6 @@ void MySqlUtil::SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list
 	}
 	//重绘
 	list->AdjustColumnWidth();
-	if (!Msg.IsEmpty())
-	{
-		throw "查询数据失败!";
-		return;
-	}
     return ;
 
 }
@@ -232,13 +245,13 @@ int MySqlUtil::UpdateData(CString SQL, CString& Msg)
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "更新数据失败!";
+			return 0;
+		}
         return 0;
     }
-	if (!Msg.IsEmpty())
-	{
-		throw "更新数据失败!";
-		return 0;
-	}
     return 1;
 }
 
@@ -248,13 +261,13 @@ int MySqlUtil::DeleteData(CString SQL, CString& Msg)
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
+		if (!Msg.IsEmpty())
+		{
+			throw "删除数据失败!";
+			return 0;
+		}
         return 0;
     }
-	if (!Msg.IsEmpty())
-	{
-		throw "删除数据失败!";
-		return 0;
-	}
     return 1;
 }
 

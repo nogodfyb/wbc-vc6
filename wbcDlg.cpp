@@ -616,6 +616,7 @@ void CWbcDlg::OnButton3() //提交称重记录
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		//回滚,不提交
 		mysql.rollbackTransaction();
 		return;
@@ -728,7 +729,7 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 	}
 	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
 	{
-		MessageBox("Plasma不满足第二次称重的条件!");
+		MessageBox("不满足第二次称重的条件!");
 		return;
 	} 
 	//手动模式
