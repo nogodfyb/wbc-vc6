@@ -14,6 +14,7 @@ static char THIS_FILE[] = __FILE__;
 
 /////////////////////////////////////////////////////////////////////////////
 // ToolsListDialog dialog
+#include "AdminMainDialog.h"
 
 
 ToolsListDialog::ToolsListDialog(CWnd* pParent /*=NULL*/)
@@ -91,11 +92,26 @@ void ToolsListDialog::initToolsListCtr()//初始化list
 void ToolsListDialog::OnButton1() //添加工具
 {
 	// TODO: Add your control notification handler code here
+	if (!isAdmin())
+	{
+		MessageBox("管理员未登录!");
+		return;
+	}
 	AddToolDialog dlg;
 	dlg.DoModal();
 	toolsListCtr.DeleteAllItems();
 	getAllTools();
 	
+}
+
+bool ToolsListDialog::isAdmin(){
+	CWnd * parent=GetParent()->GetParent();
+	AdminMainDialog * adminDlg=(AdminMainDialog *)parent;
+	if (adminDlg->adminLogin==1)
+	{
+		return true;
+	}
+	return false;
 }
 void ToolsListDialog::getAllTools()//获取所有工具
 {
@@ -147,6 +163,11 @@ void ToolsListDialog::OnContextMenu(CWnd* pWnd, CPoint point) //菜单关联
 
 void ToolsListDialog::OnMenuitem32774() //编辑
 {
+	if (!isAdmin())
+	{
+		MessageBox("管理员未登录!");
+		return;
+	}
 	// TODO: Add your command handler code here
 	int currentRow=toolsListCtr.GetSelectionMark();
 	//序列号
@@ -173,6 +194,11 @@ void ToolsListDialog::OnMenuitem32774() //编辑
 
 void ToolsListDialog::OnMenuitem32775() //删除
 {
+	if (!isAdmin())
+	{
+		MessageBox("管理员未登录!");
+		return;
+	}
 	// TODO: Add your command handler code here
 	if(MessageBox(TEXT("是否确认删除?"),TEXT("删除工具"),MB_OKCANCEL)!=IDOK)
 	{

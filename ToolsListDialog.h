@@ -24,6 +24,7 @@ public:
 	//}}AFX_DATA
 	void initToolsListCtr();
 	void getAllTools();
+	bool isAdmin();
 
 // Overrides
 	// ClassWizard generated virtual function overrides

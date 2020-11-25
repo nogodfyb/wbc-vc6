@@ -23,6 +23,7 @@ public:
 	//}}AFX_DATA
 	void initToolsRelationListCtr();
 	void getAllToolsRelation();
+	bool isAdmin();
 // Overrides
 	// ClassWizard generated virtual function overrides
 	//{{AFX_VIRTUAL(ToolsRelation)

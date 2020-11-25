@@ -726,11 +726,11 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 		MessageBox("银浆上机时间已超过2小时!");
 		return;
 	}
-// 	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
-// 	{
-// 		MessageBox("Plasma不满足第二次称重的条件!");
-// 		return;
-// 	} 
+	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
+	{
+		MessageBox("Plasma不满足第二次称重的条件!");
+		return;
+	} 
 	//手动模式
 	if (weigthMode=="1")
 	{
@@ -919,6 +919,9 @@ void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString fir
 		if (array3.GetSize()==1)
 		{
 			waferSize=array3.GetAt(0);
+		}else{
+			MessageBox("未查询到waferSize!请联系管理员!");
+			return;
 		}
 	}
 	catch (const char * info)

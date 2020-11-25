@@ -77,7 +77,7 @@ Epo::~Epo()
 
 bool Epo::isLegal(CTime compareDate){
 	CTimeSpan diff=compareDate-exceedTime;
-	return diff.GetTotalSeconds()<0&&gongyi=="C";
+	return diff.GetTotalSeconds()<0&&gongyi=="W";
 }
 
 CString Epo::generateQRcode(){

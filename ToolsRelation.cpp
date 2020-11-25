@@ -15,6 +15,7 @@ static char THIS_FILE[] = __FILE__;
 // ToolsRelation dialog
 #include "MySqlUtil.h"
 #include "AddRelationDialog.h"
+#include "AdminMainDialog.h"
 
 ToolsRelation::ToolsRelation(CWnd* pParent /*=NULL*/)
 	: CDialog(ToolsRelation::IDD, pParent)
@@ -105,11 +106,27 @@ void ToolsRelation::getAllToolsRelation()//获取所有工具关系
 
 void ToolsRelation::OnButton1() //添加关系
 {
+	if (!isAdmin())
+	{
+		MessageBox("管理员未登录!");
+		return;
+	}
 	// TODO: Add your control notification handler code here
 	AddRelationDialog dlg;
 	dlg.DoModal();
 	toolsRelationListCtr.DeleteAllItems();
 	getAllToolsRelation();
+}
+
+bool ToolsRelation::isAdmin()
+{
+	CWnd * parent=GetParent()->GetParent();
+	AdminMainDialog * adminDlg=(AdminMainDialog *)parent;
+	if (adminDlg->adminLogin==1)
+	{
+		return true;
+	}
+	return false;
 }
 
 void ToolsRelation::OnContextMenu(CWnd* pWnd, CPoint point) //关联菜单
@@ -130,6 +147,11 @@ void ToolsRelation::OnContextMenu(CWnd* pWnd, CPoint point) //关联菜单
 
 void ToolsRelation::OnMenuitem32774() //修改
 {
+	if (!isAdmin())
+	{
+		MessageBox("管理员未登录!");
+		return;
+	}
 	// TODO: Add your command handler code here
 	int currentRow=toolsRelationListCtr.GetSelectionMark();
 	
@@ -156,6 +178,11 @@ void ToolsRelation::OnMenuitem32774() //修改
 
 void ToolsRelation::OnMenuitem32775() //删除
 {
+	if (!isAdmin())
+	{
+		MessageBox("管理员未登录!");
+		return;
+	}
 	// TODO: Add your command handler code here
 	if(MessageBox(TEXT("是否确认删除?"),TEXT("删除工具关系"),MB_OKCANCEL)!=IDOK)
 	{
