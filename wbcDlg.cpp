@@ -611,6 +611,16 @@ void CWbcDlg::OnButton3() //提交称重记录
 			mysql.DeleteData(sql8,msg);
 
 			secondWeighWaferListCtr.DeleteItem(k);
+			//删除查询列表的该waferLot行
+			for (int m=0;m<waferSelectListCtr.GetItemCount();m++)
+			{
+				CString expectWaferLot=waferSelectListCtr.GetItemText(m,1);
+				if (waferLot==expectWaferLot)
+				{
+					waferSelectListCtr.DeleteItem(m);
+					break;
+				}
+			}
 		}
 	}
 	catch (const char * info)
@@ -722,16 +732,16 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 		MessageBox("当前未选中任何wafer!");
 		return;
 	}
-	if (currentEpoRunTime>120)
-	{
-		MessageBox("银浆上机时间已超过2小时!");
-		return;
-	}
-	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
-	{
-		MessageBox("不满足第二次称重的条件!");
-		return;
-	} 
+// 	if (currentEpoRunTime>120)
+// 	{
+// 		MessageBox("银浆上机时间已超过2小时!");
+// 		return;
+// 	}
+// 	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
+// 	{
+// 		MessageBox("不满足第二次称重的条件!");
+// 		return;
+// 	} 
 	//手动模式
 	if (weigthMode=="1")
 	{
@@ -841,10 +851,10 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 	ManualWeighDialog dlg;
 	dlg.waferLot=waferLot;
 	dlg.DoModal();
-	waferSelectListCtr.SetItemText(currentRow,3,dlg.manualWeighValue);
 	//传来的重量数据非空
 	if (!dlg.manualWeighValue.IsEmpty())
 	{
+		waferSelectListCtr.SetItemText(currentRow,3,dlg.manualWeighValue);
 		//保存或更新该wafer的第一次称重记录
 		try
 		{
