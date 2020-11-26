@@ -2,7 +2,7 @@
 
 [General Info]
 Version=1
-LastClass=AdminMainDialog
+LastClass=CWbcDlg
 LastTemplate=CDialog
 NewFileInclude1=#include "stdafx.h"
 NewFileInclude2=#include "wbc.h"
@@ -13,19 +13,19 @@ Class2=CWbcDlg
 Class3=CAboutDlg
 
 ResourceCount=18
-Resource1=WEIGH_RECORD_LIST
+Resource1=CHECK_RECORD_LIST
 Resource2=IDR_MAINFRAME
 Class4=CMyListCtrl
-Resource3=TOOLS_RELATION
+Resource3=TOOLS_LIST_DIALOG
 Class5=CheckToolsDlg
-Resource4=ADD_TOOL_DIALOG
+Resource4=TOOLS_RELATION
 Class6=SettingDialog
-Resource5=ADMIN_MAIN_DIALOG
+Resource5=EXCEPTION_REGISTER
 Class7=ManualWeighDialog
-Resource6=ADD_RELATION_DIALOG
-Resource7=EXCEPTION_REGISTER
+Resource6=ADD_TOOL_DIALOG
+Resource7=MANUAL_WEIGH_DIALOG
 Resource8=IDR_MENU1
-Resource9=CHECK_TOOLS_DIALOG
+Resource9=MAIN_DIALOG
 Class8=ExceptionRegisterDialog
 Resource10=SETTING_DIALOG
 Class9=AdminMainDialog
@@ -33,14 +33,14 @@ Resource11=IDR_MENU3
 Class10=ToolsListDialog
 Resource12=IDD_ABOUTBOX
 Class11=ToolsRelation
-Resource13=TOOLS_LIST_DIALOG
+Resource13=ADMIN_MAIN_DIALOG
 Class12=AddToolDialog
 Resource14=IDR_MENU2
-Resource15=MANUAL_WEIGH_DIALOG
+Resource15=CHECK_TOOLS_DIALOG
 Class13=AddRelationDialog
-Resource16=MAIN_DIALOG
+Resource16=WEIGH_RECORD_LIST
 Class14=CheckRecordListDialog
-Resource17=CHECK_RECORD_LIST
+Resource17=ADD_RELATION_DIALOG
 Class15=WeighRecordListDialog
 Resource18=IDR_MENU4
 
@@ -58,7 +58,7 @@ ImplementationFile=wbcDlg.cpp
 Filter=D
 BaseClass=CDialog
 VirtualFilter=dWC
-LastObject=ID_MENUITEM32773
+LastObject=CWbcDlg
 
 [CLS:CAboutDlg]
 Type=0

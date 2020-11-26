@@ -61,6 +61,7 @@ public:
 	void manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice);
 	void manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight);
 	void matchTools();
+	void completeWaferSelectListCtr();
 	CString serialPort;
 	CString weigthMode;
 	//上次点检信息
@@ -96,6 +97,8 @@ protected:
 	afx_msg void OnButton3();
 	afx_msg void OnMenuitem32773();
 	afx_msg void OnButton4();
+	afx_msg void OnDblclkList1(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnDblclkList2(NMHDR* pNMHDR, LRESULT* pResult);
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

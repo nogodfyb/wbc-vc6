@@ -114,6 +114,8 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON3, OnButton3)
 	ON_COMMAND(ID_MENUITEM32773, OnMenuitem32773)
 	ON_BN_CLICKED(IDC_BUTTON4, OnButton4)
+	ON_NOTIFY(NM_DBLCLK, IDC_LIST1, OnDblclkList1)
+	ON_NOTIFY(NM_DBLCLK, IDC_LIST2, OnDblclkList2)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -408,25 +410,35 @@ void CWbcDlg::OnButton1() //芯片查询
 			MessageBox("未查询到芯片信息!");
 			return;
 		}
-		//如果列表不为空;遍历每一行从第一次称重记录里查询第一次称重数据;并在该行填充
-		for (int i=0;i<waferSelectListCtr.GetItemCount();i++)
-		{
-			CString waferLot=waferSelectListCtr.GetItemText(i,1);
-			CString sql;
-			sql.Format("SELECT weight from wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
-			CStringArray array;
-			mysql.SelectData(sql,msg,array);
-			//设置重量
-			if (array.GetSize()==1)
-			{
-				waferSelectListCtr.SetItemText(i,3,array.GetAt(0));
-			}
-		}
 	}
 	catch (const char * info)
 	{
 		MessageBox(info);
 		return;
+	}
+	completeWaferSelectListCtr();
+}
+
+void CWbcDlg::completeWaferSelectListCtr()//填充查询listCtr
+{
+
+	//如果列表不为空;遍历每一行从第一次称重记录里查询第一次称重数据;并在该行填充
+	for (int i=0;i<waferSelectListCtr.GetItemCount();i++)
+	{
+		CString waferLot=waferSelectListCtr.GetItemText(i,1);
+		//遍历第一次称重记录
+		for (int j=0;j<firstWeighWaferListCtr.GetItemCount();j++)
+		{
+			CString expectWaferLot=firstWeighWaferListCtr.GetItemText(j,1);
+			if (waferLot==expectWaferLot)
+			{
+				waferSelectListCtr.SetItemText(i,3,firstWeighWaferListCtr.GetItemText(j,2));
+				break;
+			}else{
+				waferSelectListCtr.SetItemText(i,3,"");
+			}
+		}
+
 	}
 }
 
@@ -712,9 +724,61 @@ void CWbcDlg::OnMenuitem32771() //刷胶前称重
 		manualFirstWeigh(waferLot,waferSource,waferDevice,row);
 	}
 }
-void CWbcDlg::OnMenuitem32772() //刷胶后称重
+void CWbcDlg::OnDblclkList1(NMHDR* pNMHDR, LRESULT* pResult) //刷胶前称重
+{
+	// TODO: Add your control notification handler code here
+	CString waferLot;
+	CString waferSource;
+	int row = waferSelectListCtr.GetSelectionMark();
+	waferLot=waferSelectListCtr.GetItemText(row, 1);
+	waferSource=waferSelectListCtr.GetItemText(row,0);
+	CString waferDevice=waferSelectListCtr.GetItemText(row,2);
+	if (waferLot.IsEmpty())
+	{
+		MessageBox("当前未选中任何wafer!");
+		return;
+	}
+	//手动模式
+	if (weigthMode=="1")
+	{
+		manualFirstWeigh(waferLot,waferSource,waferDevice,row);
+	}
+	*pResult = 0;
+}
+void CWbcDlg::OnMenuitem32772() //删除第一次称重记录
 {
 	// TODO: Add your command handler code here
+	if(MessageBox(TEXT("是否确认删除?"),TEXT("删除第一次称重记录"),MB_OKCANCEL)!=IDOK)
+	{
+		return;
+	}
+	int currentRow =firstWeighWaferListCtr.GetSelectionMark();
+	CString waferLot=firstWeighWaferListCtr.GetItemText(currentRow,1);
+	if (waferLot.IsEmpty())
+	{
+		MessageBox("当前未选中任何wafer!");
+		return;
+	}
+	try
+	{
+		CString msg;
+		MySqlUtil mysql(msg);
+		CString sql;
+		sql.Format("DELETE FROM wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
+		mysql.DeleteData(sql,msg);
+		MessageBox("删除成功!");
+		firstWeighWaferListCtr.DeleteItem(currentRow);
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		return;
+	}
+	completeWaferSelectListCtr();
+}
+void CWbcDlg::OnDblclkList2(NMHDR* pNMHDR, LRESULT* pResult) //刷胶后称重
+{
+	// TODO: Add your control notification handler code here
 	CString plasmaRemain;
 	int currentRow =firstWeighWaferListCtr.GetSelectionMark();
 	plasmaRemain=firstWeighWaferListCtr.GetItemText(currentRow,3);
@@ -732,21 +796,25 @@ void CWbcDlg::OnMenuitem32772() //刷胶后称重
 		MessageBox("当前未选中任何wafer!");
 		return;
 	}
-// 	if (currentEpoRunTime>120)
-// 	{
-// 		MessageBox("银浆上机时间已超过2小时!");
-// 		return;
-// 	}
-// 	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
-// 	{
-// 		MessageBox("不满足第二次称重的条件!");
-// 		return;
-// 	} 
+
+	if (currentEpoRunTime>120)
+	{
+		MessageBox("银浆上机时间已超过2小时!");
+		return;
+	}
+	if (minutes<=0||toolsMatch!="匹配"||epoMatch!="匹配")
+	{
+		MessageBox("不满足第二次称重的条件!");
+		return;
+	} 
+
 	//手动模式
 	if (weigthMode=="1")
 	{
 		manualSecondWeigh(waferLot,waferSource,firstWeight);
 	}
+	
+	*pResult = 0;
 }
 void CWbcDlg::OnMenuitem32773() //异常登记
 {
@@ -836,6 +904,8 @@ void CWbcDlg::matchTools()//匹配刷胶工具和银浆
 }
 //手动第一次称重从wafer查询类别中选中
 void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice, int currentRow){
+	bool cover=false;
+	int needCoveredRow=0;
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{
 		CString currentWaferLot=firstWeighWaferListCtr.GetItemText(i,1);
@@ -845,6 +915,8 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 			{
 				return;
 			}
+			cover=true;
+			needCoveredRow=i;
 			break;
 		}
 	}
@@ -863,9 +935,19 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 			CString sql;
 			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source,wafer_device, weight) VALUES ('%s','%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,waferDevice,dlg.manualWeighValue,dlg.manualWeighValue);
 			mysql.InsertData(sql,msg);
-			firstWeighWaferListCtr.DeleteAllItems();
-			//重新初始化
-			completeFirstWeighWaferListCtr();
+			//如果是覆盖
+			if (cover)
+			{
+				firstWeighWaferListCtr.SetItemText(needCoveredRow,2,dlg.manualWeighValue);
+			}else{
+				//向第一次称重列表尾部添加一行
+				int endRow=firstWeighWaferListCtr.GetItemCount();
+				firstWeighWaferListCtr.InsertItem(endRow,waferSource);
+				firstWeighWaferListCtr.SetItemText(endRow,1,waferLot);
+				firstWeighWaferListCtr.SetItemText(endRow,2,dlg.manualWeighValue);
+			}
+			refreshPlasmaRemainTime();
+			matchTools();
 		}
 		catch (const char * info)
 		{
@@ -876,6 +958,8 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 }
 //手动第一次称重
 void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice){
+	bool cover=false;
+	int needCoveredRow=0;
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{
 		CString currentWaferLot=firstWeighWaferListCtr.GetItemText(i,1);
@@ -885,6 +969,8 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 			{
 				return;
 			}
+			cover=true;
+			needCoveredRow=i;
 			break;
 		}
 	}
@@ -902,9 +988,19 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 			CString sql;
 			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source,wafer_device, weight) VALUES ('%s','%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,waferDevice,dlg.manualWeighValue,dlg.manualWeighValue);
 			mysql.InsertData(sql,msg);
-			firstWeighWaferListCtr.DeleteAllItems();
-			//重新初始化
-			completeFirstWeighWaferListCtr();
+			//如果是覆盖
+			if (cover)
+			{
+				firstWeighWaferListCtr.SetItemText(needCoveredRow,2,dlg.manualWeighValue);
+			}else{
+				//向第一次称重列表尾部添加一行
+				int endRow=firstWeighWaferListCtr.GetItemCount();
+				firstWeighWaferListCtr.InsertItem(endRow,waferSource);
+				firstWeighWaferListCtr.SetItemText(endRow,1,waferLot);
+				firstWeighWaferListCtr.SetItemText(endRow,2,dlg.manualWeighValue);
+			}
+			refreshPlasmaRemainTime();
+			matchTools();
 		}
 		catch (const char * info)
 		{
@@ -1010,7 +1106,8 @@ void CWbcDlg::OnTimer(UINT nIDEvent)
 }
 
 //刷新Plasma剩余时间
-void CWbcDlg::refreshPlasmaRemainTime(){
+void CWbcDlg::refreshPlasmaRemainTime()//刷新plasma时间
+{
 	CString msg;
 	MySqlUtil mysql;
 	try
@@ -1084,8 +1181,8 @@ void CWbcDlg::refreshEpoRemainTime()
 	CTimeSpan span=now-lastDate;
 	currentEpoRunTime=span.GetTotalMinutes();
 	CString lastScanTime;
-	lastScanTime.Format("%d",span.GetTotalMinutes());
-	epPromptTextCtr.SetWindowText("距离上次扫描银浆条码已经过去:"+lastScanTime+"分钟!银浆序列号:"+currentEpo.serialNumber+" 物料编码:"+currentEpo.partNumber);
+	lastScanTime.Format("%d",120-span.GetTotalMinutes());
+	epPromptTextCtr.SetWindowText("银浆上机有效时间还剩:"+lastScanTime+"分钟!银浆序列号:"+currentEpo.serialNumber+" 物料编码:"+currentEpo.partNumber);
 	if (span.GetTotalMinutes()>=120)
 	{
 		//已超时
@@ -1195,3 +1292,7 @@ void CWbcDlg::OnButton4() //后台管理
 	AdminMainDialog dlg;
 	dlg.DoModal();
 }
+
+
+
+

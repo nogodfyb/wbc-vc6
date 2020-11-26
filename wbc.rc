@@ -496,7 +496,7 @@ IDR_MENU2 MENU DISCARDABLE
 BEGIN
     POPUP "第二次称重"
     BEGIN
-        MENUITEM "刷胶后称重",                  ID_MENUITEM32772
+        MENUITEM "删除记录",                    ID_MENUITEM32772
     END
 END
 
