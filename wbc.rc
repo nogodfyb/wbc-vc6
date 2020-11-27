@@ -98,14 +98,14 @@ BEGIN
     LTEXT           "******",LAST_CHECK_TEXT,322,34,78,9
     LTEXT           "ID:",IDC_STATIC,459,36,13,8
     LTEXT           "******",ID_TEXT,479,37,42,8
-    GROUPBOX        "芯片查询(右击相应行刷胶前称重)",IDC_STATIC,26,100,187,
-                    340
+    GROUPBOX        "芯片查询(相应行双击左键刷胶前称重)",IDC_STATIC,26,100,
+                    187,340
     LTEXT           "扫描芯片:",IDC_STATIC,324,144,35,8
     EDITTEXT        IDC_EDIT2,367,142,123,14,ES_PASSWORD | ES_AUTOHSCROLL
     CONTROL         "List1",IDC_LIST1,"SysListView32",LVS_REPORT | WS_BORDER | 
                     WS_TABSTOP,34,206,171,147
-    GROUPBOX        "刷胶前称重记录(右击相应行刷胶后称重)",IDC_STATIC,226,
-                    100,313,340
+    GROUPBOX        "刷胶前称重记录(相应行双击左键刷胶后称重)",IDC_STATIC,
+                    226,100,313,340
     LTEXT           "计划日期:",IDC_STATIC,31,147,35,8
     CONTROL         "DateTimePicker1",IDC_DATETIMEPICKER1,"SysDateTimePick32",
                     DTS_RIGHTALIGN | WS_TABSTOP,71,143,56,15

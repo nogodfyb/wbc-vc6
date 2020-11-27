@@ -310,7 +310,7 @@ void CWbcDlg::OnScanEp()//扫银浆
 	CString nowStr=now.Format(_T("%Y%m%d%H%M"));
 	if (!epo.isLegal(now))
 	{
-		MessageBox("扫描银浆不合法!");
+		MessageBox("银浆已过期!");
 		return;
 	}
 	MessageBox("银浆已上机!");
@@ -323,6 +323,7 @@ void CWbcDlg::OnScanEp()//扫银浆
 	FILE *pFile=fopen("epo.dll","w");
 	fwrite(qrCode+";"+nowStr,1,strlen(qrCode+";"+nowStr),pFile);
 	fclose(pFile);
+	refreshEpoRemainTime();
 }
 //初始化芯片查询的listCtr
 void CWbcDlg::initSelectWaferListCtr(){
@@ -860,6 +861,17 @@ void CWbcDlg::matchTools()//匹配刷胶工具和银浆
 
 	CString lastCheckId;
 	idTextCtr.GetWindowText(lastCheckId);
+	MySqlUtil mysql;
+	CString msg;
+	try
+	{
+		mysql.ConnMySQL(msg);
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		return;
+	}
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{
 
@@ -873,8 +885,6 @@ void CWbcDlg::matchTools()//匹配刷胶工具和银浆
 		CStringArray array;
 		try
 		{
-			CString msg;
-			MySqlUtil mysql(msg);
 			CString sql;
 			sql.Format("SELECT steel_mesh_sn,shim_sn,scraper_sn,ep_pn from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
 			mysql.SelectData(sql,msg,array);
