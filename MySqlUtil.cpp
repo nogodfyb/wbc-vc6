@@ -5,7 +5,6 @@
 #include "stdafx.h"
 #include "wbc.h"
 #include "MySqlUtil.h"
-#include "properties.h"
 
 #ifdef _DEBUG
 #undef THIS_FILE
@@ -50,31 +49,19 @@ int MySqlUtil::ConnMySQL(CString &Msg)
     if (mysql_init(&mysql) == NULL)
     {
         Msg=mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "数据库连接失败1";
-		}
-        return 0;
+		throw "数据库初始化失败!";
     }
 
     if (mysql_real_connect(&mysql, HOST, USER, PASSWORD, DATABASE, PORT, NULL, 0) == NULL)
     {
         Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "数据库连接失败:端口号或账号密码错误!";
-		}
-        return 0;
+		throw "数据库连接失败:端口号或账号密码错误!";
     }
 
     if (mysql_set_character_set(&mysql, "GBK") != 0)
     {
         Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "数据库连接失败2!";
-		}
-        return 0;
+		throw "数据库连接失败2!";
     }
     return 1;
 }
@@ -87,22 +74,14 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array,int * 
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "查询数据失败1";
-		}
-        return ;
+		throw "查询数据失败1";
     }
     m_res = mysql_store_result(&mysql);
 
     if (m_res == NULL)
     {
         Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "查询数据失败2";
-		}
-        return ;
+		throw "查询数据失败2";
     }
     while (m_row = mysql_fetch_row(m_res))
     {
@@ -111,48 +90,18 @@ void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array,int * 
             array.Add(m_row[i]);
         }
     }
-    *rowNums=mysql_num_rows(m_res);
-    *colNums = mysql_num_fields(m_res);
+	if (rowNums!=NULL)
+	{
+		*rowNums=mysql_num_rows(m_res);
+		*colNums = mysql_num_fields(m_res);
+	}
     mysql_free_result(m_res);
     return ;
 }
 //查询数据
 void MySqlUtil::SelectData(CString SQL, CString & Msg,CStringArray &array)
 {
-
-    MYSQL_ROW m_row;
-    MYSQL_RES* m_res;
-    if (mysql_query(&mysql, SQL) != 0)
-    {
-        Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "查询数据失败!";
-			return;
-		}
-        return ;
-    }
-    m_res = mysql_store_result(&mysql);
-	
-    if (m_res == NULL)
-    {
-        Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "查询数据失败!";
-			return;
-		}
-        return ;
-    }
-    while (m_row = mysql_fetch_row(m_res))
-    {
-        for (int i = 0; i < mysql_num_fields(m_res); i++)
-        {
-            array.Add(m_row[i]);
-        }
-    }
-    mysql_free_result(m_res);
-    return ;
+	SelectData(SQL,Msg,array,NULL,NULL);
 }
 
 //查询数据并渲染表格
@@ -163,24 +112,14 @@ void MySqlUtil::SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list
     if (mysql_query(&mysql, SQL) != 0)
     {
         Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "查询数据失败!";
-			return;
-		}
-        return ;
+		throw "查询数据失败!";
     }
     m_res = mysql_store_result(&mysql);
 	
     if (m_res == NULL)
     {
         Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "查询数据失败!";
-			return;
-		}
-        return ;
+		throw "查询数据失败!";
     }
     while (m_row = mysql_fetch_row(m_res))
     {
@@ -226,49 +165,29 @@ bool MySqlUtil::isExist(CString SQL) {
 //插入数据
 int MySqlUtil::InsertData(CString SQL, CString &Msg)
 {
-    if (mysql_query(&mysql, SQL) != 0)
-    {
-        Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "插入数据失败!";
-			return 0;
-		}
-        return 0;
-    }
-    return 1;
+
+	return excute(SQL,Msg);
 }
 
 //更新数据
 int MySqlUtil::UpdateData(CString SQL, CString& Msg)
 {
-    if (mysql_query(&mysql, SQL) != 0)
-    {
-        Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "更新数据失败!";
-			return 0;
-		}
-        return 0;
-    }
-    return 1;
+	return excute(SQL,Msg);
 }
 
 //删除数据
 int MySqlUtil::DeleteData(CString SQL, CString& Msg)
 {
-    if (mysql_query(&mysql, SQL) != 0)
+	return excute(SQL,Msg);
+}
+
+int MySqlUtil::excute(CString sql,CString& msg){
+    if (mysql_query(&mysql, sql) != 0)
     {
-        Msg = mysql_error(&mysql);
-		if (!Msg.IsEmpty())
-		{
-			throw "删除数据失败!";
-			return 0;
-		}
-        return 0;
+        msg = mysql_error(&mysql);
+		throw "操作数据失败!";
     }
-    return 1;
+	return mysql_affected_rows(&mysql);
 }
 
 //关闭数据库连接
@@ -276,3 +195,4 @@ void MySqlUtil::CloseMySQLConn()
 {
     mysql_close(&mysql);
 }
+

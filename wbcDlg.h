@@ -9,6 +9,7 @@
 #endif // _MSC_VER > 1000
 #include "CMyListCtrl.h"
 #include "Epo.h"
+#include "MySqlUtil.h"
 
 /////////////////////////////////////////////////////////////////////////////
 // CWbcDlg dialog
@@ -50,9 +51,9 @@ public:
 	void OnScanWaferFistWeigh();
 	void OnScanEp();
 	void initSelectWaferListCtr();
-	void initFirstWeighWaferListCtr();
+	void initFirstWeighWaferListCtr(MySqlUtil &mysql,CString &msg);
 	void initSecondWeighWaferListCtr();
-	void completeFirstWeighWaferListCtr();
+	void completeFirstWeighWaferListCtr(MySqlUtil &mysql,CString &msg);
 	void initPlanIdCbxCtr();
 	void getSetting();
 	void refreshPlasmaRemainTime();

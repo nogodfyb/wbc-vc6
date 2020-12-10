@@ -4,7 +4,6 @@
 #include "stdafx.h"
 #include "wbc.h"
 #include "wbcDlg.h"
-#include "MySqlUtil.h"
 #include "CheckToolsDlg.h"
 #include "ValiadteUtils.h"
 #include "MyUtils.h"
@@ -153,10 +152,22 @@ BOOL CWbcDlg::OnInitDialog()
 	//初始化一些简单变量
 	needRestoreTimer=false;
 
+	CString msg;
+	MySqlUtil mysql;
+	try
+	{
+		mysql.ConnMySQL(msg);
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		MessageBox(msg);
+	}
+
 
 	initSelectWaferListCtr();
 	initPlanIdCbxCtr();
-	initFirstWeighWaferListCtr();
+	initFirstWeighWaferListCtr(mysql,msg);
 	initSecondWeighWaferListCtr();
 	getSetting();
 	//创建定时器
@@ -338,7 +349,7 @@ void CWbcDlg::initSelectWaferListCtr(){
 }
 
 //初始化第一次称重的listCtr
-void CWbcDlg::initFirstWeighWaferListCtr(){
+void CWbcDlg::initFirstWeighWaferListCtr(MySqlUtil &mysql,CString &msg){
 	CString str[6] = { TEXT("WaferSource"),TEXT("WaferLot"), TEXT("刷胶前重量"),TEXT("Plasma(剩余分钟)"),TEXT("刷胶工具"),TEXT("银浆")};
 	for (size_t i = 0; i < 6; i++)
 	{
@@ -347,7 +358,7 @@ void CWbcDlg::initFirstWeighWaferListCtr(){
 	//设置风格  整行选中 加入网格线
 	firstWeighWaferListCtr.SetExtendedStyle(firstWeighWaferListCtr.GetExtendedStyle() | LVS_EX_FULLROWSELECT | LVS_EX_GRIDLINES);
 	firstWeighWaferListCtr.AdjustColumnWidth();
-	completeFirstWeighWaferListCtr();
+	completeFirstWeighWaferListCtr(mysql,msg);
 }
 //初始化第二次称重的listCtr
 void CWbcDlg::initSecondWeighWaferListCtr(){
@@ -360,12 +371,10 @@ void CWbcDlg::initSecondWeighWaferListCtr(){
 	secondWeighWaferListCtr.AdjustColumnWidth();
 }
 //填充第一次称重的listCtr
-void CWbcDlg::completeFirstWeighWaferListCtr(){
+void CWbcDlg::completeFirstWeighWaferListCtr(MySqlUtil &mysql,CString &msg){
 	//将第一次称重还未进行第二次称重的数据填充到表格
 	try
 	{
-		CString msg;
-		MySqlUtil mysql(msg);
 		CString sql="SELECT wafer_source,wafer_lot,weight from wbc20_first_weigh_record";
 		mysql.SelectDataAndToList(sql,msg,&firstWeighWaferListCtr);
 	}
@@ -647,7 +656,7 @@ void CWbcDlg::OnButton3() //提交称重记录
 	mysql.commitTransaction();
 	//更新第一次称重记录表
 	firstWeighWaferListCtr.DeleteAllItems();
-	completeFirstWeighWaferListCtr();
+	//completeFirstWeighWaferListCtr();
 	
 }
 

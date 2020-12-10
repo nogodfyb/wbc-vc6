@@ -10,6 +10,12 @@
 #endif // _MSC_VER > 1000
 #include "CMyListCtrl.h"
 
+#define HOST  "localhost"
+#define USER  "tester"
+#define PASSWORD "tester"
+#define DATABASE "diesaw"
+#define PORT  3307
+
 class MySqlUtil  
 {
 public:
@@ -42,7 +48,9 @@ public:
     int UpdateData(CString SQL, CString& Msg);
 	
     int DeleteData(CString SQL, CString& Msg);
-	
+
+	int excute(CString sql,CString& msg);
+
     void CloseMySQLConn();
 
 };

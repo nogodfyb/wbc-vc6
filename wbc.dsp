@@ -231,10 +231,6 @@ SOURCE=.\MyUtils.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\properties.h
-# End Source File
-# Begin Source File
-
 SOURCE=.\Resource.h
 # End Source File
 # Begin Source File
