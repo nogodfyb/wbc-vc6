@@ -165,14 +165,15 @@ BOOL CWbcDlg::OnInitDialog()
 	}
 
 
-	initSelectWaferListCtr();
-	initPlanIdCbxCtr();
-	initFirstWeighWaferListCtr(mysql,msg);
-	initSecondWeighWaferListCtr();
-	getSetting();
+	initSelectWaferListCtr(); //初始化查询wafer信息列表的结果控件
+	initPlanIdCbxCtr(); //初始化计划下拉框控件
+	initFirstWeighWaferListCtr(mysql,msg); //初始化第一次称重的listCtr
+	initSecondWeighWaferListCtr(); //初始化第二次称重的listCtr
+	matchTools(mysql,msg); //匹配刷胶工具和银浆
+	getSetting(); //读取配置信息
 	//创建定时器
-	SetTimer(IDTIMER1,5000,0);
-	SetTimer(IDTIMER2,5000,0);
+	SetTimer(IDTIMER1,5000,0); //定时刷新plasma剩余时间
+	SetTimer(IDTIMER2,5000,0); //定时刷新银浆上机剩余时间
 	refreshEpoRemainTime();
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -865,13 +866,11 @@ void CWbcDlg::OnMenuitem32773() //异常登记
 
 }
 
-void CWbcDlg::matchTools()//匹配刷胶工具和银浆
+void CWbcDlg::matchTools(MySqlUtil &mysql,CString &msg)//匹配刷胶工具和银浆
 {
 
 	CString lastCheckId;
 	idTextCtr.GetWindowText(lastCheckId);
-	MySqlUtil mysql;
-	CString msg;
 	try
 	{
 		mysql.ConnMySQL(msg);
@@ -887,6 +886,7 @@ void CWbcDlg::matchTools()//匹配刷胶工具和银浆
 		CString waferSource=firstWeighWaferListCtr.GetItemText(i,0);
 		if (lastCheckId=="******"||lastCheckId.IsEmpty())
 		{
+			//设置刷胶工具那一列
 			firstWeighWaferListCtr.SetItemText(i,4,"未点检");
 			continue;
 		}
@@ -910,6 +910,7 @@ void CWbcDlg::matchTools()//匹配刷胶工具和银浆
 		}
 		if (currentEpo.partNumber!=array.GetAt(3))
 		{
+			//设置银浆工具那一列
 			firstWeighWaferListCtr.SetItemText(i,5,"不匹配");
 		}else{
 			firstWeighWaferListCtr.SetItemText(i,5,"匹配");
@@ -945,7 +946,10 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 	//传来的重量数据非空
 	if (!dlg.manualWeighValue.IsEmpty())
 	{
-		waferSelectListCtr.SetItemText(currentRow,3,dlg.manualWeighValue);
+		if (currentRow!=NULL)
+		{
+			waferSelectListCtr.SetItemText(currentRow,3,dlg.manualWeighValue);
+		}
 		//保存或更新该wafer的第一次称重记录
 		try
 		{
@@ -966,7 +970,7 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 				firstWeighWaferListCtr.SetItemText(endRow,2,dlg.manualWeighValue);
 			}
 			refreshPlasmaRemainTime();
-			matchTools();
+			//matchTools();
 		}
 		catch (const char * info)
 		{
@@ -977,56 +981,7 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 }
 //手动第一次称重
 void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice){
-	bool cover=false;
-	int needCoveredRow=0;
-	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
-	{
-		CString currentWaferLot=firstWeighWaferListCtr.GetItemText(i,1);
-		if (currentWaferLot==waferLot)
-		{
-			if(MessageBox(TEXT("已有称重数据,是否再次称重?"),TEXT("再次确认"),MB_OKCANCEL)!=IDOK)
-			{
-				return;
-			}
-			cover=true;
-			needCoveredRow=i;
-			break;
-		}
-	}
-	ManualWeighDialog dlg;
-	dlg.waferLot=waferLot;
-	dlg.DoModal();
-	//传来的重量数据非空
-	if (!dlg.manualWeighValue.IsEmpty())
-	{
-		//保存或更新该wafer的第一次称重记录
-		try
-		{
-			CString msg;
-			MySqlUtil mysql(msg);
-			CString sql;
-			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source,wafer_device, weight) VALUES ('%s','%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,waferDevice,dlg.manualWeighValue,dlg.manualWeighValue);
-			mysql.InsertData(sql,msg);
-			//如果是覆盖
-			if (cover)
-			{
-				firstWeighWaferListCtr.SetItemText(needCoveredRow,2,dlg.manualWeighValue);
-			}else{
-				//向第一次称重列表尾部添加一行
-				int endRow=firstWeighWaferListCtr.GetItemCount();
-				firstWeighWaferListCtr.InsertItem(endRow,waferSource);
-				firstWeighWaferListCtr.SetItemText(endRow,1,waferLot);
-				firstWeighWaferListCtr.SetItemText(endRow,2,dlg.manualWeighValue);
-			}
-			refreshPlasmaRemainTime();
-			matchTools();
-		}
-		catch (const char * info)
-		{
-			MessageBox(info);
-			return;
-		}
-	}
+	manualFirstWeigh(waferLot,waferSource,waferDevice,NULL);
 }
 //手动第二次称重
 void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight){
@@ -1114,7 +1069,6 @@ void CWbcDlg::OnTimer(UINT nIDEvent)
 	if (nIDEvent==IDTIMER1)
 	{
 		refreshPlasmaRemainTime();
-		matchTools();
 	}
 	if (nIDEvent==IDTIMER2)
 	{

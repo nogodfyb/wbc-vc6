@@ -61,7 +61,7 @@ public:
 	void manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice, int currentRow);
 	void manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice);
 	void manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight);
-	void matchTools();
+	void matchTools(MySqlUtil &mysql,CString &msg);
 	void completeWaferSelectListCtr();
 	CString serialPort;
 	CString weigthMode;
