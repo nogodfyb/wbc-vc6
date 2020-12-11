@@ -134,9 +134,9 @@ void AdminMainDialog::OnButton1() //登录后台管理
 	usernameEditCtr.GetWindowText(username);
 	passwordEditCtr.GetWindowText(password);
 
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		CStringArray array;
@@ -153,6 +153,7 @@ void AdminMainDialog::OnButton1() //登录后台管理
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 	
 }

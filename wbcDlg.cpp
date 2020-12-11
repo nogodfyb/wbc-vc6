@@ -115,6 +115,7 @@ BEGIN_MESSAGE_MAP(CWbcDlg, CDialog)
 	ON_BN_CLICKED(IDC_BUTTON4, OnButton4)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST1, OnDblclkList1)
 	ON_NOTIFY(NM_DBLCLK, IDC_LIST2, OnDblclkList2)
+	ON_BN_CLICKED(IDC_BUTTON5, OnButton5)
 	//}}AFX_MSG_MAP
 END_MESSAGE_MAP()
 
@@ -162,19 +163,19 @@ BOOL CWbcDlg::OnInitDialog()
 	{
 		MessageBox(info);
 		MessageBox(msg);
+		return FALSE;
 	}
-
-
 	initSelectWaferListCtr(); //初始化查询wafer信息列表的结果控件
 	initPlanIdCbxCtr(); //初始化计划下拉框控件
+	//创建定时器
+	SetTimer(IDTIMER1,5000,0); //定时刷新plasma剩余时间
 	initFirstWeighWaferListCtr(mysql,msg); //初始化第一次称重的listCtr
 	initSecondWeighWaferListCtr(); //初始化第二次称重的listCtr
 	matchTools(mysql,msg); //匹配刷胶工具和银浆
 	getSetting(); //读取配置信息
-	//创建定时器
-	SetTimer(IDTIMER1,5000,0); //定时刷新plasma剩余时间
+
 	SetTimer(IDTIMER2,5000,0); //定时刷新银浆上机剩余时间
-	refreshEpoRemainTime();
+	refreshEpoRemainTime(); //刷新银浆上机剩余时间
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
 
@@ -284,8 +285,20 @@ void CWbcDlg::OnScanWafer()//点检扫描wafer
 		lastCheckShimSn=dlg.expectedShim;
 	}else{
 		MessageBox("芯片二维码格式不正确!");
+		return;
 	}
 	waferCtr.SetWindowText("");
+	MySqlUtil mysql;
+	CString msg;
+	try
+	{
+		matchTools(mysql,msg);
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		MessageBox(msg);
+	}
 }
 void CWbcDlg::OnScanWaferFistWeigh()//第一次称重前扫描wafer
 {
@@ -382,9 +395,10 @@ void CWbcDlg::completeFirstWeighWaferListCtr(MySqlUtil &mysql,CString &msg){
 	catch (const char *info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
-	refreshPlasmaRemainTime();
+	refreshPlasmaRemainTime(mysql,msg);
 }
 //初始化计划号下拉框
 void CWbcDlg::initPlanIdCbxCtr(){
@@ -402,6 +416,7 @@ void CWbcDlg::initPlanIdCbxCtr(){
 void CWbcDlg::OnButton1() //芯片查询
 {
 	// TODO: Add your control notification handler code here
+	CString msg;
 	try
 	{
 		waferSelectListCtr.DeleteAllItems();
@@ -410,7 +425,6 @@ void CWbcDlg::OnButton1() //芯片查询
 		CString planDate=date.Format(_T("%y%m%d"));
 		CString planId;
 		planIdCbxCtr.GetWindowText(planId);
-		CString msg;
 		MySqlUtil mysql(msg);
 		//查询数据并渲染
 		CString sql;
@@ -425,6 +439,7 @@ void CWbcDlg::OnButton1() //芯片查询
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
 	completeWaferSelectListCtr();
@@ -508,6 +523,7 @@ void CWbcDlg::OnButton3() //提交称重记录
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
 	//开启事务
@@ -770,9 +786,9 @@ void CWbcDlg::OnMenuitem32772() //删除第一次称重记录
 		MessageBox("当前未选中任何wafer!");
 		return;
 	}
+	CString msg;
 	try
-	{
-		CString msg;
+	{	
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("DELETE FROM wbc20_first_weigh_record WHERE wafer_lot='%s'",waferLot);
@@ -783,6 +799,7 @@ void CWbcDlg::OnMenuitem32772() //删除第一次称重记录
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
 	completeWaferSelectListCtr();
@@ -871,15 +888,6 @@ void CWbcDlg::matchTools(MySqlUtil &mysql,CString &msg)//匹配刷胶工具和银浆
 
 	CString lastCheckId;
 	idTextCtr.GetWindowText(lastCheckId);
-	try
-	{
-		mysql.ConnMySQL(msg);
-	}
-	catch (const char * info)
-	{
-		MessageBox(info);
-		return;
-	}
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{
 
@@ -901,6 +909,7 @@ void CWbcDlg::matchTools(MySqlUtil &mysql,CString &msg)//匹配刷胶工具和银浆
 		catch (const char * info)
 		{
 			MessageBox(info);
+			MessageBox(msg);
 			return;
 		}
 		if (array.GetSize()!=4)
@@ -946,14 +955,14 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 	//传来的重量数据非空
 	if (!dlg.manualWeighValue.IsEmpty())
 	{
-		if (currentRow!=NULL)
+		if (currentRow!=-1)
 		{
 			waferSelectListCtr.SetItemText(currentRow,3,dlg.manualWeighValue);
 		}
+		CString msg;
 		//保存或更新该wafer的第一次称重记录
 		try
 		{
-			CString msg;
 			MySqlUtil mysql(msg);
 			CString sql;
 			sql.Format("INSERT INTO wbc20_first_weigh_record (wafer_lot, wafer_source,wafer_device, weight) VALUES ('%s','%s','%s','%s') ON DUPLICATE KEY UPDATE weight='%s'",waferLot,waferSource,waferDevice,dlg.manualWeighValue,dlg.manualWeighValue);
@@ -969,19 +978,20 @@ void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString wafe
 				firstWeighWaferListCtr.SetItemText(endRow,1,waferLot);
 				firstWeighWaferListCtr.SetItemText(endRow,2,dlg.manualWeighValue);
 			}
-			refreshPlasmaRemainTime();
-			//matchTools();
+			refreshPlasmaRemainTime(mysql,msg);
+			matchTools(mysql,msg);
 		}
 		catch (const char * info)
 		{
 			MessageBox(info);
+			MessageBox(msg);
 			return;
 		}
 	}
 }
 //手动第一次称重
 void CWbcDlg::manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice){
-	manualFirstWeigh(waferLot,waferSource,waferDevice,NULL);
+	manualFirstWeigh(waferLot,waferSource,waferDevice,-1);
 }
 //手动第二次称重
 void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString firstWeight){
@@ -989,9 +999,9 @@ void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString fir
 
 
 	CString waferSize;
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql3;
 		CStringArray array3;
@@ -1008,6 +1018,7 @@ void CWbcDlg::manualSecondWeigh(CString waferLot,CString waferSource,CString fir
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
 	for (int i=0;i<secondWeighWaferListCtr.GetItemCount();i++)
@@ -1078,48 +1089,73 @@ void CWbcDlg::OnTimer(UINT nIDEvent)
 	CDialog::OnTimer(nIDEvent);
 }
 
-//刷新Plasma剩余时间
-void CWbcDlg::refreshPlasmaRemainTime()//刷新plasma时间
+void CWbcDlg::refreshPlasmaRemainTime(MySqlUtil &mysql,CString &msg)//访问数据库刷新plasma时间
 {
-	CString msg;
-	MySqlUtil mysql;
-	try
-	{
-		mysql.ConnMySQL(msg);
-	}
-	catch (const char * info)
-	{
-		MessageBox(info);
-		return;
-	}
+	//关掉刷新plasma的定时器
+	KillTimer(IDTIMER1);
 	//遍历表格;取每一行的waferLot;查询该wafer的Plasma剩余时间
 	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
 	{
 		
 		CStringArray array;
+		CString waferLot=firstWeighWaferListCtr.GetItemText(i,1);
 		try
 		{
-			CString waferLot=firstWeighWaferListCtr.GetItemText(i,1);
 			CString sql;
-			sql.Format("SELECT 30-TIMESTAMPDIFF(MINUTE, in_time, NOW()),is_over_count from plasma_rec WHERE wl='%s' ORDER BY r_id DESC LIMIT 1",waferLot);
+			sql.Format("SELECT 30*60-TIMESTAMPDIFF(SECOND, in_time, NOW()),is_over_count from plasma_rec WHERE wl='%s' ORDER BY r_id DESC LIMIT 1",waferLot);
 			mysql.SelectData(sql,msg,array);
 		}
 		catch (const char * info)
 		{
 			MessageBox(info);
+			MessageBox(msg);
 			return;
 		}
 		if (array.GetSize()==2)
 		{
+			//秒换算成分钟
+			int leftMinutes=atoi(array.GetAt(0))/60;
+			CString leftMinutesStr;
+			leftMinutesStr.Format("%d",leftMinutes);
 			if (array.GetAt(1)=="1")
 			{
-				firstWeighWaferListCtr.SetItemText(i,3,array.GetAt(0)+"***清洗超次");
-			}else firstWeighWaferListCtr.SetItemText(i,3,array.GetAt(0));
+				firstWeighWaferListCtr.SetItemText(i,3,leftMinutesStr+"***清洗超次");
+			}else firstWeighWaferListCtr.SetItemText(i,3,leftMinutesStr);
+			plasmaMap.SetAt(waferLot,array.GetAt(0));
 		}else{
 			firstWeighWaferListCtr.SetItemText(i,3,"无记录");
 		}
 	}
 	firstWeighWaferListCtr.AdjustColumnWidth();
+	//恢复定时器
+	SetTimer(IDTIMER1,5000,0);
+}
+void CWbcDlg::refreshPlasmaRemainTime()//读取缓存在map中的plasma剩余时间,定时刷新
+{
+
+	//遍历表格;取每一行的waferLot;刷新该wafer的Plasma剩余时间
+	for (int i=0;i<firstWeighWaferListCtr.GetItemCount();i++)
+	{
+		CString waferLot=firstWeighWaferListCtr.GetItemText(i,1);
+		CString msg=firstWeighWaferListCtr.GetItemText(i,3);
+		CString leftSeconds;
+		bool state=plasmaMap.Lookup(waferLot,leftSeconds);
+		if (state)
+		{
+			int newLeft=atoi(leftSeconds)-5;
+			CString newLeftStr;
+			newLeftStr.Format("%d",newLeft);
+			plasmaMap.SetAt(waferLot,newLeftStr);
+			int leftMinutes=newLeft/60;
+			CString leftMinutesStr;
+			leftMinutesStr.Format("%d",leftMinutes);
+			if (msg.Find("***清洗超次")!=-1)
+			{
+				firstWeighWaferListCtr.SetItemText(i,3,leftMinutesStr+"***清洗超次");
+			} else firstWeighWaferListCtr.SetItemText(i,3,leftMinutesStr);
+		}
+	}
+
 }
 //刷新银浆上机时间
 void CWbcDlg::refreshEpoRemainTime()
@@ -1269,3 +1305,24 @@ void CWbcDlg::OnButton4() //后台管理
 
 
 
+
+void CWbcDlg::OnButton5() //刷新plasma时间
+{
+	// TODO: Add your control notification handler code here
+	
+	MySqlUtil mysql;
+	CString msg;
+	try
+	{
+		mysql.ConnMySQL(msg);
+		refreshPlasmaRemainTime(mysql,msg);
+	}
+	catch (const char * info)
+	{
+		MessageBox(info);
+		MessageBox(msg);
+		return;
+	}
+	MessageBox("刷新完毕!");
+	
+}

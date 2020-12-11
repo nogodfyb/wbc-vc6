@@ -38,6 +38,8 @@ public:
 
 	//存储异常记录map
 	CMapStringToString exceptionMap;
+	//缓存各个waferLot对应的最近的plasma时间
+	CMapStringToString plasmaMap;
 	//当前银浆上机时间
 	int currentEpoRunTime;
 
@@ -56,6 +58,7 @@ public:
 	void completeFirstWeighWaferListCtr(MySqlUtil &mysql,CString &msg);
 	void initPlanIdCbxCtr();
 	void getSetting();
+	void refreshPlasmaRemainTime(MySqlUtil &mysql,CString &msg);
 	void refreshPlasmaRemainTime();
 	void refreshEpoRemainTime();
 	void manualFirstWeigh(CString waferLot,CString waferSource,CString waferDevice, int currentRow);
@@ -100,6 +103,7 @@ protected:
 	afx_msg void OnButton4();
 	afx_msg void OnDblclkList1(NMHDR* pNMHDR, LRESULT* pResult);
 	afx_msg void OnDblclkList2(NMHDR* pNMHDR, LRESULT* pResult);
+	afx_msg void OnButton5();
 	//}}AFX_MSG
 	DECLARE_MESSAGE_MAP()
 private:

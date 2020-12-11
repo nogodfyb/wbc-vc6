@@ -90,9 +90,9 @@ void AddToolDialog::OnOK() //÷ÿ–¥ok
 		return;
 	}
 
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 
@@ -112,6 +112,7 @@ void AddToolDialog::OnOK() //÷ÿ–¥ok
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
 	

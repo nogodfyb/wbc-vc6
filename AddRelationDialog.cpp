@@ -92,9 +92,9 @@ void AddRelationDialog::OnOK() //重写ok
 		MessageBox("银浆sn为空!");
 		return;
 	}
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		if (mode==1)
@@ -113,6 +113,7 @@ void AddRelationDialog::OnOK() //重写ok
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 	CDialog::OnOK();
 }
@@ -150,9 +151,9 @@ void AddRelationDialog::initWaferSizeCbxCtr()//初始化芯片尺寸下拉框
 
 void AddRelationDialog::initSteelMeshCbxCtr()//初始化钢网下拉框
 {
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("SELECT sn from wbc20_tool WHERE type=2");
@@ -166,15 +167,16 @@ void AddRelationDialog::initSteelMeshCbxCtr()//初始化钢网下拉框
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
 }
 
 void AddRelationDialog::initShimCbxCtr()//初始化垫片下拉框
 {
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("SELECT sn from wbc20_tool WHERE type=3");
@@ -188,6 +190,7 @@ void AddRelationDialog::initShimCbxCtr()//初始化垫片下拉框
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
 }
@@ -195,9 +198,9 @@ void AddRelationDialog::initShimCbxCtr()//初始化垫片下拉框
 void AddRelationDialog::initScraperCbxCtr()//初始化刀片下拉框
 {
 
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("SELECT sn from wbc20_tool WHERE type=1");
@@ -211,6 +214,7 @@ void AddRelationDialog::initScraperCbxCtr()//初始化刀片下拉框
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 		return;
 	}
 }
