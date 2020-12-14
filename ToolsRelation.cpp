@@ -88,9 +88,9 @@ void ToolsRelation::initToolsRelationListCtr()//初始化列表
 
 void ToolsRelation::getAllToolsRelation()//获取所有工具关系
 {
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("SELECT wafer_source,wafer_size,steel_mesh_sn,shim_sn,scraper_sn,ep_pn from wbc20_tool_rule");
@@ -99,6 +99,7 @@ void ToolsRelation::getAllToolsRelation()//获取所有工具关系
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 
 
@@ -191,10 +192,9 @@ void ToolsRelation::OnMenuitem32775() //删除
 	int currentRow=toolsRelationListCtr.GetSelectionMark();
 	//序列号
 	CString waferSource=toolsRelationListCtr.GetItemText(currentRow,0);
-	
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("DELETE from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
@@ -206,6 +206,7 @@ void ToolsRelation::OnMenuitem32775() //删除
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 
 }

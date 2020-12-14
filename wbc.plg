@@ -6,13 +6,24 @@
 --------------------Configuration: wbc - Win32 Debug--------------------
 </h3>
 <h3>Command Lines</h3>
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPFE79.tmp" with contents
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSP36F7.tmp" with contents
 [
 /nologo /MDd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_AFXDLL" /D "_MBCS" /FR"Debug/" /Fp"Debug/wbc.pch" /Yu"stdafx.h" /Fo"Debug/" /Fd"Debug/" /FD /GZ /c 
+"D:\vc6\wbc\AddRelationDialog.cpp"
+"D:\vc6\wbc\AddToolDialog.cpp"
+"D:\vc6\wbc\AdminMainDialog.cpp"
+"D:\vc6\wbc\CheckRecordListDialog.cpp"
+"D:\vc6\wbc\CheckToolsDlg.cpp"
+"D:\vc6\wbc\ExceptionRegisterDialog.cpp"
+"D:\vc6\wbc\MySqlUtil.cpp"
+"D:\vc6\wbc\ToolsListDialog.cpp"
+"D:\vc6\wbc\ToolsRelation.cpp"
+"D:\vc6\wbc\wbc.cpp"
 "D:\vc6\wbc\wbcDlg.cpp"
+"D:\vc6\wbc\WeighRecordListDialog.cpp"
 ]
-Creating command line "cl.exe @C:\Users\FYB\AppData\Local\Temp\RSPFE79.tmp" 
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPFE7A.tmp" with contents
+Creating command line "cl.exe @C:\Users\FYB\AppData\Local\Temp\RSP36F7.tmp" 
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSP36F8.tmp" with contents
 [
 /nologo /subsystem:windows /incremental:yes /pdb:"Debug/wbc.pdb" /debug /machine:I386 /out:"Debug/wbc.exe" /pdbtype:sept 
 .\Debug\AddRelationDialog.obj
@@ -38,9 +49,27 @@ Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPFE7A.tmp" with conte
 .\Debug\WeighRecordListDialog.obj
 .\Debug\wbc.res
 ]
-Creating command line "link.exe @C:\Users\FYB\AppData\Local\Temp\RSPFE7A.tmp"
+Creating command line "link.exe @C:\Users\FYB\AppData\Local\Temp\RSP36F8.tmp"
 <h3>Output Window</h3>
 Compiling...
+AddRelationDialog.cpp
+Generating Code...
+Compiling...
+AddToolDialog.cpp
+AdminMainDialog.cpp
+CheckRecordListDialog.cpp
+CheckToolsDlg.cpp
+ExceptionRegisterDialog.cpp
+MySqlUtil.cpp
+D:\vc6\wbc\MySqlUtil.cpp(88) : warning C4018: '<' : signed/unsigned mismatch
+D:\vc6\wbc\MySqlUtil.cpp(95) : warning C4244: '=' : conversion from 'unsigned __int64' to 'int', possible loss of data
+D:\vc6\wbc\MySqlUtil.cpp(126) : warning C4018: '<' : signed/unsigned mismatch
+D:\vc6\wbc\MySqlUtil.cpp(131) : warning C4244: 'initializing' : conversion from 'unsigned __int64' to 'int', possible loss of data
+D:\vc6\wbc\MySqlUtil.cpp(153) : warning C4244: 'initializing' : conversion from 'unsigned __int64' to 'int', possible loss of data
+D:\vc6\wbc\MySqlUtil.cpp(190) : warning C4244: 'return' : conversion from 'unsigned __int64' to 'int', possible loss of data
+ToolsListDialog.cpp
+ToolsRelation.cpp
+wbc.cpp
 wbcDlg.cpp
 D:\vc6\wbc\wbcDlg.cpp(486) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
 D:\vc6\wbc\wbcDlg.cpp(535) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
@@ -54,8 +83,10 @@ D:\vc6\wbc\wbcDlg.cpp(1142) : warning C4800: 'int' : forcing value to bool 'true
 D:\vc6\wbc\wbcDlg.cpp(1165) : warning C4800: 'int' : forcing value to bool 'true' or 'false' (performance warning)
 D:\vc6\wbc\wbcDlg.cpp(1230) : warning C4101: 'm_crTextBk' : unreferenced local variable
 D:\vc6\wbc\wbcDlg.cpp(1272) : warning C4101: 'm_crTextBk' : unreferenced local variable
+WeighRecordListDialog.cpp
+Generating Code...
 Linking...
-Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPFF36.tmp" with contents
+Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSP389E.tmp" with contents
 [
 /nologo /o"Debug/wbc.bsc" 
 .\Debug\StdAfx.sbr
@@ -79,14 +110,14 @@ Creating temporary file "C:\Users\FYB\AppData\Local\Temp\RSPFF36.tmp" with conte
 .\Debug\wbc.sbr
 .\Debug\wbcDlg.sbr
 .\Debug\WeighRecordListDialog.sbr]
-Creating command line "bscmake.exe @C:\Users\FYB\AppData\Local\Temp\RSPFF36.tmp"
+Creating command line "bscmake.exe @C:\Users\FYB\AppData\Local\Temp\RSP389E.tmp"
 Creating browse info file...
 <h3>Output Window</h3>
 
 
 
 <h3>Results</h3>
-wbc.exe - 0 error(s), 12 warning(s)
+wbc.exe - 0 error(s), 18 warning(s)
 </pre>
 </body>
 </html>

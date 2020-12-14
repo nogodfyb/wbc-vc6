@@ -163,7 +163,7 @@ BOOL CWbcDlg::OnInitDialog()
 	{
 		MessageBox(info);
 		MessageBox(msg);
-		return FALSE;
+		exit(0);
 	}
 	initSelectWaferListCtr(); //初始化查询wafer信息列表的结果控件
 	initPlanIdCbxCtr(); //初始化计划下拉框控件

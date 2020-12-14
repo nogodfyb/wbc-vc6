@@ -116,9 +116,9 @@ bool ToolsListDialog::isAdmin(){
 void ToolsListDialog::getAllTools()//获取所有工具
 {
 
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("SELECT sn,type,life,description,create_time,update_time FROM wbc20_tool");
@@ -141,6 +141,7 @@ void ToolsListDialog::getAllTools()//获取所有工具
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 
 }
@@ -207,10 +208,9 @@ void ToolsListDialog::OnMenuitem32775() //删除
 	int currentRow=toolsListCtr.GetSelectionMark();
 	//序列号
 	CString sn=toolsListCtr.GetItemText(currentRow,0);
-
+	CString msg;
 	try
-	{
-		CString msg;
+	{	
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("DELETE from wbc20_tool WHERE sn='%s'",sn);
@@ -222,6 +222,7 @@ void ToolsListDialog::OnMenuitem32775() //删除
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 
 }

@@ -115,9 +115,9 @@ void CheckToolsDlg::OnCancel()
 //查询所有工具信息并填充到3个静态文本控件
 void CheckToolsDlg::selectToolsInfo(){
 
+	CString msg;
 	try
-	{
-		CString msg;
+	{	
 		MySqlUtil mysqlUtil(msg);
 		CString sql;
 		sql.Format("SELECT steel_mesh_sn,shim_sn,scraper_sn from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
@@ -141,6 +141,7 @@ void CheckToolsDlg::selectToolsInfo(){
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 
 }
@@ -208,9 +209,9 @@ void CheckToolsDlg::initAppearanceCheckSelects(){
 void CheckToolsDlg::OnButton1() 
 {
 	// TODO: Add your control notification handler code here
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		ShiftUtils shiftUtil;
@@ -300,6 +301,7 @@ void CheckToolsDlg::OnButton1()
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 	
 }

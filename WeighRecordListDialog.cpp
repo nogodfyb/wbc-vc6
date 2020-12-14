@@ -103,10 +103,9 @@ void WeighRecordListDialog::OnButton1() //≤È—Ø
 	}
 	beginTime=beginTime+" 00:00:00";
 	endTime=endTime+" 23:59:59";
-	
+	CString msg;
 	try
 	{
-		CString msg;
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("SELECT shift,bn,machine_code,wafer_device,wafer_source,wafer_lot,first_weight,first_weigh_time,ep_sn,ep_start_time,ep_exceed_time,second_weight,\
@@ -116,6 +115,7 @@ void WeighRecordListDialog::OnButton1() //≤È—Ø
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 	
 }

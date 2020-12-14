@@ -122,6 +122,7 @@ bool ExceptionRegisterDialog::setException(CString waferLot) //´æ´¢Òì³£¼ÇÂ¼µ½map
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}	
 
 	CWnd * parent=GetParent();

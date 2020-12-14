@@ -103,9 +103,10 @@ void CheckRecordListDialog::OnButton1() //≤È—Ø
 	beginTime=beginTime+" 00:00:00";
 	endTime=endTime+" 23:59:59";
 
+	CString msg;
 	try
 	{
-		CString msg;
+		
 		MySqlUtil mysql(msg);
 		CString sql;
 		sql.Format("SELECT shift,machine_code,create_time,bn,power,speed,vacuum,shim_check,scraper_check,steelmesh_check from wbc20_check_record WHERE create_time BETWEEN '%s' AND '%s'",beginTime,endTime);
@@ -114,6 +115,7 @@ void CheckRecordListDialog::OnButton1() //≤È—Ø
 	catch (const char * info)
 	{
 		MessageBox(info);
+		MessageBox(msg);
 	}
 	
 }
