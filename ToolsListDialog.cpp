@@ -116,13 +116,12 @@ bool ToolsListDialog::isAdmin(){
 void ToolsListDialog::getAllTools()//获取所有工具
 {
 
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		sql.Format("SELECT sn,type,life,description,create_time,update_time FROM wbc20_tool");
-		mysql.SelectDataAndToList(sql,msg,&toolsListCtr);
+		mysql.SelectDataAndToList(sql,&toolsListCtr);
 		//遍历列表将数字类型转换为
 		for (int i=0;i<toolsListCtr.GetItemCount();i++)
 		{
@@ -138,10 +137,9 @@ void ToolsListDialog::getAllTools()//获取所有工具
 			}
 		}
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 	}
 
 }
@@ -208,21 +206,19 @@ void ToolsListDialog::OnMenuitem32775() //删除
 	int currentRow=toolsListCtr.GetSelectionMark();
 	//序列号
 	CString sn=toolsListCtr.GetItemText(currentRow,0);
-	CString msg;
 	try
 	{	
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		sql.Format("DELETE from wbc20_tool WHERE sn='%s'",sn);
-		mysql.DeleteData(sql,msg);
+		mysql.DeleteData(sql);
 		MessageBox("删除成功!");
 		toolsListCtr.DeleteAllItems();
 		getAllTools();
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 	}
 
 }

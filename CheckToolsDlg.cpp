@@ -115,14 +115,13 @@ void CheckToolsDlg::OnCancel()
 //查询所有工具信息并填充到3个静态文本控件
 void CheckToolsDlg::selectToolsInfo(){
 
-	CString msg;
 	try
 	{	
-		MySqlUtil mysqlUtil(msg);
+		MySqlUtil mysqlUtil;
 		CString sql;
 		sql.Format("SELECT steel_mesh_sn,shim_sn,scraper_sn from wbc20_tool_rule WHERE wafer_source='%s'",waferSource);
 		CStringArray array;
-		mysqlUtil.SelectData(sql,msg,array);
+		mysqlUtil.SelectData(sql,array);
 		if(array.GetSize()!=3){
 			MessageBox("刷胶工具未知!请联系管理员!");
 			CDialog::OnOK();
@@ -138,10 +137,9 @@ void CheckToolsDlg::selectToolsInfo(){
 		shimTextCtr.SetWindowText(array.GetAt(1));
 		expectedShim=array.GetAt(1);
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 	}
 
 }
@@ -209,10 +207,9 @@ void CheckToolsDlg::initAppearanceCheckSelects(){
 void CheckToolsDlg::OnButton1() 
 {
 	// TODO: Add your control notification handler code here
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		ShiftUtils shiftUtil;
 		CString shift=shiftUtil.getShiftByNow();
@@ -287,21 +284,20 @@ void CheckToolsDlg::OnButton1()
 		}
 		sql.Format("INSERT INTO wbc20_check_record (shift, machine_code,bn,power,speed,vacuum,shim_check,scraper_check,steelmesh_check) \
 			VALUES ('%s','%s','%s','%s','%s','%s','%s','%s','%s')",shift,machineCode,bn,power,speed,vacuum,shimCheckStr,scraperCheckStr,steelMeshCheckStr);
-		mysql.InsertData(sql,msg);
+		mysql.InsertData(sql);
 		MessageBox("保存点检记录成功!");
 		CStringArray array;
 		CString sql2;
 		sql2.Format("SELECT id,create_time from wbc20_check_record WHERE id=LAST_INSERT_ID()");
-		mysql.SelectData(sql2,msg,array);
+		mysql.SelectData(sql2,array);
 		lastCheckId=array.GetAt(0);
 		lastCheckTime=array.GetAt(1);
 		//关闭弹窗
 		CDialog::OnOK();
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 	}
 	
 }

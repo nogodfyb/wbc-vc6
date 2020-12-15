@@ -103,19 +103,17 @@ void WeighRecordListDialog::OnButton1() //≤È—Ø
 	}
 	beginTime=beginTime+" 00:00:00";
 	endTime=endTime+" 23:59:59";
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		sql.Format("SELECT shift,bn,machine_code,wafer_device,wafer_source,wafer_lot,first_weight,first_weigh_time,ep_sn,ep_start_time,ep_exceed_time,second_weight,\
 					create_time,second_weight-first_weight,wafer_size,is_over_weight,scraper_sn,steel_mesh_sn,shim_sn,scraper_life,steel_mesh_life,shim_life,expection_reason,handle_plan,handle_remark,handle_result,deal_person from wbc20_second_weigh_record WHERE create_time BETWEEN '%s' AND '%s'",beginTime,endTime);
-		mysql.SelectDataAndToList(sql,msg,&weighRecordListCtr);
+		mysql.SelectDataAndToList(sql,&weighRecordListCtr);
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 	}
 	
 }

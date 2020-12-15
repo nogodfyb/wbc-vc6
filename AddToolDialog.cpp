@@ -89,30 +89,27 @@ void AddToolDialog::OnOK() //重写ok
 		MessageBox("中文描述不能为空!");
 		return;
 	}
-
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 
 		//编辑模式
 		if (mode==1)
 		{
 			sql.Format("UPDATE wbc20_tool SET type='%s',life='%s',description='%s' WHERE sn='%s'",type,life,description,sn);
-			mysql.UpdateData(sql,msg);
+			mysql.UpdateData(sql);
 			MessageBox("修改成功!");
 		}else{
 			sql.Format("INSERT INTO wbc20_tool(sn, type, life, description) VALUES ('%s','%s','%s','%s')",sn,type,life,description);
-			mysql.InsertData(sql,msg);
+			mysql.InsertData(sql);
 			MessageBox("添加成功!");
 		}
 
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 		return;
 	}
 	

@@ -133,15 +133,13 @@ void AdminMainDialog::OnButton1() //登录后台管理
 	CString password;
 	usernameEditCtr.GetWindowText(username);
 	passwordEditCtr.GetWindowText(password);
-
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		CStringArray array;
 		sql.Format("SELECT bn from diesaw_user WHERE bn='%s' AND pw=MD5('%s')",username,password);
-		mysql.SelectData(sql,msg,array);
+		mysql.SelectData(sql,array);
 		if(array.GetSize()!=1){
 			MessageBox("工号和密码不正确");
 			return;
@@ -150,10 +148,9 @@ void AdminMainDialog::OnButton1() //登录后台管理
 			MessageBox("登录成功!");
 		}
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 	}
 	
 }

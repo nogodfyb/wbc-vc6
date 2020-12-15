@@ -92,28 +92,26 @@ void AddRelationDialog::OnOK() //重写ok
 		MessageBox("银浆sn为空!");
 		return;
 	}
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		if (mode==1)
 		{
 			sql.Format("UPDATE wbc20_tool_rule SET wafer_size='%s', steel_mesh_sn='%s', shim_sn='%s', scraper_sn='%s', ep_pn='%s' WHERE (wafer_source='%s')",waferSize,steelMeshSn,shimSn,scraperSn,epSn,waferSource);
-			mysql.UpdateData(sql,msg);
+			mysql.UpdateData(sql);
 			MessageBox("修改成功!");
 		}else{
 			sql.Format("INSERT INTO wbc20_tool_rule (wafer_source, wafer_size, steel_mesh_sn, shim_sn, scraper_sn, ep_pn)\
 				VALUES ('%s','%s','%s','%s','%s','%s')",waferSource,waferSize,steelMeshSn,shimSn,scraperSn,epSn);
-			mysql.InsertData(sql,msg);
+			mysql.InsertData(sql);
 			MessageBox("添加成功!");
 		}
 
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 	}
 	CDialog::OnOK();
 }
@@ -151,70 +149,63 @@ void AddRelationDialog::initWaferSizeCbxCtr()//初始化芯片尺寸下拉框
 
 void AddRelationDialog::initSteelMeshCbxCtr()//初始化钢网下拉框
 {
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		sql.Format("SELECT sn from wbc20_tool WHERE type=2");
 		CStringArray array;
-		mysql.SelectData(sql,msg,array);
+		mysql.SelectData(sql,array);
 		for (int i=0;i<array.GetSize();i++)
 		{
 			steelMeshCbxCtr.AddString(array.GetAt(i));
 		}
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 		return;
 	}
 }
 
 void AddRelationDialog::initShimCbxCtr()//初始化垫片下拉框
 {
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		sql.Format("SELECT sn from wbc20_tool WHERE type=3");
 		CStringArray array;
-		mysql.SelectData(sql,msg,array);
+		mysql.SelectData(sql,array);
 		for (int i=0;i<array.GetSize();i++)
 		{
 			shimCbxCtr.AddString(array.GetAt(i));
 		}
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 		return;
 	}
 }
 
 void AddRelationDialog::initScraperCbxCtr()//初始化刀片下拉框
 {
-
-	CString msg;
 	try
 	{
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		sql.Format("SELECT sn from wbc20_tool WHERE type=1");
 		CStringArray array;
-		mysql.SelectData(sql,msg,array);
+		mysql.SelectData(sql,array);
 		for (int i=0;i<array.GetSize();i++)
 		{
 			scraperCbxCtr.AddString(array.GetAt(i));
 		}
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 		return;
 	}
 }

@@ -102,20 +102,16 @@ void CheckRecordListDialog::OnButton1() //≤È—Ø
 	}
 	beginTime=beginTime+" 00:00:00";
 	endTime=endTime+" 23:59:59";
-
-	CString msg;
 	try
 	{
-		
-		MySqlUtil mysql(msg);
+		MySqlUtil mysql;
 		CString sql;
 		sql.Format("SELECT shift,machine_code,create_time,bn,power,speed,vacuum,shim_check,scraper_check,steelmesh_check from wbc20_check_record WHERE create_time BETWEEN '%s' AND '%s'",beginTime,endTime);
-		mysql.SelectDataAndToList(sql,msg,&checkRecordListCtr);
+		mysql.SelectDataAndToList(sql,&checkRecordListCtr);
 	}
-	catch (const char * info)
+	catch (CString info)
 	{
 		MessageBox(info);
-		MessageBox(msg);
 	}
 	
 }

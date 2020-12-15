@@ -33,7 +33,6 @@ void CMyListCtrl::AdjustColumnWidth()
         int nColumnWidth = GetColumnWidth(i);
         SetColumnWidth(i, LVSCW_AUTOSIZE_USEHEADER);
         int nHeaderWidth = GetColumnWidth(i);
-		
         SetColumnWidth(i, max(nColumnWidth, nHeaderWidth));
     }
     SetRedraw(TRUE);

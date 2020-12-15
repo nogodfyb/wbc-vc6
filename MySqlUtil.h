@@ -8,7 +8,6 @@
 #if _MSC_VER > 1000
 #pragma once
 #endif // _MSC_VER > 1000
-#include "CMyListCtrl.h"
 
 #define HOST  "localhost"
 #define USER  "tester"
@@ -19,40 +18,35 @@
 class MySqlUtil  
 {
 public:
-	MySqlUtil();
+MySqlUtil();
 
-	MySqlUtil(CString &msg);
 	virtual ~MySqlUtil();
-
-	//±‰¡ø
-    MYSQL mysql;
-
+	
 	void beginTransaction();
 	
-    void commitTransaction();
+	void commitTransaction();
 	
-    void rollbackTransaction();
+	void rollbackTransaction();
 	
-    int ConnMySQL( CString &Msg);
-	
-    void SelectData(CString SQL,  CString &Msg, CStringArray& array, int* rowNums,int * colNums);
-	
-	void SelectData(CString SQL, CString & Msg,CStringArray &array);
+	int ConnMySQL();
 
-	void SelectDataAndToList(CString SQL, CString & Msg,CMyListCtrl *list);
+	void SelectData(CString SQL, CStringArray& array, int* rowNums,int * colNums);
 	
-    bool isExist(CString SQL);
+	void SelectData(CString SQL,CStringArray &array);
 	
-    int InsertData(CString SQL, CString &Msg);
+	void SelectDataAndToList(CString SQL,CListCtrl *list);
 	
-    int UpdateData(CString SQL, CString& Msg);
+	int InsertData(CString SQL);
 	
-    int DeleteData(CString SQL, CString& Msg);
-
-	int excute(CString sql,CString& msg);
-
-    void CloseMySQLConn();
-
+	int UpdateData(CString SQL);
+	
+	int DeleteData(CString SQL);
+	
+	int excute(CString sql);
+	
+private:
+	MYSQL mysql;
+	
 };
 
 #endif // !defined(AFX_MYSQLUTIL_H__1C70EF04_E87C_43F7_A890_8157928FB403__INCLUDED_)
